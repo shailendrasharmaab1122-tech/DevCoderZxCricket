@@ -59,7 +59,7 @@
     .telegram-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.95);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -116,7 +116,7 @@
   <!-- Video Container -->
   <div data-shaka-player-container class="shaka-mobile shaka-video-container" shaka-controls="true" style="cursor: none;">
     <div class="shaka-video-container shaka-video" data-shaka-player="">
-      <video muted playsinline preload="metadata" poster="" src="blob:https://waptv.wapka.xyz/81ff5297-c515-4845-8099-68ded74f4bc2" class="shaka-video"></video>
+      <video muted autoplay playsinline preload="metadata" poster="" src="blob:https://waptv.wapka.xyz/81ff5297-c515-4845-8099-68ded74f4bc2" class="shaka-video"></video>
     </div>
     <canvas class="shaka-canvas-container"></canvas>
   </div>
@@ -146,8 +146,16 @@
       // Play video function
       function playVideo() {
         overlay.style.display = 'none';
-        video.muted = false;
-        video.play().catch(err => console.log("Autoplay blocked:", err));
+        // Start playing muted first (browser autoplay-safe)
+        video.muted = true;
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            // After first user interaction, unmute
+            video.muted = false;
+            video.volume = 1;
+          }).catch(err => console.log("Autoplay blocked:", err));
+        }
       }
 
       // Shaka Player Setup
