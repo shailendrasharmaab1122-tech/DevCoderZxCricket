@@ -45,23 +45,6 @@
     .popup-button { background:#1e90ff; color:#fff; }
     .popup-button:hover { background:#00ffff; color:#000; }
     .popup-skip { background:transparent; color:#fff; text-decoration:underline; }
-
-    /* Shaka Player progress bar (single) */
-    .shaka-seek-bar-container {
-      position: absolute !important;
-      top: 50px !important; /* developer ke neeche */
-      left: 0; right:0;
-      height: 6px !important; /* chhota */
-      z-index: 9998 !important;
-    }
-    .shaka-seek-bar-background { height: 6px !important; background: rgba(50,55,61,0.6) !important; }
-    .shaka-seek-bar-buffered { height:6px !important; background: rgba(135,206,235,0.4) !important; }
-    .shaka-seek-bar-played { height:6px !important; background: #1e90ff !important; }
-
-    /* Hide default spinner */
-    .shaka-spinner-container,
-    .shaka-spinner,
-    .shaka-spinner-svg { display:none !important; }
   </style>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
@@ -70,15 +53,17 @@
 
   <div class="glow-developer">Developer - DevCoderz X Assault Decoder</div>
 
+  <!-- Telegram Popup -->
   <div class="popup-overlay" id="telegramPopup">
     <h2>Join Our Telegram Group to Continue</h2>
     <button class="popup-button" onclick="joinTelegram()">Join Telegram</button>
     <button class="popup-skip" onclick="skipPopup()">Skip</button>
   </div>
 
+  <!-- Video Container -->
   <div data-shaka-player-container class="shaka-mobile shaka-video-container" id="videoContainer" shaka-controls="true">
     <div class="shaka-video-container shaka-video" data-shaka-player="">
-      <video muted autoplay playsinline preload="metadata"></video>
+      <video autoplay playsinline preload="metadata"></video>
     </div>
   </div>
 
@@ -93,11 +78,11 @@
     }
     function skipPopup() { startVideo(); }
 
-    function startVideo() {
+    async function startVideo() {
       document.getElementById('telegramPopup').style.display='none';
       const container = document.getElementById('videoContainer');
       container.style.display='block';
-      initShaka();
+      await initShaka();
     }
 
     async function initShaka() {
@@ -111,26 +96,21 @@
       const container = document.querySelector('.shaka-video-container');
       const ui = new shaka.ui.Overlay(player, container, video);
 
-      // Only ONE progress bar will show
       ui.configure({
-        controlPanelElements:['play_pause','mute','volume','time_and_duration','spacer','language','captions','picture_in_picture','quality','fullscreen'],
-        volumeBarColors:{base:'rgba(135,206,235,0.35)', level:'rgb(255,255,255)'},
-        seekBarColors:{base:'rgba(50,55,61,0.6)', buffered:'rgba(135,206,235,0.4)', played:'#1e90ff'}
+        controlPanelElements:['play_pause','mute','volume','time_and_duration','spacer','language','captions','picture_in_picture','quality','fullscreen']
       });
 
       player.addEventListener('error', e=>console.error('Shaka Error:', e.detail));
 
       try { 
         await player.load(streamUrl); 
-        video.muted=true; 
-        const playPromise=video.play(); 
-        if(playPromise!==undefined) playPromise.catch(e=>console.log("Autoplay blocked:",e)); 
+        // 🔥 Automatically unmute and play
+        video.muted=false;
+        video.volume=1;
+        const playPromise = video.play();
+        if(playPromise!==undefined) playPromise.catch(e => console.log("Autoplay blocked:", e));
       }
       catch(e){ console.error('Load error:', e); }
-
-      document.addEventListener('click', ()=>{
-        if(video.muted){ video.muted=false; video.volume=1; }
-      }, {once:true});
     }
   </script>
 </body>
