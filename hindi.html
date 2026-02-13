@@ -116,7 +116,7 @@
   <!-- Video Container -->
   <div data-shaka-player-container class="shaka-mobile shaka-video-container" shaka-controls="true" style="cursor: none;">
     <div class="shaka-video-container shaka-video" data-shaka-player="">
-      <video muted autoplay playsinline preload="metadata" poster="" src="blob:https://waptv.wapka.xyz/81ff5297-c515-4845-8099-68ded74f4bc2" class="shaka-video"></video>
+      <video muted autoplay playsinline preload="metadata" poster="" class="shaka-video"></video>
     </div>
     <canvas class="shaka-canvas-container"></canvas>
   </div>
@@ -143,22 +143,20 @@
         }
       }, 1000);
 
-      // Play video function
+      // Function to start video
       function playVideo() {
         overlay.style.display = 'none';
-        // Start playing muted first (browser autoplay-safe)
         video.muted = true;
         const playPromise = video.play();
         if (playPromise !== undefined) {
           playPromise.then(() => {
-            // After first user interaction, unmute
             video.muted = false;
             video.volume = 1;
           }).catch(err => console.log("Autoplay blocked:", err));
         }
       }
 
-      // Shaka Player Setup
+      // Shaka Player setup
       shaka.polyfill.installAll();
       if (!shaka.Player.isBrowserSupported()) { console.error('Browser not supported'); return; }
       const player = new shaka.Player();
@@ -176,20 +174,16 @@
         seekBarColors: { base: 'rgba(50, 55, 61)', buffered: 'rgba(135, 206, 235, 0.6)', played: 'rgb(255, 255, 255)' }
       });
 
-      player.configure({
-        drm: { clearKeys: { "400131994b445d8c8817202248760fda":"2d56cb6f07a75b9aff165d534ae2bfc4" } },
-        streaming: { lowLatencyMode: true, bufferingGoal: 15, rebufferingGoal: 2, bufferBehind: 15 },
-        manifest: { retryParameters: { timeout: 8000, maxAttempts: 3 } }
-      });
+      // Configure DRM/stream
+      const drmConfig = { clearKeys: { "400131994b445d8c8817202248760fda":"2d56cb6f07a75b9aff165d534ae2bfc4" } };
+      const streamUrl = "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
+      player.configure({ drm: drmConfig, streaming: { lowLatencyMode: true, bufferingGoal: 15, rebufferingGoal: 2, bufferBehind: 15 }, manifest: { retryParameters: { timeout: 8000, maxAttempts: 3 } } });
 
-      player.addEventListener('error', (event) => { console.error('Shaka Player Error:', event.detail); });
+      player.addEventListener('error', (event) => console.error('Shaka Player Error:', event.detail));
 
-      // Button Events
+      // Button events
       joinBtn.addEventListener('click', playVideo);
-      skipBtn.addEventListener('click', () => {
-        clearInterval(timer);
-        playVideo();
-      });
+      skipBtn.addEventListener('click', () => { clearInterval(timer); playVideo(); });
     });
   </script>
 </body>
