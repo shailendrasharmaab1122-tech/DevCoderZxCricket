@@ -46,15 +46,15 @@
     .popup-button:hover { background:#00ffff; color:#000; }
     .popup-skip { background:transparent; color:#fff; text-decoration:underline; }
 
-    /* Customize Shaka Player progress bar */
+    /* Shaka Player progress bar (single) */
     .shaka-seek-bar-container {
       position: absolute !important;
-      top: 50px !important; /* upar le aaye, developer ke neeche */
+      top: 50px !important; /* developer ke neeche */
       left: 0; right:0;
       height: 6px !important; /* chhota */
       z-index: 9998 !important;
     }
-    .shaka-seek-bar-background { height: 6px !important; }
+    .shaka-seek-bar-background { height: 6px !important; background: rgba(50,55,61,0.6) !important; }
     .shaka-seek-bar-buffered { height:6px !important; background: rgba(135,206,235,0.4) !important; }
     .shaka-seek-bar-played { height:6px !important; background: #1e90ff !important; }
 
@@ -111,15 +111,21 @@
       const container = document.querySelector('.shaka-video-container');
       const ui = new shaka.ui.Overlay(player, container, video);
 
+      // Only ONE progress bar will show
       ui.configure({
         controlPanelElements:['play_pause','mute','volume','time_and_duration','spacer','language','captions','picture_in_picture','quality','fullscreen'],
         volumeBarColors:{base:'rgba(135,206,235,0.35)', level:'rgb(255,255,255)'},
-        seekBarColors:{base:'rgba(50,55,61)', buffered:'rgba(135,206,235,0.4)', played:'#1e90ff'}
+        seekBarColors:{base:'rgba(50,55,61,0.6)', buffered:'rgba(135,206,235,0.4)', played:'#1e90ff'}
       });
 
       player.addEventListener('error', e=>console.error('Shaka Error:', e.detail));
 
-      try { await player.load(streamUrl); video.muted=true; const playPromise=video.play(); if(playPromise!==undefined) playPromise.catch(e=>console.log("Autoplay blocked:",e)); }
+      try { 
+        await player.load(streamUrl); 
+        video.muted=true; 
+        const playPromise=video.play(); 
+        if(playPromise!==undefined) playPromise.catch(e=>console.log("Autoplay blocked:",e)); 
+      }
       catch(e){ console.error('Load error:', e); }
 
       document.addEventListener('click', ()=>{
