@@ -5,180 +5,104 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Video Player</title>
 
-  <!-- Glowing Developer Name CSS -->
   <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { background:#000; width:100%; height:100%; font-family: system-ui, -apple-system, sans-serif; overflow:hidden; }
+
+    /* Glowing Developer Name */
     .glow-developer {
       position: absolute;
       top: 10px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: clamp(16px, 2vw, 24px);
+      font-size: clamp(14px, 1.5vw, 18px);
       font-weight: bold;
       color: #1e90ff;
-      text-shadow: 0 0 5px #1e90ff,
-                   0 0 10px #1e90ff,
-                   0 0 20px #1e90ff,
-                   0 0 40px #00ffff;
+      text-shadow: 0 0 3px #1e90ff, 0 0 5px #1e90ff, 0 0 10px #00ffff;
       z-index: 9999;
       pointer-events: none;
-      font-family: system-ui, -apple-system, sans-serif;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      background: #000;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      font-family: system-ui, -apple-system, sans-serif;
-    }
-
+    /* Video Container */
     .shaka-video-container {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: none; /* Hidden until popup skipped */
+      position:absolute;
+      inset:0;
+      display:none;
+      width:100%;
+      height:100%;
     }
 
-    video {
-      width: 100%;
-      height: 100%;
-      background: #000;
-      object-fit: contain;
-    }
+    video { width:100%; height:100%; object-fit:contain; background:#000; }
 
-    /* Spinner hidden */
+    /* Telegram Popup */
+    .popup-overlay {
+      position:absolute; inset:0; background:rgba(0,0,0,0.85); z-index:9998; display:flex;
+      flex-direction:column; justify-content:center; align-items:center; color:#fff; text-align:center;
+    }
+    .popup-button, .popup-skip {
+      margin-top:20px; padding:10px 25px; font-size:16px; font-weight:bold; border:none; cursor:pointer; border-radius:6px; transition:.3s;
+    }
+    .popup-button { background:#1e90ff; color:#fff; }
+    .popup-button:hover { background:#00ffff; color:#000; }
+    .popup-skip { background:transparent; color:#fff; text-decoration:underline; }
+
+    /* Customize Shaka Player progress bar */
+    .shaka-seek-bar-container {
+      position: absolute !important;
+      top: 50px !important; /* upar le aaye, developer ke neeche */
+      left: 0; right:0;
+      height: 6px !important; /* chhota */
+      z-index: 9998 !important;
+    }
+    .shaka-seek-bar-background { height: 6px !important; }
+    .shaka-seek-bar-buffered { height:6px !important; background: rgba(135,206,235,0.4) !important; }
+    .shaka-seek-bar-played { height:6px !important; background: #1e90ff !important; }
+
+    /* Hide default spinner */
     .shaka-spinner-container,
     .shaka-spinner,
-    .shaka-spinner-svg {
-      display: none !important;
-      visibility: hidden !important;
-      opacity: 0 !important;
-    }
-
-    /* Blue Controls & Icons */
-    .shaka-controls-button,
-    .shaka-overflow-button-label,
-    .shaka-current-time,
-    .shaka-time-container {
-      color: dark-blue !important;
-    }
-
-    .shaka-controls-button svg path {
-      fill: #1e90ff !important;
-    }
-
-    /* Telegram popup */
-    .popup-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9998;
-      flex-direction: column;
-      color: #fff;
-      text-align: center;
-      font-family: system-ui, -apple-system, sans-serif;
-    }
-
-    .popup-button, .popup-skip {
-      margin-top: 20px;
-      padding: 12px 25px;
-      font-size: 18px;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: 0.3s;
-    }
-
-    .popup-button {
-      background: #1e90ff;
-      color: #fff;
-    }
-
-    .popup-button:hover { background: #00ffff; }
-
-    .popup-skip {
-      background: transparent;
-      color: #fff;
-      text-decoration: underline;
-    }
-
-    /* Developer Name in Popup */
-    .popup-developer {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: clamp(16px, 2vw, 24px);
-      font-weight: bold;
-      color: #1e90ff;
-      text-shadow: 0 0 5px #1e90ff, 0 0 10px #1e90ff, 0 0 20px #1e90ff, 0 0 40px #00ffff;
-    }
+    .shaka-spinner-svg { display:none !important; }
   </style>
 
-  <!-- Shaka Player CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
 </head>
 <body>
 
-  <!-- Glowing Developer Name -->
   <div class="glow-developer">Developer - DevCoderz X Assault Decoder</div>
 
-  <!-- Telegram Popup -->
   <div class="popup-overlay" id="telegramPopup">
-    <div class="popup-developer">Developer - DevCoderz X Assault Decoder</div>
     <h2>Join Our Telegram Group to Continue</h2>
     <button class="popup-button" onclick="joinTelegram()">Join Telegram</button>
     <button class="popup-skip" onclick="skipPopup()">Skip</button>
   </div>
 
-  <!-- Video Container -->
-  <div data-shaka-player-container class="shaka-mobile shaka-video-container" shaka-controls="true" id="videoContainer">
+  <div data-shaka-player-container class="shaka-mobile shaka-video-container" id="videoContainer" shaka-controls="true">
     <div class="shaka-video-container shaka-video" data-shaka-player="">
-      <video muted autoplay playsinline preload="metadata" class="shaka-video"></video>
+      <video muted autoplay playsinline preload="metadata"></video>
     </div>
-    <canvas class="shaka-canvas-container"></canvas>
   </div>
 
-  <!-- Shaka Player Script -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
 
   <script>
     const streamUrl = "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
 
-    // Telegram button
     function joinTelegram() {
       window.open("https://t.me/+vhBu7WHaWXFkZTRl", "_blank");
       startVideo();
     }
-
-    function skipPopup() {
-      startVideo();
-    }
+    function skipPopup() { startVideo(); }
 
     function startVideo() {
-      // Hide popup
-      document.getElementById('telegramPopup').style.display = 'none';
-      // Show video container
-      const videoContainer = document.getElementById('videoContainer');
-      videoContainer.style.display = 'block';
-
-      // Start Shaka Player
+      document.getElementById('telegramPopup').style.display='none';
+      const container = document.getElementById('videoContainer');
+      container.style.display='block';
       initShaka();
     }
 
     async function initShaka() {
       shaka.polyfill.installAll();
-
-      if (!shaka.Player.isBrowserSupported()) {
-        console.error('Browser not supported');
-        return;
-      }
+      if(!shaka.Player.isBrowserSupported()){ console.error('Browser not supported'); return; }
 
       const video = document.querySelector('video');
       const player = new shaka.Player();
@@ -187,54 +111,20 @@
       const container = document.querySelector('.shaka-video-container');
       const ui = new shaka.ui.Overlay(player, container, video);
 
-      // Controls colors
       ui.configure({
-        controlPanelElements: [
-          'play_pause', 'mute', 'volume', 'time_and_duration',
-          'spacer', 'language', 'captions', 'picture_in_picture',
-          'quality', 'fullscreen'
-        ],
-        volumeBarColors: { base: 'rgba(135, 206, 235, 0.35)', level: 'rgb(255,255,255)' },
-        seekBarColors: { base: 'rgba(50, 55, 61)', buffered: 'rgba(135, 206, 235, 0.6)', played: 'rgb(255, 255, 255)' }
+        controlPanelElements:['play_pause','mute','volume','time_and_duration','spacer','language','captions','picture_in_picture','quality','fullscreen'],
+        volumeBarColors:{base:'rgba(135,206,235,0.35)', level:'rgb(255,255,255)'},
+        seekBarColors:{base:'rgba(50,55,61)', buffered:'rgba(135,206,235,0.4)', played:'#1e90ff'}
       });
 
-      // DRM config
-      const drmConfig = {
-        clearKeys: { "400131994b445d8c8817202248760fda":"2d56cb6f07a75b9aff165d534ae2bfc4" }
-      };
+      player.addEventListener('error', e=>console.error('Shaka Error:', e.detail));
 
-      player.configure({
-        drm: drmConfig,
-        streaming: {
-          lowLatencyMode: true,
-          bufferingGoal: 15,
-          rebufferingGoal: 2,
-          bufferBehind: 15,
-          retryParameters: { timeout: 10000, maxAttempts: 5, baseDelay: 300, backoffFactor: 1.2 },
-          segmentRequestTimeout: 8000,
-          segmentPrefetchLimit: 2,
-          useNativeHlsOnSafari: true
-        },
-        manifest: { retryParameters: { timeout: 8000, maxAttempts: 3 } }
-      });
+      try { await player.load(streamUrl); video.muted=true; const playPromise=video.play(); if(playPromise!==undefined) playPromise.catch(e=>console.log("Autoplay blocked:",e)); }
+      catch(e){ console.error('Load error:', e); }
 
-      player.addEventListener('error', (event) => {
-        console.error('Shaka Player Error:', event.detail);
-      });
-
-      try {
-        await player.load(streamUrl);
-        console.log("Stream loaded successfully");
-        video.muted = true;
-        const playPromise = video.play();
-        if (playPromise !== undefined) playPromise.catch(err => console.log("Autoplay blocked:", err));
-      } catch (error) {
-        console.error('Load error:', error);
-      }
-
-      document.addEventListener('click', () => {
-        if (video.muted) { video.muted = false; video.volume = 1; }
-      }, { once: true });
+      document.addEventListener('click', ()=>{
+        if(video.muted){ video.muted=false; video.volume=1; }
+      }, {once:true});
     }
   </script>
 </body>
