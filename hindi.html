@@ -77,7 +77,8 @@
       text-shadow: 0 0 10px #1e90ff, 0 0 20px #00ffff;
     }
 
-    .telegram-overlay a.join-btn {
+    .telegram-overlay a.join-btn,
+    .telegram-overlay button.skip-btn {
       background: #1e90ff;
       color: #fff;
       padding: 15px 30px;
@@ -86,9 +87,12 @@
       text-decoration: none;
       box-shadow: 0 0 10px #1e90ff, 0 0 20px #00ffff;
       transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 10px;
+      cursor: pointer;
     }
 
-    .telegram-overlay a.join-btn:hover {
+    .telegram-overlay a.join-btn:hover,
+    .telegram-overlay button.skip-btn:hover {
       transform: scale(1.1);
       box-shadow: 0 0 20px #1e90ff, 0 0 30px #00ffff;
     }
@@ -106,6 +110,7 @@
   <div class="telegram-overlay" id="telegramOverlay">
     <h1>Join Our Telegram Channel!</h1>
     <a href="https://t.me/+vhBu7WHaWXFkZTRl" target="_blank" class="join-btn" id="joinBtn">Join Now</a>
+    <button class="skip-btn" id="skipBtn">Skip in <span id="countdown">5</span> sec</button>
   </div>
 
   <!-- Video Container -->
@@ -124,6 +129,26 @@
       const video = document.querySelector('video');
       const overlay = document.getElementById('telegramOverlay');
       const joinBtn = document.getElementById('joinBtn');
+      const skipBtn = document.getElementById('skipBtn');
+      const countdownSpan = document.getElementById('countdown');
+
+      // Countdown timer
+      let countdown = 5;
+      const timer = setInterval(() => {
+        countdown--;
+        countdownSpan.textContent = countdown;
+        if (countdown <= 0) {
+          clearInterval(timer);
+          playVideo();
+        }
+      }, 1000);
+
+      // Play video function
+      function playVideo() {
+        overlay.style.display = 'none';
+        video.muted = false;
+        video.play().catch(err => console.log("Autoplay blocked:", err));
+      }
 
       // Shaka Player Setup
       shaka.polyfill.installAll();
@@ -143,7 +168,6 @@
         seekBarColors: { base: 'rgba(50, 55, 61)', buffered: 'rgba(135, 206, 235, 0.6)', played: 'rgb(255, 255, 255)' }
       });
 
-      // DRM Config
       player.configure({
         drm: { clearKeys: { "400131994b445d8c8817202248760fda":"2d56cb6f07a75b9aff165d534ae2bfc4" } },
         streaming: { lowLatencyMode: true, bufferingGoal: 15, rebufferingGoal: 2, bufferBehind: 15 },
@@ -152,11 +176,11 @@
 
       player.addEventListener('error', (event) => { console.error('Shaka Player Error:', event.detail); });
 
-      // Telegram Join Button Click
-      joinBtn.addEventListener('click', () => {
-        overlay.style.display = 'none'; // Hide overlay
-        video.muted = false;             // Unmute
-        video.play().catch(err => console.log("Autoplay blocked:", err));
+      // Button Events
+      joinBtn.addEventListener('click', playVideo);
+      skipBtn.addEventListener('click', () => {
+        clearInterval(timer);
+        playVideo();
       });
     });
   </script>
