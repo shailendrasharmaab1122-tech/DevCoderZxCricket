@@ -100,4 +100,13 @@
       }
     }
 
-    document.addEventListener('shaka-ui-loaded',
+    document.addEventListener('shaka-ui-loaded', initApp);
+
+    // Audio Unmute Fix
+    window.addEventListener('click', () => {
+        const v = document.getElementById('video');
+        v.muted = false;
+    }, { once: true });
+  </script>
+</body>
+</html>
