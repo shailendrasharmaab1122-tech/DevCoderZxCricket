@@ -104,7 +104,7 @@
         </div>
 
         <div id="player-container" data-shaka-player-container>
-            <video autoplay data-shaka-player id="video" poster="https://i.postimg.cc/zX5R78S1/In-Shot-20250930-163713042.jpg"></video>
+            <video autoplay data-shaka-player id="video"></video>
         </div>
 
         <div class="grid-panels">
@@ -140,21 +140,19 @@
             try {
                 // MPD Stream Link
                 await player.load('https://a201aivottlib9.maihd.net/OTTB/lhr-nitro/live/dash/enc/qkp4pavybn/cenc.mpd');
-                console.log('Video loaded successfully!');
             } catch (e) {
                 console.error('Error loading video', e);
             }
         }
 
-        // Shaka UI setup hone ke baad player start karein
         document.addEventListener('shaka-ui-loaded', initPlayer);
         
-        // Telegram Alert
+        // Simple Popup Alert
         setTimeout(() => {
-            if (confirm("Join Our Telegram Channel for more links?")) {
+            if (confirm("Join Our Telegram Channel @Cric_decoders?")) {
                 window.open("https://t.me/Cric_decoders", '_blank');
             }
-        }, 2000);
+        }, 3000);
     </script>
 </body>
 </html>
