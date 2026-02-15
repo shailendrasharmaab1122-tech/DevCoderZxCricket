@@ -6,40 +6,51 @@
   <title>Video Player - DevCoderz</title>
 
   <style>
+    /* 1. Developer Name Ek Hi Line Mein */
     .glow-developer {
       position: absolute; 
       top: 20px; 
       left: 50%; 
       transform: translateX(-50%);
-      font-size: clamp(16px, 2.5vw, 24px); 
+      font-size: clamp(16px, 2.5vw, 22px); 
       font-weight: bold; 
       color: #1e90ff;
       text-shadow: 0 0 10px #1e90ff, 0 0 20px #00ffff; 
       z-index: 9999;
       pointer-events: none; 
       font-family: sans-serif;
-      /* Ek line mein rakhne ke liye */
       white-space: nowrap;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #000; height: 100vh; overflow: hidden; }
+    body { background: #000; height: 100vh; width: 100vw; overflow: hidden; }
 
-    #player-container { position: absolute; inset: 0; width: 100%; height: 100%; }
+    #player-container { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; }
     video { width: 100%; height: 100%; object-fit: contain; }
 
-    /* Loading Spinner Hide */
-    .shaka-spinner-container {
+    /* --- 2. CENTER PLAY BUTTON & SPINNER HIDE (Gola Fix) --- */
+    .shaka-spinner-container, 
+    .shaka-play-button-container, 
+    .shaka-central-play-button {
       display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
     }
 
-    /* Progress Bar thoda upar karne ke liye */
+    /* --- 3. PROGRESS BAR HEIGHT ADJUSTMENT --- */
+    /* Mobile ke bottom buttons se bachne ke liye controls ko upar kiya */
     .shaka-controls-container {
-      bottom: 30px !important; /* Screen se thoda upar */
+      bottom: 50px !important; 
     }
 
+    .shaka-bottom-controls {
+      padding: 0 10px !important;
+    }
+
+    /* Color Theme */
     .shaka-bottom-controls button { color: #1e90ff !important; }
     .shaka-range-element { color: #1e90ff !important; }
+    .shaka-current-time { color: #ffffff !important; }
   </style>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
@@ -64,6 +75,7 @@
       const player = new shaka.Player(video);
       const ui = new shaka.ui.Overlay(player, container, video);
 
+      // DRM Config
       player.configure({
         drm: {
           clearKeys: {
@@ -77,21 +89,15 @@
         }
       });
 
+      // Manifest URL
       const manifestUri = "https://otte.live.fly.ww.aiv-cdn.net/syd-nitro/live/dash/enc/qkp4pavybn/out/v1/2298afadf64943adb0b44dc540ace1ce/cenc.mpd";
 
       try {
         await player.load(manifestUri);
-        console.log("Loaded!");
+        console.log("Stream Loaded!");
       } catch (e) {
         console.error("Error Code:", e.code);
       }
     }
 
-    document.addEventListener('shaka-ui-loaded', initApp);
-
-    window.addEventListener('click', () => {
-        document.getElementById('video').muted = false;
-    }, { once: true });
-  </script>
-</body>
-</html>
+    document.addEventListener('shaka-ui-loaded',
