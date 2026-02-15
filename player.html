@@ -8,13 +8,13 @@
   <style>
     .glow-developer {
       position: absolute;
-      top: 10px;
+      top: 15px;
       left: 50%;
       transform: translateX(-50%);
       font-size: clamp(16px, 2vw, 24px);
       font-weight: bold;
       color: #1e90ff;
-      text-shadow: 0 0 5px #1e90ff, 0 0 20px #1e90ff, 0 0 40px #00ffff;
+      text-shadow: 0 0 10px #1e90ff, 0 0 20px #1e90ff, 0 0 40px #00ffff;
       z-index: 9999;
       pointer-events: none;
       font-family: sans-serif;
@@ -32,9 +32,10 @@
 
     video { width: 100%; height: 100%; object-fit: contain; }
 
-    /* Blue Theme Controls */
+    /* Blue Theme Player Controls */
     .shaka-range-element { color: #1e90ff !important; }
     .shaka-bottom-controls button { color: #1e90ff !important; }
+    .shaka-current-time { color: #1e90ff !important; }
   </style>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
@@ -51,7 +52,7 @@
 
   <script>
     async function initApp() {
-      // Install built-in polyfills
+      // 1. Polyfills install karein
       shaka.polyfill.installAll();
 
       if (!shaka.Player.isBrowserSupported()) {
@@ -62,45 +63,44 @@
       const video = document.getElementById('video');
       const container = document.getElementById('player-container');
       
-      // Player init
+      // 2. Player aur UI initialize karein
       const player = new shaka.Player(video);
-      
-      // UI Overlay setup
       const ui = new shaka.ui.Overlay(player, container, video);
       
-      // Blue Theme Config
+      // UI Control configuration
       ui.configure({
         'controlPanelElements': ['play_pause', 'mute', 'volume', 'time_and_duration', 'spacer', 'quality', 'fullscreen'],
       });
 
-      // CORRECT DRM CONFIG (From original stream data)
+      // 3. DRM Config (Aapke naye link se extracted keys)
       player.configure({
         drm: {
           clearKeys: {
-            '2904b17cb64c996dbc254981b7602863': '3adb0b44dc84498e64f966a7ef671b4e'
+            '2904b17cb64c996dbc254981b7602863': '66a7ef671b84498e64f966a7ef671b4e'
           }
         },
         streaming: {
           lowLatencyMode: true,
-          bufferingGoal: 10,
+          bufferingGoal: 12,
           rebufferingGoal: 2,
         }
       });
 
-      // Clean MPD Link
-      const manifestUri = "https://a201aivottlib9.maihd.net/OTTB/lhr-nitro/live/dash/enc/qkp4pavybn/cenc.mpd";
+      // 4. Aapka naya Stream Link (Cleaned for Player)
+      const manifestUri = "https://otte.live.fly.ww.aiv-cdn.net/syd-nitro/live/dash/enc/qkp4pavybn/out/v1/2298afadf64943adb0b44dc540ace1ce/cenc.mpd";
 
       try {
         await player.load(manifestUri);
-        console.log("Success!");
+        console.log("Success: Stream loaded!");
       } catch (e) {
-        console.error("Load error", e);
+        console.error("Load error code:", e.code, e);
       }
     }
 
+    // Start when UI is ready
     document.addEventListener('shaka-ui-loaded', initApp);
     
-    // User interaction to unmute
+    // Pehle click par audio enable karein
     window.addEventListener('click', () => {
         const video = document.getElementById('video');
         video.muted = false;
