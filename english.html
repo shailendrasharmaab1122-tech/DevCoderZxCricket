@@ -43,6 +43,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         .live-badge {
@@ -51,9 +52,11 @@
             padding: 0.4rem 1rem;
             border-radius: 30px;
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Video Player Styling */
         #player-container {
             width: 100%;
             aspect-ratio: 16 / 9;
@@ -78,13 +81,15 @@
             border-radius: 16px;
             padding: 1.5rem;
             text-align: center;
+            backdrop-filter: blur(10px);
         }
 
         .action-button {
             margin-top: 1rem;
             display: inline-flex;
+            align-items: center;
             gap: 0.75rem;
-            padding: 1rem 2rem;
+            padding: 0.8rem 1.5rem;
             background: var(--accent-gradient);
             color: #fff;
             border-radius: 12px;
@@ -92,7 +97,10 @@
             text-decoration: none;
             border: none;
             cursor: pointer;
+            transition: transform 0.2s;
         }
+
+        .action-button:hover { transform: scale(1.05); }
     </style>
 </head>
 
@@ -100,23 +108,27 @@
     <main class="container">
         <div class="stream-header">
             <h1>DevCoderz X Assault Decoder</h1>
-            <span class="live-badge"><i class="fa-solid fa-circle"></i> LIVE NOW</span>
+            <span class="live-badge">
+                <i class="fa-solid fa-circle fa-beat" style="font-size: 10px;"></i> LIVE NOW
+            </span>
         </div>
 
         <div id="player-container" data-shaka-player-container>
-            <video autoplay data-shaka-player id="video"></video>
+            <video autoplay muted data-shaka-player id="video"></video>
         </div>
 
         <div class="grid-panels">
             <div class="info-card">
-                <h2>📣 Follow us</h2>
+                <h2>📣 Stay Updated</h2>
                 <a href="https://t.me/Cric_decoders" target="_blank" class="action-button">
                     <i class="fa-brands fa-telegram"></i> Join Telegram
                 </a>
             </div>
             <div class="info-card">
-                <h2><i class="fa-solid fa-share-nodes"></i> Share Stream</h2>
-                <button class="action-button" onclick="alert('Link Copied!')">Share This Page ❤️</button>
+                <h2><i class="fa-solid fa-share-nodes"></i> Share Link</h2>
+                <button class="action-button" onclick="copyToClipboard()">
+                    Copy Stream Link ❤️
+                </button>
             </div>
         </div>
     </main>
@@ -128,31 +140,58 @@
             const controls = ui.getControls();
             const player = controls.getPlayer();
 
-            // DRM ClearKey Configuration
+            // Java/JS Configuration for ClearKey DRM
             player.configure({
                 drm: {
                     clearKeys: {
                         '2904b17cb64c996dbc254981b7602863': '3adb0b44dc84498e64f966a7ef671b4e'
                     }
+                },
+                streaming: {
+                    rebufferingGoal: 2,
+                    bufferingGoal: 10,
+                    retryParameters: {
+                        maxAttempts: 5,
+                        baseDelay: 1000,
+                        backoffFactor: 2
+                    }
                 }
             });
 
+            // Error handling
+            player.addEventListener('error', (event) => {
+                console.error('Shaka Player Error:', event.detail);
+            });
+
             try {
-                // MPD Stream Link
+                // Loading the MPD manifest
                 await player.load('https://a201aivottlib9.maihd.net/OTTB/lhr-nitro/live/dash/enc/qkp4pavybn/cenc.mpd');
+                console.log('Stream loaded successfully!');
+                
+                // Unmute attempt after interaction
+                video.muted = false; 
             } catch (e) {
-                console.error('Error loading video', e);
+                console.error('Load failed:', e);
             }
         }
 
+        // Initialize when UI is ready
         document.addEventListener('shaka-ui-loaded', initPlayer);
-        
-        // Simple Popup Alert
+
+        // Utility functions
+        function copyToClipboard() {
+            const link = window.location.href;
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Link Copied to Clipboard!');
+            });
+        }
+
+        // Telegram Confirm
         setTimeout(() => {
-            if (confirm("Join Our Telegram Channel @Cric_decoders?")) {
+            if (confirm("Join Our Telegram Channel @Cric_decoders for more updates?")) {
                 window.open("https://t.me/Cric_decoders", '_blank');
             }
-        }, 3000);
+        }, 5000);
     </script>
 </body>
 </html>
