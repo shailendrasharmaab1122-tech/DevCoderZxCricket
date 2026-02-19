@@ -2,50 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>JioTV Fix Player</title>
+  <title>JioTV Ultra Player</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.js"></script>
   <style>
-    body { margin: 0; background: #000; color: white; font-family: sans-serif; }
-    #video { width: 100vw; height: 100vh; }
-    #msg { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 10px; z-index: 10; }
+    body { margin: 0; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; color: white; font-family: sans-serif; }
+    #video-container { width: 100%; max-width: 900px; aspect-ratio: 16/9; position: relative; background: #111; }
+    video { width: 100%; height: 100%; outline: none; }
+    #status { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); padding: 5px 10px; border-radius: 4px; font-size: 12px; }
   </style>
 </head>
 <body>
 
-  <div id="msg">Status: Wait...</div>
-  <video id="video" controls autoplay></video>
+  <div id="video-container">
+    <div id="status">Status: Connecting...</div>
+    <video id="video" controls autoplay playsinline></video>
+  </div>
 
   <script>
-    async function startPlayer() {
+    async function initPlayer() {
       const video = document.getElementById('video');
-      const msg = document.getElementById('msg');
+      const status = document.getElementById('status');
       const player = new shaka.Player(video);
 
-      // Sabse powerful proxy jo headers ko bypass karti hai
+      // Best Public Proxy (AllOrigins with Raw)
       const proxy = "https://api.allorigins.win/raw?url=";
       const streamUrl = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
       const token = "__hdnea__=st=1771464029~exp=1771550429~acl=/*~hmac=ed4c72d3d0ce76491c2ed440e71eada349e8b803057316b4711b7ee1da4d0374";
 
-      player.getNetworkingEngine().registerRequestFilter((type, request) => {
-        // Sirf manifest aur segments ke liye proxy lagana
-        if (type == shaka.net.NetworkingEngine.RequestType.MANIFEST || type == shaka.net.NetworkingEngine.RequestType.SEGMENT) {
-           let originalUrl = request.uris[0];
-           // URL mein token jodna
-           let separator = originalUrl.includes('?') ? '&' : '?';
-           request.uris[0] = proxy + encodeURIComponent(originalUrl + separator + token);
+      // Player Configuration for faster loading
+      player.configure({
+        streaming: {
+          bufferingGoal: 30, // 30 seconds buffer target
+          rebufferingGoal: 2,
+          bufferBehind: 30,
+          lowLatencyMode: true
         }
+      });
+
+      player.getNetworkingEngine().registerRequestFilter((type, request) => {
+        // Headers simulate karna (JioTV App ki tarah)
+        request.headers['User-Agent'] = 'JioTV/7.0.8 (Linux; Android 9; Build/PKQ1.190118.001; wv)';
+        request.headers['X-Requested-With'] = 'com.jio.jiotv';
+
+        // URL mein token aur proxy mix karna
+        let originalUrl = request.uris[0];
+        let separator = originalUrl.includes('?') ? '&' : '?';
+        let finalUrlWithToken = originalUrl + separator + token;
+        
+        request.uris[0] = proxy + encodeURIComponent(finalUrlWithToken);
       });
 
       try {
         await player.load(streamUrl);
-        msg.innerHTML = "Playing!";
+        status.innerText = "Playing Live...";
+        status.style.color = "#00ff00";
       } catch (e) {
-        msg.innerHTML = "Error: " + e.code + " (Check Console)";
-        console.error("Full Error Details:", e);
+        status.innerText = "Error: " + e.code;
+        status.style.color = "red";
+        console.error("Shaka Error:", e);
       }
     }
 
-    document.addEventListener('DOMContentLoaded', startPlayer);
+    document.addEventListener('DOMContentLoaded', initPlayer);
   </script>
 </body>
 </html>
