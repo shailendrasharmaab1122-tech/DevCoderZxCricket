@@ -3,82 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JioTV Player</title>
-
-  <!-- Shaka Player -->
+  <title>JioTV Player Fix</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; width: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
-    .shaka-video-container { position: absolute; inset: 0; width: 100%; height: 100%; }
-    video { width: 100%; height: 100%; background: #000; object-fit: contain; }
-    .channel-info { position: absolute; top:0; left:0; right:0; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); padding: 1rem; display:flex; align-items:center; z-index:10; transition: opacity 0.3s ease; }
-    .channel-info.hidden { opacity:0; pointer-events:none; }
-    .channel-logo { width:40px; height:40px; margin-right:15px; border-radius:8px; background:#222; }
-    .channel-name { font-size:1.2rem; font-weight:500; color:white; }
-    .loading { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); color:white; font-size:1.2rem; text-align:center; z-index:5; }
-    .error { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); color:#ff4444; font-size:1.2rem; text-align:center; background:rgba(0,0,0,0.7); padding:2rem; border-radius:8px; max-width:80%; }
-    .error.hidden { display:none; }
+    body { margin: 0; background: #000; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .video-container { width: 100%; height: 100%; }
+    video { width: 100%; height: 100%; }
+    #status { position: absolute; color: white; z-index: 10; font-family: sans-serif; background: rgba(0,0,0,0.5); padding: 10px; }
   </style>
 </head>
 <body>
 
-  <div class="channel-info" id="channelInfo">
-    <img class="channel-logo" id="channelLogo" src="" alt="Channel Logo" style="display: none;">
-    <div class="channel-name" id="channelName">Star Sports HD1 Hindi</div>
+  <div id="status">Initializing Player...</div>
+  <div class="video-container" data-shaka-player-container>
+    <video id="video" autoplay playsinline data-shaka-player></video>
   </div>
-
-  <div class="shaka-video-container">
-    <video id="video" autoplay playsinline></video>
-  </div>
-
-  <div class="loading" id="loadingMessage">Loading channel...</div>
-  <div class="error hidden" id="errorMessage"><h2>Error Loading Channel</h2><p id="errorText"></p></div>
 
   <script>
-    async function initPlayer() {
+    async function initApp() {
       const video = document.getElementById('video');
+      const status = document.getElementById('status');
       const player = new shaka.Player(video);
 
-      // Add cookie for the stream
+      // 1. Proxy Setup (CORS bypass ke liye)
+      const proxy = 'https://cors-anywhere.herokuapp.com/';
+      const manifestUri = 'https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd';
+      const token = '__hdnea__=st=1771464029~exp=1771550429~acl=/*~hmac=ed4c72d3d0ce76491c2ed440e71eada349e8b803057316b4711b7ee1da4d0374';
+
+      // 2. Request Filter (Headers fix karne ke liye)
       player.getNetworkingEngine().registerRequestFilter((type, request) => {
-        if (
-          type === shaka.net.NetworkingEngine.RequestType.MANIFEST ||
-          type === shaka.net.NetworkingEngine.RequestType.SEGMENT
-        ) {
-          request.headers['cookie'] =
-            '__hdnea__=st=1771464029~exp=1771550429~acl=/*~hmac=ed4c72d3d0ce76491c2ed440e71eada349e8b803057316b4711b7ee1da4d0374';
-        }
+        // Proxy URL add karna
+        request.uris[0] = proxy + request.uris[0];
+
+        // JioTV specific headers
+        // Browser 'Cookie' header block karta hai, isliye hum use proxy ke through bhejte hain (agar proxy support kare)
+        request.headers['x-requested-with'] = 'XMLHttpRequest';
+        request.headers['User-Agent'] = 'JioTV/7.0.8 (Linux; Android 9)';
       });
 
       try {
-        // Load the DASH manifest
-        await player.load(
-          'https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd'
-        );
-        console.log('Video loaded');
-
-        // Hide loading message
-        document.getElementById('loadingMessage').style.display = 'none';
-
-        // Show channel info for 5 seconds
-        const channelInfo = document.getElementById('channelInfo');
-        channelInfo.classList.remove('hidden');
-        setTimeout(() => channelInfo.classList.add('hidden'), 5000);
-
+        // 3. Load Manifest with Token in URL
+        // Cookie header block hone ki wajah se token ko URL mein pass karna zyada safe hai
+        const finalUrl = manifestUri + '?' + token;
+        
+        await player.load(finalUrl);
+        status.innerText = "Playing: Star Sports HD1 Hindi";
+        setTimeout(() => status.style.display = 'none', 3000);
+        
       } catch (e) {
-        console.error('Error loading video', e);
-        const errorMessage = document.getElementById('errorMessage');
-        document.getElementById('errorText').textContent = e.message;
-        errorMessage.classList.remove('hidden');
-        document.getElementById('loadingMessage').style.display = 'none';
+        status.style.color = 'red';
+        status.innerText = "Error: " + e.code + " - " + e.message;
+        console.error('Error Code:', e.code, e);
       }
     }
 
-    initPlayer();
+    document.addEventListener('DOMContentLoaded', initApp);
   </script>
-
 </body>
 </html>
