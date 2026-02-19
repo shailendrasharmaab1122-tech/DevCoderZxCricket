@@ -1,133 +1,155 @@
-<!DOCTYPE html><html lang="en"><head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TG_@Cricinsider365</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DevCoderz X Assault Decoder">
+<meta name="theme-color" content="#ffffff">
+<title>DevCoderz X Assault Decoder // Live Stream</title>
 
-  <!-- Shaka Player -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.1/shaka-player.ui.min.js" crossorigin="anonymous"></script><style type="text/css">* {user-select: auto !important; -webkit-user-select: auto !important;}</style><input type="hidden" id="inject_idm_text_selection"><style></style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.1/controls.min.css" crossorigin="anonymous">
+<!-- Shaka Player -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
 
-  <style>
-    body {
-      margin: 0;
-      background-color: #000000; /* Full Black Background */
-      font-family: Arial, sans-serif;
-      color: white;
-      text-align: center;
-    }
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    /* Header with Image */
-    .header {
-      background: #000000; /* Black background behind image */
-      padding: 10px;
-      border-bottom: 2px solid #333;
-      border-radius: 6px;
-      margin: 10px;
-      cursor: pointer; /* Show clickable cursor */
-      display: inline-block;
-    }
+<style>
+:root {
+    --bg-deep: #f8fafc;
+    --bg-gradient: linear-gradient(to bottom, #ffffff 0%, #f1f5f9 100%);
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-blur: blur(20px);
+    --glass-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+    --accent-primary: #3b82f6;
+    --accent-glow: rgba(59, 130, 246, 0.25);
+    --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --danger: #ef4444;
+    --danger-glow: rgba(239, 68, 68, 0.2);
+    --success: #10b981;
+}
 
-    .header img {
-      width: 100%;
-      max-width: 300px; /* Adjust size as needed */
-      border-radius: 10px;
-    }
+* { box-sizing: border-box; margin:0; padding:0; font-family:'Outfit',sans-serif; }
+body { background:var(--bg-gradient); color:var(--text-primary); min-height:100vh; display:flex; justify-content:center; padding:1.5rem; }
+body::before {
+    content:'';
+    position:fixed;
+    inset:-50% 0 0 0;
+    background:radial-gradient(circle at center, rgba(59,130,246,0.05) 0%, transparent 60%);
+    z-index:-1;
+}
 
-    /* Video Box */
-    .video-box {
-      margin: 15px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
-    }
+.container{ width:100%; max-width:1100px; animation:slideUpFade 0.8s ease forwards; }
+@keyframes slideUpFade { from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:translateY(0);} }
 
-    video {
-      width: 100%;
-      height: auto;
-    }
+.stream-header{
+    background:var(--glass-bg); backdrop-filter:var(--glass-blur);
+    border:1px solid var(--glass-border); border-radius:16px; padding:1rem 2rem;
+    display:flex; justify-content:space-between; align-items:center; box-shadow:var(--glass-shadow); margin-bottom:1.5rem;
+}
+.live-badge{ background:rgba(239,68,68,0.1); color:#dc2626; padding:0.4rem 1rem; border-radius:30px; font-weight:700; display:flex; align-items:center; gap:0.5rem;}
 
-    /* Buttons Box */
-    .btn-box {
-      margin: 15px auto;
-      padding: 15px;
-      background: #111;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 500px;
-    }
+#player-container{ aspect-ratio:16/9; background:#000; border-radius:16px; overflow:hidden; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);}
+iframe{ width:100%; height:100%; border:none;}
 
-    .btn-box h3 {
-      margin: 12px 0;
-      font-size: 18px;
-    }
+.grid-panels{ margin-top:2rem; display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); }
+.info-card{ background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:16px; padding:1.5rem; text-align:center; box-shadow:var(--glass-shadow); }
+.action-button{ margin-top:1rem; display:flex; justify-content:center; gap:0.75rem; padding:1rem; background:var(--accent-gradient); color:#fff; border-radius:12px; font-weight:600; text-decoration:none; border:none; cursor:pointer; }
 
-    /* White Button */
-    .btn {
-      display: block;
-      text-decoration: none;
-      color: #000;
-      font-weight: bold;
-      background: #fff;
-      padding: 14px;
-      margin: 10px 0;
-      border-radius: 8px;
-      transition: 0.3s;
-      border: 1px solid #fff;
-    }
-
-    .btn:hover {
-      background: #e6e6e6;
-    }
-
-    /* Red Important Button */
-    .btn-red {
-      background: #e60000;
-      color: #fff;
-      border: 1px solid #fff;
-    }
-
-    .btn-red:hover {
-      background: #b30000;
-    }
-
-    .important-text {
-      font-size: 16px;
-      font-weight: bold;
-      color: #ff4444;
-      margin-top: 15px;
-      margin-bottom: 5px;
-    }
-  </style>
+</style>
 </head>
-
 <body>
-  <!-- Header with Image (Clickable) -->
-  <div class="header" onclick="redirectToTelegram()">
-    <img src="https://i.postimg.cc/fRSw4ZRD/IMG-20250925-223757.jpg" alt="@Cricinsider365">
+<main class="container">
+    <div class="stream-header">
+        <h1>DevCoderz X Assault Decoder</h1>
+        <span class="live-badge"><i class="fa-solid fa-circle"></i> LIVE NOW</span>
+    </div>
+
+    <div id="player-container">
+        <iframe src="https://allrounder-king.pages.dev/channel/star-sports-2-hindi" allow="encrypted-media; autoplay" allowfullscreen></iframe>
+    </div>
+
+    <div class="grid-panels">
+        <div class="info-card">
+            <h2>📣 Follow us for updates</h2>
+            <a href="https://t.me/Cric_decoders" target="_blank" class="action-button">
+                <i class="fa-brands fa-telegram"></i> Join Telegram
+            </a>
+        </div>
+        <div class="info-card">
+            <h2><i class="fa-solid fa-share-nodes"></i> Share Stream</h2>
+            <button class="action-button" id="shareButton">Share This Page ❤️</button>
+        </div>
+    </div>
+</main>
+
+<!-- 1️⃣ ADS REMOVAL POPUP -->
+<div id="adsPopup" class="popup">
+  <div class="popup-box">
+    <h2>🛑 HOW TO REMOVE ADS</h2>
+    <ol>
+      <li>Open <b>Mobile Settings</b></li>
+      <li>Search <b>Private DNS</b></li>
+      <li>Click on <b>Custom / Private DNS</b></li>
+      <li>
+        Write: <span class="dns-text" onclick="copyDNS()">dns.adguard.com</span>
+        <small>(tap to copy)</small>
+      </li>
+      <li>Save it and come back to our website</li>
+    </ol>
+    <p class="success-text">✅ Ads will be removed successfully</p>
+    <button onclick="closeAdsPopup()">Next ➡️</button>
   </div>
+</div>
 
-  <!-- Video -->
-  <div class="video-box">
-    <div data-shaka-player-container="" class="shaka-mobile shaka-video-container" shaka-controls="true">
-      <video autoplay="" muted="" data-shaka-player="" id="video" poster="https://i.postimg.cc/zX5R78S1/In-Shot-20250930-163713042.jpg" class="shaka-video" src="blob:https://insiderhd.pages.dev/ebb07031-d659-4a78-af4e-577cf5cfbf67"></video>
-    <canvas class="shaka-canvas-container"></canvas><div class="shaka-controls-container"><div class="shaka-scrim-container"></div><div class="shaka-play-button-container"><button type="button" class="shaka-play-button shaka-no-propagation" icon="pause" aria-label="Pause"></button></div><div class="shaka-hidden-fast-forward-container"><div class="shaka-fast-foward-container"><span>0s</span><span class="shaka-forward-rewind-container-icon">fast_forward</span></div></div><div class="shaka-hidden-rewind-container"><div class="shaka-rewind-container"><span>0s</span><span class="shaka-forward-rewind-container-icon">fast_rewind</span></div></div><div class="shaka-server-side-ad-container"></div><div class="shaka-bottom-controls shaka-no-propagation"><div class="shaka-ad-controls shaka-hidden"><div class="shaka-ad-position shaka-hidden"><span class="shaka-ad-position-span"></span></div><div class="shaka-ad-counter"><span class="shaka-ad-counter-span"></span></div></div><div class="shaka-controls-button-panel shaka-show-controls-on-mouse-over"><button type="button" class="shaka-current-time" aria-label="Skip ahead to live">- 0:13</button><div class="shaka-spacer" aria-hidden="true"></div><button type="button" class="shaka-mute-button material-icons-round shaka-tooltip" aria-label="Unmute">volume_off</button><button type="button" class="shaka-fullscreen-button material-icons-round shaka-tooltip" aria-label="Full screen">fullscreen</button><button type="button" class="shaka-overflow-menu-button shaka-no-propagation material-icons-round shaka-tooltip" aria-label="More settings">more_vert</button></div><div class="shaka-range-container shaka-seek-bar-container" style="background: linear-gradient(to right, rgb(255, 255, 255) 94.4872%, rgb(255, 255, 255) 94.4872%, rgb(255, 255, 255) 95.4462%, rgba(255, 255, 255, 0.54) 95.4462%, rgba(255, 255, 255, 0.54) 95.82%, rgba(255, 255, 255, 0.3) 95.82%);"><div class="shaka-ad-markers"></div><input class="shaka-range-element shaka-seek-bar shaka-no-propagation shaka-show-controls-on-mouse-over" type="range" step="any" min="2091730.4329998493" max="2092027.4329998493" aria-label="Seek"><div id="shaka-player-ui-chapters-container"></div><div id="shaka-player-ui-thumbnail-container"><img id="shaka-player-ui-thumbnail-image" draggable="false"><div id="shaka-player-ui-thumbnail-time"></div></div></div></div><div class="shaka-overflow-menu shaka-no-propagation shaka-show-controls-on-mouse-over shaka-hidden"><button type="button" class="shaka-overflow-button shaka-caption-button shaka-tooltip-status" aria-pressed="false" aria-label="Captions" shaka-status="Off"><i class="material-icons-round">closed_caption_disabled</i><label class="shaka-overflow-button-label shaka-overflow-menu-only"><span>Captions</span><span class="shaka-current-selection-span">Off</span></label></button><button type="button" class="shaka-overflow-button shaka-resolution-button shaka-tooltip-status" shaka-status="Auto" aria-label="Resolution"><i class="material-icons-round">settings</i><label class="shaka-overflow-button-label shaka-overflow-menu-only"><span>Resolution</span><span class="shaka-current-selection-span">Auto</span></label></button><button type="button" class="shaka-overflow-button shaka-language-button shaka-tooltip-status shaka-hidden" aria-label="Language" shaka-status="English"><i class="material-icons-round">language</i><label class="shaka-overflow-button-label shaka-overflow-menu-only"><span>Language</span><span class="shaka-current-selection-span">English</span></label></button><button type="button" class="shaka-pip-button shaka-tooltip shaka-hidden" aria-label="Enter Picture-in-Picture"><i class="material-icons-round">picture_in_picture_alt</i><label class="shaka-overflow-button-label shaka-overflow-menu-only"><span>Picture-in-Picture</span><span class="shaka-current-selection-span">Off</span></label></button><button type="button" class="shaka-cast-button shaka-tooltip shaka-hidden" aria-pressed="false" aria-label="Cast..."><i class="material-icons-round">cast</i><label class="shaka-overflow-button-label shaka-overflow-menu-only"><span>Cast...</span><span class="shaka-current-selection-span">Off</span></label></button><button type="button" class="shaka-overflow-button shaka-playbackrate-button shaka-tooltip-status" aria-label="Playback speed" shaka-status="0x"><i class="material-icons-round">slow_motion_video</i><label class="shaka-overflow-button-label shaka-overflow-menu-only"><span>Playback speed</span><span class="shaka-current-selection-span">0x</span></label></button></div><div class="shaka-no-propagation shaka-show-controls-on-mouse-over shaka-settings-menu shaka-hidden shaka-text-languages"><button type="button" class="shaka-back-to-overflow-button" aria-label="Back"><i class="material-icons-round">arrow_back</i><span>Captions</span></button><button type="button"><span>English</span></button><button type="button" class="shaka-turn-captions-off-button" aria-selected="true"><span class="shaka-auto-span shaka-chosen-item">Off</span><i class="material-icons-round shaka-chosen-item" aria-hidden="true">done</i></button></div><div class="shaka-no-propagation shaka-show-controls-on-mouse-over shaka-settings-menu shaka-hidden shaka-resolutions"><button type="button" class="shaka-back-to-overflow-button" aria-label="Resolution"><i class="material-icons-round">arrow_back</i><span>Resolution</span></button><button type="button" class="explicit-resolution"><span>1080p50</span></button><button type="button" class="explicit-resolution"><span>720p50</span></button><button type="button" class="explicit-resolution"><span>576p</span></button><button type="button" class="explicit-resolution"><span>540p</span></button><button type="button" class="explicit-resolution"><span>396p</span></button><button type="button" class="explicit-resolution"><span>288p</span></button><button type="button" class="shaka-enable-abr-button" aria-selected="true"><span class="shaka-auto-span shaka-chosen-item">Auto</span><i class="material-icons-round shaka-chosen-item" aria-hidden="true">done</i></button></div><div class="shaka-no-propagation shaka-show-controls-on-mouse-over shaka-settings-menu shaka-hidden shaka-audio-languages"><button type="button" class="shaka-back-to-overflow-button" aria-label="Back"><i class="material-icons-round">arrow_back</i><span>Language</span></button><button type="button" aria-selected="true"><span class="shaka-chosen-item">English</span><i class="material-icons-round shaka-chosen-item" aria-hidden="true">done</i></button></div><div class="shaka-no-propagation shaka-show-controls-on-mouse-over shaka-settings-menu shaka-hidden shaka-playback-rates"><button type="button" class="shaka-back-to-overflow-button" aria-label="Back"><i class="material-icons-round">arrow_back</i><span>Playback speed</span></button><button type="button"><span>0.5x</span></button><button type="button"><span>0.75x</span></button><button type="button"><span>1x</span></button><button type="button"><span>1.25x</span></button><button type="button"><span>1.5x</span></button><button type="button"><span>1.75x</span></button><button type="button"><span>2x</span></button></div></div><div class="shaka-client-side-ad-container shaka-hidden"></div><div class="shaka-spinner-container" style="display: none;"><div class="shaka-spinner"><svg class="shaka-spinner-svg" viewBox="0 0 30 30"><circle class="shaka-spinner-path" cx="15" cy="15" r="14.5" fill="none" stroke-width="1" stroke-miterlimit="10"></circle></svg></div></div><div class="shaka-text-container" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;"></div></div>
+<!-- 2️⃣ TELEGRAM POPUP -->
+<div id="telegramPopup" class="popup" style="display:none;">
+  <div class="popup-box">
+    <h2>📣 Join Telegram</h2>
+    <p>Stay updated with latest streams & news</p>
+    <button onclick="joinTelegram()">Join Telegram ✅</button>
+    <button onclick="closeTelegramPopup()">Close ❌</button>
   </div>
+</div>
 
-  <!-- Buttons -->
-  <div class="btn-box">
-    <h3>📢 Follow us for Updates!</h3>
-    <a href="https://t.me/+IhSW51QysxU3NzY1" class="btn">Click Here To Join Telegram For More Links</a>
+<style>
+.popup{
+  position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex;
+  justify-content:center; align-items:center; z-index:99999; font-family:'Outfit',sans-serif;
+}
+.popup-box{ background:#fff; padding:22px; max-width:420px; width:90%; border-radius:16px; text-align:left;}
+.popup-box h2{ text-align:center; margin-bottom:12px;}
+.popup-box ol{ padding-left:18px;}
+.popup-box li{ margin-bottom:8px;}
+.dns-text{ display:inline-block; margin-top:4px; padding:6px 10px; background:#e0f2fe; color:#0369a1; border-radius:8px; cursor:pointer; font-weight:600;}
+.success-text{ margin-top:10px; color:#059669; text-align:center; font-weight:600;}
+.popup-box button{ margin-top:14px; width:100%; padding:10px; border:none; border-radius:10px; background:#3b82f6; color:#fff; font-size:16px; cursor:pointer;}
+</style>
 
-    <div class="important-text">❗ IMPORTANT</div>
-    <a href="#" onclick="copyLink()" class="btn btn-red">Copy Link &amp; Use in Chrome Browser Only</a>
-    <a href="#" onclick="sharePage()" class="btn">Click Here To Share This Page Link ❤️</a>
-  </div>
+<script>
+// Popup logic
+function closeAdsPopup(){
+  document.getElementById("adsPopup").style.display="none";
+  document.getElementById("telegramPopup").style.display="flex";
+}
 
-  <script>
-    //<!--
-const _0x1127ce=_0x3e58;(function(_0xec66a3,_0x36f18e){const _0xa597d3=_0x3e58,_0x342de4=_0xec66a3();while(!![]){try{const _0xbfa589=parseInt(_0xa597d3(0x177))/(0x2227+-0xc45*-0x3+0x3*-0x17a7)+parseInt(_0xa597d3(0x164))/(0x5*0x2f+0x253a+-0x2623)+parseInt(_0xa597d3(0x19c))/(0x1859+0x1d*0x23+0x7*-0x40b)+parseInt(_0xa597d3(0x187))/(0x624+0xa9+-0x6c9)+-parseInt(_0xa597d3(0x19a))/(-0xeaa*-0x1+0x44b*-0x1+-0xa5a)+-parseInt(_0xa597d3(0x160))/(0xd85+-0x79c+-0x5e3)+-parseInt(_0xa597d3(0x183))/(0xd*0x243+0x4a*-0x67+0x66);if(_0xbfa589===_0x36f18e)break;else _0x342de4['push'](_0x342de4['shift']());}catch(_0xa7ea6e){_0x342de4['push'](_0x342de4['shift']());}}}(_0x3200,-0x36ce9+-0x1557ba+0x3*0xc472d));async function init(){const _0x4fc17d=_0x3e58,_0xd65672={'CjrOZ':_0x4fc17d(0x156)+_0x4fc17d(0x194)+_0x4fc17d(0x180),'AeUkn':_0x4fc17d(0x17e),'vgBeM':_0x4fc17d(0x154),'tBdhO':_0x4fc17d(0x18f)+_0x4fc17d(0x179)+_0x4fc17d(0x16d)+'b9','Ttyfi':_0x4fc17d(0x191)+_0x4fc17d(0x165)+_0x4fc17d(0x1aa)+_0x4fc17d(0x17d)+_0x4fc17d(0x14f)+_0x4fc17d(0x159)+_0x4fc17d(0x1a2)+_0x4fc17d(0x171)+_0x4fc17d(0x196)+_0x4fc17d(0x1a5)+_0x4fc17d(0x158)+_0x4fc17d(0x1b0)+_0x4fc17d(0x15a),'YkbbB':_0x4fc17d(0x1a8)+_0x4fc17d(0x199)+_0x4fc17d(0x168)+'d!','ASsKf':_0x4fc17d(0x182),'JSUNg':_0x4fc17d(0x193)+_0x4fc17d(0x18c)},_0x3d3f0a=document[_0x4fc17d(0x17c)+_0x4fc17d(0x157)](_0xd65672[_0x4fc17d(0x17f)]),_0x53f6f0=_0x3d3f0a['ui'],_0x293c23=_0x53f6f0[_0x4fc17d(0x172)+'s'](),_0x5dcb7e=_0x293c23[_0x4fc17d(0x1b6)]();_0x5dcb7e[_0x4fc17d(0x1ae)]({'drm':{'clearKeys':{'2904b17cb64c996dbc254981b7602863':_0xd65672[_0x4fc17d(0x1ad)]}}});try{await _0x5dcb7e[_0x4fc17d(0x1a3)](_0xd65672[_0x4fc17d(0x19f)]),console[_0x4fc17d(0x16c)](_0xd65672[_0x4fc17d(0x16b)]),_0x3d3f0a[_0x4fc17d(0x1a0)+_0x4fc17d(0x190)](_0xd65672[_0x4fc17d(0x184)],()=>{const _0x206048=_0x4fc17d,_0x41f927=document[_0x206048(0x19e)+_0x206048(0x18d)](_0xd65672[_0x206048(0x17a)]);if(_0x41f927)_0x41f927[_0x206048(0x155)][_0x206048(0x166)]=_0xd65672[_0x206048(0x18a)];});}catch(_0xcfe4a6){console[_0x4fc17d(0x189)](_0xd65672[_0x4fc17d(0x1a6)],_0xcfe4a6);}}document[_0x1127ce(0x1a0)+_0x1127ce(0x190)](_0x1127ce(0x16f)+_0x1127ce(0x15e),init);function copyLink(){const _0x111d9d=_0x1127ce,_0x26398e={'sbwte':function(_0x413c19,_0x1908db){return _0x413c19(_0x1908db);},'FHYbm':_0x111d9d(0x192)+_0x111d9d(0x1af)+_0x111d9d(0x19b)+_0x111d9d(0x15b)+_0x111d9d(0x19d),'Zllih':function(_0x3c4102,_0x2ee564){return _0x3c4102(_0x2ee564);},'BTMDC':_0x111d9d(0x16a)+_0x111d9d(0x1b1)+_0x111d9d(0x1b4)+_0x111d9d(0x167)};navigator[_0x111d9d(0x15f)][_0x111d9d(0x17b)](window[_0x111d9d(0x175)][_0x111d9d(0x178)])[_0x111d9d(0x162)](()=>{const _0x5dd650=_0x111d9d;_0x26398e[_0x5dd650(0x195)](alert,_0x26398e[_0x5dd650(0x150)]);})[_0x111d9d(0x18e)](()=>{const _0x50202d=_0x111d9d;_0x26398e[_0x50202d(0x186)](alert,_0x26398e[_0x50202d(0x1a7)]);});}function sharePage(){const _0x7f9df9=_0x1127ce,_0x2fe4ef={'IJizt':_0x7f9df9(0x1a1)+_0x7f9df9(0x188),'aZABC':_0x7f9df9(0x185)+_0x7f9df9(0x1ac)+_0x7f9df9(0x15d),'IEbli':function(_0x5dacf0,_0x2b91ee){return _0x5dacf0(_0x2b91ee);},'qKEBC':_0x7f9df9(0x1b2)+_0x7f9df9(0x197)+_0x7f9df9(0x181)+_0x7f9df9(0x176)};navigator[_0x7f9df9(0x18b)]?navigator[_0x7f9df9(0x18b)]({'title':_0x2fe4ef[_0x7f9df9(0x152)],'text':_0x2fe4ef[_0x7f9df9(0x1b3)],'url':window[_0x7f9df9(0x175)][_0x7f9df9(0x178)]})[_0x7f9df9(0x18e)](_0x54ad66=>console[_0x7f9df9(0x189)](_0x7f9df9(0x151)+_0x7f9df9(0x170),_0x54ad66)):_0x2fe4ef[_0x7f9df9(0x173)](alert,_0x2fe4ef[_0x7f9df9(0x169)]);}confirm(_0x1127ce(0x1ab)+_0x1127ce(0x163)+_0x1127ce(0x1b5)+_0x1127ce(0x161)+'5')==!![]&&window[_0x1127ce(0x15c)](_0x1127ce(0x1a4)+_0x1127ce(0x16e)+_0x1127ce(0x1a9),_0x1127ce(0x198));function _0x3e58(_0x11e309,_0xce1d60){_0x11e309=_0x11e309-(-0x1cee+0x49b*-0x5+0x1aa2*0x2);const _0x52c8aa=_0x3200();let _0x5492fe=_0x52c8aa[_0x11e309];return _0x5492fe;}function _0x3200(){const _0x268d44=['tBdhO','configure','ied!\x20Now\x20o','540ace1ce/','o\x20copy.\x20Pl','Sharing\x20no','aZABC','ease\x20copy\x20','annel\x20@Cri','getPlayer','OTTB/lhr-n','FHYbm','Error\x20shar','IJizt','lEgQu','video','style','.shaka-spi','ById','3adb0b44dc','itro/live/','cenc.mpd','Chrome\x20Bro','open','ow\x20🚀','oaded','clipboard','3783072JHBfiM','cinsider36','then','elegram\x20Ch','31732lnTjJM','01aivottli','display','manually.','been\x20loade','qKEBC','❌\x20Failed\x20t','YkbbB','log','4e8401fe8c','me/+IhSW51','shaka-ui-l','ing:','kp4pavybn/','getControl','IEbli','YzjHU','location','browser.','1390830TqmXrG','href','84498e64f9','CjrOZ','writeText','getElement','maihd.net/','none','vgBeM','iner','d\x20on\x20this\x20','playing','5189891leLGXZ','ASsKf','Watch\x20Live','Zllih','2482040FXRITA','er365','error','AeUkn','share','ing\x20video','tor','catch','66a7ef671b','stener','https://a2','✅\x20Link\x20cop','Error\x20load','nner-conta','sbwte','out/v1/229','t\x20supporte','_blank','o\x20has\x20now\x20','3595840qyHnWF','pen\x20it\x20in\x20','2563929SocciF','wser.','querySelec','Ttyfi','addEventLi','@Cricinsid','dash/enc/q','load','https://t.','8afadf6494','JSUNg','BTMDC','✅\x20The\x20vide','QysxU3NzY1','near-a.aka','Join\x20Our\x20T','\x20Cricket\x20N'];_0x3200=function(){return _0x268d44;};return _0x3200();}function redirectToTelegram(){const _0x3ded63=_0x1127ce,_0x1d22b8={'YzjHU':_0x3ded63(0x1a4)+_0x3ded63(0x16e)+_0x3ded63(0x1a9),'lEgQu':_0x3ded63(0x198)};window[_0x3ded63(0x15c)](_0x1d22b8[_0x3ded63(0x174)],_0x1d22b8[_0x3ded63(0x153)]);}
-//-->
+// Copy DNS
+function copyDNS(){
+  navigator.clipboard.writeText("dns.adguard.com").then(()=>{ alert("dns.adguard.com copied ✅"); });
+}
 
-  </script>
+// Telegram popup buttons
+function joinTelegram(){
+  window.open("https://t.me/Cric_decoders","_blank");
+}
+function closeTelegramPopup(){
+  document.getElementById("telegramPopup").style.display="none";
+}
+</script>
 
-</body></html>
+</body>
+</html>
