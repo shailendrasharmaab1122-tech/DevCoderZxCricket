@@ -3,52 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DevCoderz X Assault Decoder // Live Stream</title>
+<title>Video Player</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Shaka Player Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
 
 <style>
-body {
-    margin: 0; padding: 2rem; font-family: 'Outfit', sans-serif;
-    background: #f1f5f9; color: #1e293b; display: flex; flex-direction: column; align-items: center;
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
 }
-#player-container {
-    width: 100%; max-width: 900px; aspect-ratio: 16/9;
-    border-radius: 16px; overflow: hidden; background: #000;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+
+#video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
 }
-.action-button { margin-top: 1rem; padding: 1rem; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; background: linear-gradient(135deg,#3b82f6 0%,#2563eb 100%); color: #fff; }
-.grid-panels { display: flex; gap: 1rem; margin-top: 1.5rem; }
+
+/* Hide Shaka Player UI completely */
+.shaka-seek-bar-container,
+.shaka-seek-bar,
+.shaka-current-time,
+.shaka-duration,
+.shaka-ad-markers,
+.shaka-volume-bar-container,
+.shaka-mute-button,
+.shaka-play-button,
+.shaka-rewind-button,
+.shaka-fastforward-button,
+.shaka-fullscreen-button,
+.shaka-settings-menu-button,
+.shaka-caption-button,
+.shaka-spinner-container,
+.shaka-spinner,
+.shaka-spinner-svg,
+.shaka-controls-container {
+    display: none !important;
+}
 </style>
 </head>
 <body>
 
-<h1>DevCoderz X Assault Decoder</h1>
-<div id="player-container"></div>
-
-<div class="grid-panels">
-    <button class="action-button" onclick="copyURL()">Copy Stream Link ❤️</button>
-</div>
+<video id="video" autoplay playsinline muted></video> <!-- muted for autoplay to work on mobile -->
 
 <script>
-(function() {
-    // URL to iframe page (iframe page will contain Shaka Player)
-    var iframePageURL = "iframe_player.html";  // rename iframe page accordingly
-    var iframe = document.createElement('iframe');
-    iframe.src = iframePageURL;
-    iframe.allow = "autoplay; encrypted-media";
-    iframe.allowFullscreen = true;
-    iframe.style.border = 'none';
-    iframe.style.width = '100%';
-    iframe.style.height = '100%';
-    document.getElementById('player-container').appendChild(iframe);
-})();
+document.addEventListener('DOMContentLoaded', async () => {
+    // Install Shaka polyfills
+    shaka.polyfill.installAll();
 
-function copyURL() {
-    navigator.clipboard.writeText(window.location.href);
-    alert("Link Copied! ✅");
-}
+    // Check browser support
+    if (!shaka.Player.isBrowserSupported()) {
+        alert("Browser not supported!");
+        return;
+    }
+
+    const video = document.getElementById('video');
+    const player = new shaka.Player(video);
+
+    // Example DASH manifest (replace with your own)
+    const manifestUri = 'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd';
+
+    // Error handling
+    player.addEventListener('error', (event) => {
+        console.error("Shaka Player Error:", event.detail);
+    });
+
+    try {
+        await player.load(manifestUri);
+        console.log("Video loaded successfully!");
+        video.play(); // ensure autoplay
+    } catch (e) {
+        console.error("Error loading video:", e);
+    }
+});
 </script>
 
 </body>
