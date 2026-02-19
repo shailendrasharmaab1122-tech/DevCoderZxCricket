@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>JioTV Ultra Player</title>
+  <title>JioTV Star Sports Fix</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.js"></script>
   <style>
-    body { margin: 0; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; color: white; font-family: sans-serif; }
-    #video-container { width: 100%; max-width: 900px; aspect-ratio: 16/9; position: relative; background: #111; }
-    video { width: 100%; height: 100%; outline: none; }
-    #status { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); padding: 5px 10px; border-radius: 4px; font-size: 12px; }
+    body { margin: 0; background: #000; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; color: white; font-family: sans-serif; }
+    #video-container { width: 100%; max-width: 960px; aspect-ratio: 16/9; position: relative; }
+    video { width: 100%; height: 100%; background: #111; }
+    #status { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); padding: 8px 15px; border-radius: 5px; font-size: 14px; z-index: 10; }
   </style>
 </head>
 <body>
@@ -19,51 +19,55 @@
   </div>
 
   <script>
-    async function initPlayer() {
+    async function initJioPlayer() {
       const video = document.getElementById('video');
       const status = document.getElementById('status');
       const player = new shaka.Player(video);
 
-      // Best Public Proxy (AllOrigins with Raw)
+      // Aapka Resource Data
+      const baseUrl = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
+      const token = "st=1771464029~exp=1771550429~acl=/*~hmac=ed4c72d3d0ce76491c2ed440e71eada349e8b803057316b4711b7ee1da4d0374";
+      const fullCookie = "__hdnea__=" + token;
+      
+      // Best Proxy (Jo headers ko forward karti hai)
       const proxy = "https://api.allorigins.win/raw?url=";
-      const streamUrl = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
-      const token = "__hdnea__=st=1771464029~exp=1771550429~acl=/*~hmac=ed4c72d3d0ce76491c2ed440e71eada349e8b803057316b4711b7ee1da4d0374";
 
-      // Player Configuration for faster loading
+      player.getNetworkingEngine().registerRequestFilter((type, request) => {
+        // 1. Har request (Manifest & Segments) mein token jodna
+        let originalUrl = request.uris[0];
+        let separator = originalUrl.includes('?') ? '&' : '?';
+        let urlWithToken = originalUrl + separator + "__hdnea__=" + token;
+
+        // 2. Proxy ke sath URL ko wrap karna
+        request.uris[0] = proxy + encodeURIComponent(urlWithToken);
+
+        // 3. User-Agent aur Cookie Headers set karna
+        request.headers['User-Agent'] = 'JioTV/7.0.8 (Linux; Android 9)';
+        // Note: Browser shayad 'Cookie' header block kare, lekin proxy ke URL mein token pehle hi hai
+        request.headers['Cookie'] = fullCookie;
+      });
+
+      // Player Settings for Stability
       player.configure({
         streaming: {
-          bufferingGoal: 30, // 30 seconds buffer target
-          rebufferingGoal: 2,
-          bufferBehind: 30,
-          lowLatencyMode: true
+          bufferingGoal: 20,
+          retryParameters: { maxAttempts: 5 }
         }
       });
 
-      player.getNetworkingEngine().registerRequestFilter((type, request) => {
-        // Headers simulate karna (JioTV App ki tarah)
-        request.headers['User-Agent'] = 'JioTV/7.0.8 (Linux; Android 9; Build/PKQ1.190118.001; wv)';
-        request.headers['X-Requested-With'] = 'com.jio.jiotv';
-
-        // URL mein token aur proxy mix karna
-        let originalUrl = request.uris[0];
-        let separator = originalUrl.includes('?') ? '&' : '?';
-        let finalUrlWithToken = originalUrl + separator + token;
-        
-        request.uris[0] = proxy + encodeURIComponent(finalUrlWithToken);
-      });
-
       try {
-        await player.load(streamUrl);
-        status.innerText = "Playing Live...";
-        status.style.color = "#00ff00";
+        await player.load(baseUrl + "?__hdnea__=" + token);
+        status.innerText = "Playing: Star Sports HD1 Hindi";
+        status.style.color = "#4CAF50";
+        console.log("Stream Loaded Successfully!");
       } catch (e) {
-        status.innerText = "Error: " + e.code;
-        status.style.color = "red";
-        console.error("Shaka Error:", e);
+        status.innerText = "Error: " + e.code + " (Token Expired?)";
+        status.style.color = "#FF5252";
+        console.error("Error Detail:", e);
       }
     }
 
-    document.addEventListener('DOMContentLoaded', initPlayer);
+    document.addEventListener('DOMContentLoaded', initJioPlayer);
   </script>
 </body>
 </html>
