@@ -7,11 +7,9 @@
 <meta name="theme-color" content="#ffffff">
 <title>DevCoderz X Assault Decoder // Live Stream</title>
 
-<!-- Shaka Player -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
 
-<!-- Fonts & Icons -->
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -42,14 +40,6 @@ body {
     display: flex;
     justify-content: center;
     padding: 1.5rem;
-}
-
-body::before {
-    content: '';
-    position: fixed;
-    inset: -50% 0 0 0;
-    background: radial-gradient(circle at center, rgba(59,130,246,0.05) 0%, transparent 60%);
-    z-index: -1;
 }
 
 .container {
@@ -131,68 +121,6 @@ iframe {
     border: none;
     cursor: pointer;
 }
-
-.popup {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 99999;
-}
-
-.popup-box {
-    background: #fff;
-    padding: 22px;
-    max-width: 420px;
-    width: 90%;
-    border-radius: 16px;
-    text-align: left;
-}
-
-.popup-box h2 {
-    text-align: center;
-    margin-bottom: 12px;
-}
-
-.popup-box ol {
-    padding-left: 18px;
-}
-
-.popup-box li {
-    margin-bottom: 8px;
-}
-
-.dns-text {
-    display: inline-block;
-    margin-top: 4px;
-    padding: 6px 10px;
-    background: #e0f2fe;
-    color: #0369a1;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-.success-text {
-    margin-top: 10px;
-    color: #059669;
-    text-align: center;
-    font-weight: 600;
-}
-
-.popup-box button {
-    margin-top: 14px;
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 10px;
-    background: #3b82f6;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-}
 </style>
 </head>
 
@@ -205,8 +133,7 @@ iframe {
     </div>
 
     <div id="player-container">
-        <!-- iframe injected via JS -->
-    </div>
+        </div>
 
     <div class="grid-panels">
         <div class="info-card">
@@ -217,67 +144,16 @@ iframe {
         </div>
         <div class="info-card">
             <h2><i class="fa-solid fa-share-nodes"></i> Share Stream</h2>
-            <button class="action-button" id="shareButton">Share This Page ❤️</button>
+            <button class="action-button" id="shareButton" onclick="copyURL()">Copy Stream Link ❤️</button>
         </div>
     </div>
 </main>
 
-<!-- Ads Popup -->
-<div id="adsPopup" class="popup">
-  <div class="popup-box">
-    <h2>🛑 HOW TO REMOVE ADS</h2>
-    <ol>
-      <li>Open <b>Mobile Settings</b></li>
-      <li>Search <b>Private DNS</b></li>
-      <li>Click <b>Custom / Private DNS</b></li>
-      <li>Write: <span class="dns-text" onclick="copyDNS()">dns.adguard.com</span></li>
-      <li>Save it and come back</li>
-    </ol>
-    <p class="success-text">✅ Ads will be removed successfully</p>
-    <button onclick="closeAdsPopup()">Next ➡️</button>
-  </div>
-</div>
-
-<!-- Telegram Popup -->
-<div id="telegramPopup" class="popup" style="display:none;">
-  <div class="popup-box">
-    <h2>📣 Join Telegram</h2>
-    <p>Stay updated with latest streams & news</p>
-    <button onclick="joinTelegram()">Join Telegram ✅</button>
-    <button onclick="closeTelegramPopup()">Close ❌</button>
-  </div>
-</div>
-
 <script>
-// Popup functions
-function closeAdsPopup() {
-    document.getElementById("adsPopup").style.display = "none";
-    document.getElementById("telegramPopup").style.display = "flex";
-}
-
-function copyDNS() {
-    navigator.clipboard.writeText("dns.adguard.com").then(()=>{ alert("dns.adguard.com copied ✅"); });
-}
-
-function joinTelegram() {
-    window.open("https://t.me/Cric_decoders","_blank");
-}
-
-function closeTelegramPopup() {
-    document.getElementById("telegramPopup").style.display = "none";
-}
-
-// Anti Inspect
-document.addEventListener('keydown', function(e) {
-    if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key==='U')){
-        e.preventDefault();
-        alert('Inspect / View Source Disabled!');
-    }
-});
-
-// Iframe src injection
+// Iframe src injection - Updated to your new link
 (function() {
-    var encoded = "aHR0cHM6Ly9hbGxyb3VuZGVyLWtpbmcucGFnZXMuZGV2L2NoYW5uZWwvc3Rhci1zcG9ydHMtMi1oaW5kaQ==";
+    // URL: https://devcoderzxcricket.vercel.app/ntmate.ka.baap.html
+    var encoded = "aHR0cHM6Ly9kZXZjb2Rlcnp4Y3JpY2tldC52ZXJjZWwuYXBwL250bWF0ZS5rYS5iYWFwLmh0bWw=";
     var url = atob(encoded);
     var iframe = document.createElement('iframe');
     iframe.src = url;
@@ -285,6 +161,18 @@ document.addEventListener('keydown', function(e) {
     iframe.allowFullscreen = true;
     document.getElementById('player-container').appendChild(iframe);
 })();
+
+function copyURL() {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Link Copied! Share it with friends. ✅");
+}
+
+// Anti Inspect (Optional)
+document.addEventListener('keydown', function(e) {
+    if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key==='U')){
+        e.preventDefault();
+    }
+});
 </script>
 
 </body>
