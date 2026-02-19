@@ -2,63 +2,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JioTV Player Fix</title>
+  <title>JioTV Fix Player</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
   <style>
-    body { margin: 0; background: #000; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    .video-container { width: 100%; height: 100%; }
-    video { width: 100%; height: 100%; }
-    #status { position: absolute; color: white; z-index: 10; font-family: sans-serif; background: rgba(0,0,0,0.5); padding: 10px; }
+    body { margin: 0; background: #000; color: white; font-family: sans-serif; }
+    #video { width: 100vw; height: 100vh; }
+    #msg { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 10px; z-index: 10; }
   </style>
 </head>
 <body>
 
-  <div id="status">Initializing Player...</div>
-  <div class="video-container" data-shaka-player-container>
-    <video id="video" autoplay playsinline data-shaka-player></video>
-  </div>
+  <div id="msg">Status: Wait...</div>
+  <video id="video" controls autoplay></video>
 
   <script>
-    async function initApp() {
+    async function startPlayer() {
       const video = document.getElementById('video');
-      const status = document.getElementById('status');
+      const msg = document.getElementById('msg');
       const player = new shaka.Player(video);
 
-      // 1. Proxy Setup (CORS bypass ke liye)
-      const proxy = 'https://cors-anywhere.herokuapp.com/';
-      const manifestUri = 'https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd';
-      const token = '__hdnea__=st=1771464029~exp=1771550429~acl=/*~hmac=ed4c72d3d0ce76491c2ed440e71eada349e8b803057316b4711b7ee1da4d0374';
+      // Sabse powerful proxy jo headers ko bypass karti hai
+      const proxy = "https://api.allorigins.win/raw?url=";
+      const streamUrl = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
+      const token = "__hdnea__=st=1771464029~exp=1771550429~acl=/*~hmac=ed4c72d3d0ce76491c2ed440e71eada349e8b803057316b4711b7ee1da4d0374";
 
-      // 2. Request Filter (Headers fix karne ke liye)
       player.getNetworkingEngine().registerRequestFilter((type, request) => {
-        // Proxy URL add karna
-        request.uris[0] = proxy + request.uris[0];
-
-        // JioTV specific headers
-        // Browser 'Cookie' header block karta hai, isliye hum use proxy ke through bhejte hain (agar proxy support kare)
-        request.headers['x-requested-with'] = 'XMLHttpRequest';
-        request.headers['User-Agent'] = 'JioTV/7.0.8 (Linux; Android 9)';
+        // Sirf manifest aur segments ke liye proxy lagana
+        if (type == shaka.net.NetworkingEngine.RequestType.MANIFEST || type == shaka.net.NetworkingEngine.RequestType.SEGMENT) {
+           let originalUrl = request.uris[0];
+           // URL mein token jodna
+           let separator = originalUrl.includes('?') ? '&' : '?';
+           request.uris[0] = proxy + encodeURIComponent(originalUrl + separator + token);
+        }
       });
 
       try {
-        // 3. Load Manifest with Token in URL
-        // Cookie header block hone ki wajah se token ko URL mein pass karna zyada safe hai
-        const finalUrl = manifestUri + '?' + token;
-        
-        await player.load(finalUrl);
-        status.innerText = "Playing: Star Sports HD1 Hindi";
-        setTimeout(() => status.style.display = 'none', 3000);
-        
+        await player.load(streamUrl);
+        msg.innerHTML = "Playing!";
       } catch (e) {
-        status.style.color = 'red';
-        status.innerText = "Error: " + e.code + " - " + e.message;
-        console.error('Error Code:', e.code, e);
+        msg.innerHTML = "Error: " + e.code + " (Check Console)";
+        console.error("Full Error Details:", e);
       }
     }
 
-    document.addEventListener('DOMContentLoaded', initApp);
+    document.addEventListener('DOMContentLoaded', startPlayer);
   </script>
 </body>
 </html>
