@@ -3,87 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevCoderZ X Cricket</title>
+  <title>DevCoderz X Cricket Player</title>
 
-  <!-- Shaka Player -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
 
   <style>
-    /* Reset and container */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
-      background: #000;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden;
     }
-
-    .shaka-video-container {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+    #player1 {
+      width: 100%; height: 100%;
+      position: absolute; top: 0; left: 0;
     }
-
     video {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%; object-fit: contain;
       background: #000;
-      object-fit: contain;
     }
 
-    /* Completely hide progress bar, time, volume, controls, spinner */
-    .shaka-seek-bar-container,
-    .shaka-seek-bar,
-    .shaka-current-time,
-    .shaka-duration,
-    .shaka-ad-markers,
-    .shaka-volume-bar-container,
-    .shaka-mute-button,
-    .shaka-play-button,
-    .shaka-rewind-button,
-    .shaka-fastforward-button,
-    .shaka-fullscreen-button,
-    .shaka-settings-menu-button,
-    .shaka-caption-button,
-    .shaka-spinner-container,
-    .shaka-spinner,
-    .shaka-spinner-svg,
-    .shaka-controls-container {
+    /* Hide all Shaka Player controls completely */
+    #player1 .shaka-seek-bar-container,
+    #player1 .shaka-seek-bar,
+    #player1 .shaka-current-time,
+    #player1 .shaka-duration,
+    #player1 .shaka-ad-markers,
+    #player1 .shaka-volume-bar-container,
+    #player1 .shaka-mute-button,
+    #player1 .shaka-play-button,
+    #player1 .shaka-rewind-button,
+    #player1 .shaka-fastforward-button,
+    #player1 .shaka-fullscreen-button,
+    #player1 .shaka-settings-menu-button,
+    #player1 .shaka-caption-button,
+    #player1 .shaka-spinner-container,
+    #player1 .shaka-spinner,
+    #player1 .shaka-spinner-svg,
+    #player1 .shaka-controls-container {
       display: none !important;
     }
   </style>
 </head>
 <body>
-  <div class="shaka-video-container shaka-mobile" data-shaka-player-container="" shaka-controls="true">
-    <video autoplay playsinline preload="metadata" class="shaka-video" id="video"></video>
-  </div>
+
+<div id="player1" class="shaka-video-container">
+  <video id="video1" autoplay playsinline preload="metadata"></video>
+</div>
 
 <script>
-  // Initialize Shaka Player
-  document.addEventListener('DOMContentLoaded', async () => {
-    shaka.polyfill.installAll();
+document.addEventListener('DOMContentLoaded', async () => {
+  shaka.polyfill.installAll();
 
-    if (!shaka.Player.isBrowserSupported()) {
-      alert('Browser not supported!');
-      return;
-    }
+  if (!shaka.Player.isBrowserSupported()) {
+    alert('Browser not supported!');
+    return;
+  }
 
-    const video = document.getElementById('video');
-    const player = new shaka.Player(video);
+  const video = document.getElementById('video1');
+  const player = new shaka.Player(video);
 
-    // Example manifest (replace with your own)
-    const manifestUri = 'https://path-to-your-video/manifest.mpd';
+  // Replace this with your actual video manifest
+  const manifestUri = 'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd';
 
-    try {
-      await player.load(manifestUri);
-      console.log('Video loaded successfully!');
-    } catch (e) {
-      console.error('Error loading video', e);
-    }
-  });
+  try {
+    await player.load(manifestUri);
+    console.log('Video loaded successfully!');
+  } catch (e) {
+    console.error('Error loading video', e);
+  }
+});
 </script>
+
 </body>
 </html>
