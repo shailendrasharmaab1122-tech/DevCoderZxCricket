@@ -7,21 +7,16 @@
 <meta name="theme-color" content="#ffffff">
 <title>DevCoderz X Assault Decoder // Live Stream</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
-
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
 :root {
-    --bg-deep: #f8fafc;
     --bg-gradient: linear-gradient(to bottom, #ffffff 0%, #f1f5f9 100%);
     --glass-bg: rgba(255, 255, 255, 0.75);
     --glass-border: rgba(0, 0, 0, 0.08);
     --glass-blur: blur(20px);
     --glass-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
-    --accent-primary: #3b82f6;
     --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     --text-primary: #1e293b;
 }
@@ -85,12 +80,6 @@ body {
     box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
 }
 
-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
 .grid-panels {
     margin-top: 2rem;
     display: grid;
@@ -132,8 +121,8 @@ iframe {
         <span class="live-badge"><i class="fa-solid fa-circle"></i> LIVE NOW</span>
     </div>
 
-    <div id="player-container">
-        </div>
+    <!-- Iframe container -->
+    <div id="player-container"></div>
 
     <div class="grid-panels">
         <div class="info-card">
@@ -150,9 +139,9 @@ iframe {
 </main>
 
 <script>
-// Iframe src injection - Updated to your new link
+// Embed the iframe
 (function() {
-    // URL: https://devcoderzxcricket.vercel.app/ntmate.ka.baap.html
+    // URL to iframe page (ntmate.ka.baap.html)
     var encoded = "aHR0cHM6Ly9kZXZjb2Rlcnp4Y3JpY2tldC52ZXJjZWwuYXBwL250bWF0ZS5rYS5iYWFwLmh0bWw=";
     var url = atob(encoded);
     var iframe = document.createElement('iframe');
@@ -162,12 +151,13 @@ iframe {
     document.getElementById('player-container').appendChild(iframe);
 })();
 
+// Copy URL
 function copyURL() {
     navigator.clipboard.writeText(window.location.href);
     alert("Link Copied! Share it with friends. ✅");
 }
 
-// Anti Inspect (Optional)
+// Optional Anti-Inspect
 document.addEventListener('keydown', function(e) {
     if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key==='U')){
         e.preventDefault();
