@@ -1,32 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Parent Page - DevCoderz X Cricket</title>
-<style>
-  body { margin:0; padding:0; background:#000; }
-  #player-container { width:100%; height:500px; background:#000; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevCoderZ X Cricket</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      background: #000;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .shaka-video-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      object-fit: contain;
+    }
+    .shaka-spinner-container,
+    .shaka-spinner,
+    .shaka-spinner-svg {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+    }
+    .channel-info {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+    .channel-info.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .channel-logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 15px;
+      border-radius: 8px;
+      background: #222;
+    }
+    .channel-name {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: white;
+    }
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 1.2rem;
+      text-align: center;
+      z-index: 5;
+    }
+    .error {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ff4444;
+      font-size: 1.2rem;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 80%;
+    }
+    .error.hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
+  <div class="channel-info hidden" id="channelInfo">
+    <img class="channel-logo" id="channelLogo" src="https://jiotv.catchup.cdn.jio.com/dare_images/images/Star_Sports_HD1_Hindi.png" alt="Channel Logo" onerror="this.style.display='none'">
+    <div class="channel-name" id="channelName">Star Sports HD1 Hindi</div>
+  </div>
+  
+  <div id="video-wrapper" data-shaka-player-container class="shaka-video-container">
+    <video autoplay playsinline id="video" class="shaka-video"></video>
+  </div>
+  
+  <div class="loading" id="loadingMessage" style="display: none;">Loading channel...</div>
+  <div class="error hidden" id="errorMessage">
+    <h2>Error Loading Channel</h2>
+    <p id="errorText"></p>
+  </div>
 
-<h1 style="color:white; text-align:center;">Parent Page Example</h1>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Install Polyfills
+      shaka.polyfill.installAll();
 
-<!-- Video iframe container -->
-<div id="player-container"></div>
+      const video = document.getElementById('video');
+      const wrapper = document.getElementById('video-wrapper');
+      const loadingMessage = document.getElementById('loadingMessage');
+      const channelInfo = document.getElementById('channelInfo');
 
-<script>
-  // Create iframe dynamically
-  var iframe = document.createElement('iframe');
-  iframe.src = "iframe_player.html"; // iframe page (Shaka Player)
-  iframe.allow = "autoplay; encrypted-media";
-  iframe.allowFullscreen = true;
-  iframe.style.width = '100%';
-  iframe.style.height = '100%'; // visible
-  iframe.style.border = 'none';
-  document.getElementById('player-container').appendChild(iframe);
-</script>
+      // 2. Initialize Player
+      const player = new shaka.Player(video);
+      const ui = new shaka.ui.Overlay(player, wrapper, video);
 
+      // Aapka manifest URL (Example placeholder)
+      const manifestUri = 'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd';
+
+      // Error Handling
+      function showError(message) {
+        const errorText = document.getElementById('errorText');
+        const errorMessage = document.getElementById('errorMessage');
+        errorText.textContent = message;
+        errorMessage.classList.remove('hidden');
+        loadingMessage.style.display = 'none';
+      }
+
+      // Hide channel info after 5 seconds
+      function hideChannelInfo() {
+        setTimeout(() => {
+          channelInfo.classList.add('hidden');
+        }, 5000);
+      }
+
+      try {
+        await player.load(manifestUri);
+        channelInfo.classList.remove('hidden');
+        hideChannelInfo();
+        console.log("Stream Loaded!");
+      } catch (e) {
+        showError('Failed to load stream: ' + e.code);
+      }
+    });
+  </script>
 </body>
 </html>
