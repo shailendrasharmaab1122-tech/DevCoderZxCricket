@@ -8,89 +8,95 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; height: 100vh; width: 100vw; overflow: hidden; }
+        body { background: #000; height: 100vh; width: 100vw; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         
-        .shaka-video-container {
+        /* Fixed Container */
+        #container {
             width: 100%;
             height: 100%;
+            background: #000;
         }
-        
         video {
             width: 100%;
             height: 100%;
-            object-fit: contain;
         }
 
-        /* Faltu spinner aur double elements hide karne ke liye */
+        /* Spinner aur extra elements hide */
         .shaka-spinner-container { display: none !important; }
+        
+        /* Seek bar styling as per your choice */
+        .shaka-seek-bar-container { height: 6px !important; }
     </style>
 </head>
 <body>
 
-<div data-shaka-player-container class="shaka-video-container">
-    <video id="video" autoplay playsinline></video>
+<div id="container" data-shaka-player-container>
+    <video id="video" data-shaka-player autoplay playsinline></video>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
     shaka.polyfill.installAll();
-    
-    const video = document.getElementById('video');
-    const container = document.querySelector('.shaka-video-container');
-    const player = new shaka.Player();
-    await player.attach(video);
+    if (!shaka.Player.isBrowserSupported()) return;
 
-    // UI Overlay (Sirf ek baar initialize)
+    const video = document.getElementById('video');
+    const container = document.getElementById('container');
+    const player = new shaka.Player(video);
+
+    // UI Overlay setup - No duplicate containers
     const ui = new shaka.ui.Overlay(player, container, video);
     ui.configure({
         controlPanelElements: [
-            'play_pause','time_and_duration','mute','volume',
-            'spacer','quality','fullscreen'
+            'play_pause', 'time_and_duration', 'spacer', 'mute', 'volume', 'quality', 'fullscreen'
         ],
         seekBarColors: {
-            base: 'rgba(255,255,255,.3)',
-            buffered: 'red',
+            base: 'rgba(255,255,255,0.3)',
+            buffered: 'rgba(255,255,255,0.5)',
             played: 'green'
         }
     });
 
+    // DRM Config
     let drmConfig = {
         clearKeys: {
             "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4"
         }
     };
 
-    let cookieHeader = "hdnea=st=1770968162/exp=1771054562/acl=/*~hmac=a20b369ce7b0b48ea6f53ecd616f0e94ba595042495610cae245fed7b640c883";
+    // Jio Stream Config
     let streamUrl = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
+    let cookieHeader = "hdnea=st=1770968162/exp=1771054562/acl=/*~hmac=a20b369ce7b0b48ea6f53ecd616f0e94ba595042495610cae245fed7b640c883";
 
-    // Auto-fetch fresh cookie logic
+    // Auto-fetch fresh cookie logic (No changes here)
     try {
         const response = await fetch('https://allrounderid.pages.dev/api/jiotv2.json');
         const data = await response.json();
-        const channel = data.find(ch => ch.channel_name === "Star Sports 1 Hindi" || ch.channel_name === "DD Sports");
-        if (channel && channel.cookie) {
-            cookieHeader = channel.cookie;
-        }
-    } catch (e) { }
+        const ch = data.find(c => c.channel_name === "Star Sports 1 Hindi");
+        if (ch && ch.cookie) cookieHeader = ch.cookie;
+    } catch (e) {}
 
     player.configure({ drm: drmConfig });
 
+    // Request Filter for Security Bypass
     player.getNetworkingEngine().registerRequestFilter((type, request) => {
         request.headers['Referer'] = 'https://www.jiotv.com/';
         request.headers['User-Agent'] = "plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6";
         request.headers['Cookie'] = cookieHeader;
 
-        if ((type === shaka.net.NetworkingEngine.RequestType.MANIFEST ||
-             type === shaka.net.NetworkingEngine.RequestType.SEGMENT) &&
-            request.uris[0] && !request.uris[0].includes('__hdnea=')) {
-            const sep = request.uris[0].includes('?') ? '&' : '?';
-            request.uris[0] += sep + cookieHeader;
+        if (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT) {
+            if (!request.uris[0].includes('__hdnea=')) {
+                const sep = request.uris[0].includes('?') ? '&' : '?';
+                request.uris[0] += sep + cookieHeader;
+            }
         }
     });
 
     try {
         await player.load(streamUrl);
-    } catch (e) { }
+        console.log("Stream Loaded!");
+    } catch (e) {
+        console.error("Load failed", e);
+    }
 });
 </script>
 
