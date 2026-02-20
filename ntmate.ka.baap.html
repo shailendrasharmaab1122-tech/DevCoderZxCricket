@@ -7,47 +7,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
     <style>
-        body { background: #050505; margin: 0; font-family: sans-serif; color: #fff; }
-        #main-wrapper { max-width: 960px; margin: 40px auto; padding: 10px; }
-        .player-title { background: #1a1a1a; padding: 12px; border-radius: 8px 8px 0 0; border-bottom: 2px solid #00ffcc; color: #00ffcc; font-weight: bold; text-align: center; letter-spacing: 1px; }
-        .video-holder { width: 100%; background: #000; position: relative; border-radius: 0 0 8px 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        video { width: 100%; height: auto; display: block; }
-        .info-row { margin-top: 10px; font-size: 12px; color: #666; display: flex; justify-content: space-between; padding: 0 5px; }
-        .red-dot { color: red; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        body { background: #000; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        #player-container { width: 100%; height: 100%; max-width: 100vw; max-height: 100vh; background: #000; }
+        video { width: 100%; height: 100%; object-fit: contain; }
+        /* Loader hide karne ke liye agar zaroorat ho */
+        .shaka-spinner-container { display: none !important; }
     </style>
 </head>
 <body>
 
-<div id="main-wrapper">
-    <div class="player-title">⚡ DEVCODERZ X CRICKET ⚡</div>
-    <div data-shaka-player-container class="video-holder">
-        <video id="video" autoplay playsinline></video>
-    </div>
-    <div class="info-row">
-        <span><span class="red-dot">●</span> LIVE STREAM</span>
-        <span id="stat">status: booting...</span>
-    </div>
+<div data-shaka-player-container id="player-container">
+    <video id="video" autoplay playsinline></video>
 </div>
 
 <script>
     const manifest = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
     
-    // keys from your source
     const keys = {
         "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4"
     };
 
-    // jio auth token
     let auth = "hdnea=st=1770968162/exp=1771054562/acl=/*~hmac=a20b369ce7b0b48ea6f53ecd616f0e94ba595042495610cae245fed7b640c883";
 
     async function setup() {
         shaka.polyfill.installAll();
         
         const video = document.getElementById('video');
-        const holder = document.querySelector('.video-holder');
+        const container = document.getElementById('player-container');
         const player = new shaka.Player(video);
-        const ui = new shaka.ui.Overlay(player, holder, video);
+        const ui = new shaka.ui.Overlay(player, container, video);
 
         player.configure({
             drm: { clearKeys: keys },
@@ -67,10 +55,8 @@
 
         try {
             await player.load(manifest);
-            document.getElementById('stat').innerHTML = "online";
-        } catch (err) {
-            document.getElementById('stat').innerHTML = "error: check token/keys";
-            console.error(err);
+        } catch (e) {
+            console.error('load_fail', e);
         }
     }
 
