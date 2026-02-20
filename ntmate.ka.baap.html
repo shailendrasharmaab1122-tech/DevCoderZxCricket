@@ -3,52 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevCoderZ X Cricket - Full Fix</title>
+  <title>DevCoderZ X Cricket - Full Fixed</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
 
   <style>
     body, html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #000;
-      overflow: hidden;
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      background-color: #000; overflow: hidden;
+      font-family: sans-serif;
     }
-    #video-container {
-      width: 100%;
-      height: 100%;
-    }
-    video {
-      width: 100%;
-      height: 100%;
-    }
-    /* Spinner hide kiya hai jaisa aapne manga tha */
+    #video-container { width: 100%; height: 100%; }
+    video { width: 100%; height: 100%; }
+    /* Spinner hide */
     .shaka-spinner-container { display: none !important; }
+    #status {
+      position: absolute; top: 10px; left: 10px;
+      color: white; background: rgba(0,0,0,0.5);
+      padding: 5px 10px; border-radius: 5px; z-index: 10;
+      font-size: 12px; pointer-events: none;
+    }
   </style>
 </head>
 <body oncontextmenu="return false;">
+
+  <div id="status">Status: Initializing...</div>
 
   <div id="video-container" data-shaka-player-container>
     <video autoplay playsinline id="main-video" data-shaka-player></video>
   </div>
 
   <script>
-    // FIX: Seedha URL (Base64 decode hata diya hai)
+    // 1. FRESH TOKENS & URL (Make sure these are current)
     const streamUrl = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd?__hdnea__=st=1771529762~exp=1771616162~acl=/*~hmac=cf31360fadcb5ea2c9771bece88d82d4b2a6e81d44ff5d80d22aec7ddaabc21c";
-    
-    // Cookie Token
     const activeCookie = "hdnea=st=1770968162/exp=1771054562/acl=/*~hmac=a20b369ce7b0b48ea6f53ecd616f0e94ba595042495610cae245fed7b640c883";
 
-    async function initApp() {
-      // Install built-in polyfills
+    async function startPlayer() {
+      const status = document.getElementById('status');
       shaka.polyfill.installAll();
 
-      // Check browser support
       if (!shaka.Player.isBrowserSupported()) {
-        console.error('Browser not supported!');
+        status.innerText = "Error: Browser Not Supported";
         return;
       }
 
@@ -57,12 +53,11 @@
       const player = new shaka.Player(video);
       const ui = new shaka.ui.Overlay(player, container, video);
 
-      // UI Config
       ui.configure({
         'controlPanelElements': ['play_pause', 'time_and_duration', 'spacer', 'quality', 'fullscreen']
       });
 
-      // DRM ClearKeys Configuration
+      // 2. DRM KEYS (Check if these are still valid)
       player.configure({
         drm: {
           clearKeys: {
@@ -70,43 +65,44 @@
           }
         },
         streaming: {
-          bufferingGoal: 30,
-          rebufferingGoal: 15
+          lowLatencyMode: true,
+          jumpLargeGaps: true
         }
       });
 
-      // Networking Engine for Jio Security
+      // 3. NETWORKING FILTER (Fixing Black Screen & Auth)
       player.getNetworkingEngine().registerRequestFilter((type, request) => {
-        // Headers set karna
+        // Adding mandatory Jio headers
         request.headers['Referer'] = 'https://www.jiotv.com/';
         request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13)';
         request.headers['Cookie'] = activeCookie;
 
-        // Har segment request mein cookie inject karna
+        // Append token to all segment requests if not present
         if (request.uris[0] && !request.uris[0].includes('__hdnea=')) {
-          const joiner = request.uris[0].includes('?') ? '&' : '?';
-          request.uris[0] += joiner + activeCookie;
+          const separator = request.uris[0].includes('?') ? '&' : '?';
+          request.uris[0] += separator + activeCookie;
         }
       });
 
-      // Load Stream
+      // 4. LOAD STREAM
       try {
         await player.load(streamUrl);
-        console.log("Jai Ho! Stream loaded successfully.");
-      } catch (e) {
-        console.error("Playback Error:", e.code, e);
+        status.innerText = "Status: Playing...";
+        console.log("Stream Loaded!");
+      } catch (error) {
+        status.innerText = "Error: " + error.code;
+        console.error("Error Detail:", error);
       }
     }
 
-    // Security: Block F12 and Shortcuts
+    // Block F12 and shortcuts
     document.onkeydown = (e) => {
       if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
         return false;
       }
     };
 
-    // UI Load hone par start karein
-    document.addEventListener('shaka-ui-loaded', initApp);
+    document.addEventListener('shaka-ui-loaded', startPlayer);
   </script>
 
 </body>
