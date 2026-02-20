@@ -3,97 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Stream Player</title>
+    <title>Main Player - Fixed</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body {
-            background: #000;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            font-family: sans-serif;
-        }
-
-        /* Container for isolation to prevent clashing */
-        .main-container {
+        body { background: #000; font-family: sans-serif; overflow-x: hidden; }
+        
+        /* Container for isolation - prevents progress bar clash */
+        .video-wrapper {
             width: 100%;
-            height: 500px; /* Aapki height requirement */
+            height: 500px;
+            background: #000;
             position: relative;
-            background: #000;
         }
 
-        #video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        /* Loading & Error Styles */
-        .status-msg {
+        /* Status messages */
+        #status {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: white;
-            z-index: 5;
+            color: #fff;
+            z-index: 10;
             text-align: center;
+            pointer-events: none;
         }
-        
-        /* Hide Shaka Spinner if not needed */
-        .shaka-spinner-container { display: none !important; }
     </style>
 </head>
 <body>
 
-<h1 style="color:white; text-align:center; padding: 10px;">Main Stream</h1>
+<h1 style="color:white; text-align:center; padding: 20px;">Main Stream Player</h1>
 
-<div class="main-container" id="player-wrapper" data-shaka-player-container>
-    <video id="video" data-shaka-player autoplay playsinline muted></video>
-    <div id="loading-text" class="status-msg">Loading Stream...</div>
+<div class="video-wrapper" id="player-container" data-shaka-player-container>
+    <video id="video" data-shaka-player autoplay playsinline muted style="width:100%; height:100%;"></video>
+    <div id="status">Initializing Player...</div>
 </div>
 
 <script>
-async function initMainPlayer() {
-    // 1. Install Polyfills
+async function initPlayer() {
     shaka.polyfill.installAll();
-
+    
     const video = document.getElementById('video');
-    const wrapper = document.getElementById('player-wrapper');
-    const loadingText = document.getElementById('loading-text');
+    const container = document.getElementById('player-container');
+    const status = document.getElementById('status');
 
-    // 2. Initialize Player & UI Overlay
-    // Overlay use karne se progress bar clash nahi hote
+    // Player and UI Setup
     const player = new shaka.Player(video);
-    const ui = new shaka.ui.Overlay(player, wrapper, video);
-
-    // 3. Your JioTV DASH Link
-    const manifestUri = 'https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/dash/Star_Sports_HD1_Hindi_BTS-audio_98834_hin=98800-85034706461952.dash?__hdnea__=st=1771550189~exp=1771636589~acl=/*~hmac=0514601e05baa981c7d7519bf824c76275d663393d8b1cab20015d37e6d11de3';
-
-    player.addEventListener('error', (event) => {
-        console.error("Shaka Error:", event.detail);
-        loadingText.innerHTML = "Error Loading Stream (Check if link expired)";
+    const ui = new shaka.ui.Overlay(player, container, video);
+    
+    // Config: JioTV streams often need specific settings
+    player.configure({
+        manifest: { retryParameters: { maxAttempts: 5 } },
+        streaming: { lowLatencyMode: true }
     });
 
+    // 1. AAPKA JIO LINK
+    const jioUri = 'https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/dash/Star_Sports_HD1_Hindi_BTS-audio_98834_hin=98800-85034706461952.dash?__hdnea__=st=1771550189~exp=1771636589~acl=/*~hmac=0514601e05baa981c7d7519bf824c76275d663393d8b1cab20015d37e6d11de3';
+
+    // 2. TESTING LINK (Agar Jio wala na chale to ise check karein)
+    const testUri = 'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd';
+
     try {
-        await player.load(manifestUri);
-        loadingText.style.display = 'none';
-        console.log("Main stream loaded!");
+        // Yahan Jio link load karne ki koshish
+        await player.load(jioUri); 
+        status.style.display = 'none';
+        console.log("Success!");
     } catch (e) {
-        console.error("Load failed", e);
-        loadingText.innerHTML = "Stream Load Failed";
+        console.error("Error code", e.code, "object", e);
+        status.innerHTML = "Stream Failed: Link Expired or Restricted";
+        
+        // Auto-fallback to test link to check if player is working
+        /* await player.load(testUri); 
+        status.style.display = 'none'; 
+        */
     }
 }
 
-// UI ready hone par player chalu karein
-document.addEventListener('shaka-ui-loaded', initMainPlayer);
-// Fallback
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.shaka && !window.shakaUI) initMainPlayer();
-});
+document.addEventListener('shaka-ui-loaded', initPlayer);
 </script>
 
 </body>
