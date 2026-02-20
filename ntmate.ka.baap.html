@@ -3,43 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Player - Fixed</title>
+    <title>Main Player - JioTV</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; font-family: sans-serif; overflow-x: hidden; }
+        body { background: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* Container for isolation - prevents progress bar clash */
+        /* Container to isolate UI and prevent progress bar clash */
         .video-wrapper {
             width: 100%;
-            height: 500px;
+            height: 500px; /* Aap ise 100vh bhi kar sakte hain full screen ke liye */
             background: #000;
             position: relative;
         }
 
-        /* Status messages */
-        #status {
+        #video { width: 100%; height: 100%; }
+
+        .status-msg {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: #fff;
+            color: #ff4444;
             z-index: 10;
             text-align: center;
-            pointer-events: none;
+            background: rgba(0,0,0,0.6);
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
         }
     </style>
 </head>
 <body>
 
-<h1 style="color:white; text-align:center; padding: 20px;">Main Stream Player</h1>
-
 <div class="video-wrapper" id="player-container" data-shaka-player-container>
-    <video id="video" data-shaka-player autoplay playsinline muted style="width:100%; height:100%;"></video>
-    <div id="status">Initializing Player...</div>
+    <video id="video" data-shaka-player autoplay playsinline muted></video>
+    <div id="status" class="status-msg">Link Expired! Please use a fresh JioTV Link.</div>
 </div>
 
 <script>
@@ -54,31 +56,29 @@ async function initPlayer() {
     const player = new shaka.Player(video);
     const ui = new shaka.ui.Overlay(player, container, video);
     
-    // Config: JioTV streams often need specific settings
+    // Config for JioTV (Retries for better stability)
     player.configure({
-        manifest: { retryParameters: { maxAttempts: 5 } },
-        streaming: { lowLatencyMode: true }
+        streaming: { bufferingGoal: 30 },
+        manifest: { retryParameters: { maxAttempts: 3 } }
     });
 
-    // 1. AAPKA JIO LINK
-    const jioUri = 'https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/dash/Star_Sports_HD1_Hindi_BTS-audio_98834_hin=98800-85034706461952.dash?__hdnea__=st=1771550189~exp=1771636589~acl=/*~hmac=0514601e05baa981c7d7519bf824c76275d663393d8b1cab20015d37e6d11de3';
+    // --- YAHAN NAYA LINK DALEIN ---
+    const freshJioUri = 'https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/dash/Star_Sports_HD1_Hindi_BTS-audio_98834_hin=98800-85034706461952.dash?__hdnea__=REPLACE_WITH_LATEST_TOKEN';
 
-    // 2. TESTING LINK (Agar Jio wala na chale to ise check karein)
+    // Test Link (Check karne ke liye ki player sahi hai ya nahi)
     const testUri = 'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd';
 
     try {
-        // Yahan Jio link load karne ki koshish
-        await player.load(jioUri); 
-        status.style.display = 'none';
-        console.log("Success!");
+        // Sabse pehle aapka Jio link try karega
+        await player.load(freshJioUri);
+        console.log("Jio Stream Loaded!");
     } catch (e) {
-        console.error("Error code", e.code, "object", e);
-        status.innerHTML = "Stream Failed: Link Expired or Restricted";
+        console.error("Error code", e.code);
+        status.style.display = 'block'; // Error dikhayega
         
-        // Auto-fallback to test link to check if player is working
-        /* await player.load(testUri); 
-        status.style.display = 'none'; 
-        */
+        // Agar aap chahte hain ki player fail na ho aur test video chal jaye:
+        // await player.load(testUri); 
+        // status.style.display = 'none';
     }
 }
 
