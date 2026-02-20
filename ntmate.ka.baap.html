@@ -2,16 +2,13 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>DevCoderZ X Cricket</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
     <style>
-        body { background: #000; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        #player-container { width: 100%; height: 100%; max-width: 100vw; max-height: 100vh; background: #000; }
-        video { width: 100%; height: 100%; object-fit: contain; }
-        /* Loader hide karne ke liye agar zaroorat ho */
-        .shaka-spinner-container { display: none !important; }
+        body { background: #000; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        #player-container { width: 100%; height: 100%; }
+        video { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
@@ -21,17 +18,13 @@
 </div>
 
 <script>
+    // 1. Fresh URL aur Token yahan check karein
     const manifest = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
-    
-    const keys = {
-        "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4"
-    };
-
-    let auth = "hdnea=st=1770968162/exp=1771054562/acl=/*~hmac=a20b369ce7b0b48ea6f53ecd616f0e94ba595042495610cae245fed7b640c883";
+    const keys = { "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4" };
+    let auth = "hdnea=st=1771529762~exp=1771616162~acl=/*~hmac=cf31360fadcb5ea2c9771bece88d82d4b2a6e81d44ff5d80d22aec7ddaabc21c";
 
     async function setup() {
         shaka.polyfill.installAll();
-        
         const video = document.getElementById('video');
         const container = document.getElementById('player-container');
         const player = new shaka.Player(video);
@@ -39,29 +32,36 @@
 
         player.configure({
             drm: { clearKeys: keys },
-            streaming: { lowLatencyMode: true }
+            streaming: { 
+                rebufferingGoal: 10,
+                bufferingGoal: 30 
+            }
         });
 
         player.getNetworkingEngine().registerRequestFilter((type, request) => {
-            request.headers['Referer'] = 'https://www.jiotv.com/';
+            // Jio Authentication Headers
             request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6';
-            request.headers['Cookie'] = auth;
-
-            if (!request.uris[0].includes('hdnea')) {
-                const q = request.uris[0].includes('?') ? '&' : '?';
-                request.uris[0] += q + auth;
+            
+            // Token ko URL ke peeche lagana zaroori hai segments ke liye
+            if (request.uris[0].includes('jiotvmblive.cdn.jio.com')) {
+                const separator = request.uris[0].includes('?') ? '&' : '?';
+                if (!request.uris[0].includes('hdnea')) {
+                    request.uris[0] += separator + auth;
+                }
             }
         });
 
         try {
             await player.load(manifest);
+            console.log("Success!");
         } catch (e) {
-            console.error('load_fail', e);
+            console.error("Error Code: " + e.code);
+            // Agar 1001 error hai toh URL/Token galat hai
+            // Agar 1002 error hai toh CORS block hai
         }
     }
 
     document.addEventListener('shaka-ui-loaded', setup);
 </script>
-
 </body>
 </html>
