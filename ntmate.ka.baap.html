@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevCoderZ X Cricket</title>
+  <title>DevCoderZ X Cricket - Full Fix</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
@@ -25,7 +25,7 @@
       width: 100%;
       height: 100%;
     }
-    /* Manually hiding the default spinner */
+    /* Spinner hide kiya hai jaisa aapne manga tha */
     .shaka-spinner-container { display: none !important; }
   </style>
 </head>
@@ -36,62 +36,77 @@
   </div>
 
   <script>
-    // Manual Stream Decoding
-    const _0x_m1 = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd?__hdnea__=st=1771529762~exp=1771616162~acl=/*~hmac=cf31360fadcb5ea2c9771bece88d82d4b2a6e81d44ff5d80d22aec7ddaabc21c";
-    const _0x_c1 = "aHR0cHM6Ly93d3cuamlvdHYuY29tLw==";
+    // FIX: Seedha URL (Base64 decode hata diya hai)
+    const streamUrl = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd?__hdnea__=st=1771529762~exp=1771616162~acl=/*~hmac=cf31360fadcb5ea2c9771bece88d82d4b2a6e81d44ff5d80d22aec7ddaabc21c";
+    
+    // Cookie Token
+    const activeCookie = "hdnea=st=1770968162/exp=1771054562/acl=/*~hmac=a20b369ce7b0b48ea6f53ecd616f0e94ba595042495610cae245fed7b640c883";
 
-    async function startPlayer() {
+    async function initApp() {
+      // Install built-in polyfills
       shaka.polyfill.installAll();
+
+      // Check browser support
+      if (!shaka.Player.isBrowserSupported()) {
+        console.error('Browser not supported!');
+        return;
+      }
 
       const video = document.getElementById('main-video');
       const container = document.getElementById('video-container');
       const player = new shaka.Player(video);
       const ui = new shaka.ui.Overlay(player, container, video);
 
-      // Custom UI Config
+      // UI Config
       ui.configure({
         'controlPanelElements': ['play_pause', 'time_and_duration', 'spacer', 'quality', 'fullscreen']
       });
 
-      // Stream Auth & DRM
-      const activeCookie = "hdnea=st=1770968162/exp=1771054562/acl=/*~hmac=a20b369ce7b0b48ea6f53ecd616f0e94ba595042495610cae245fed7b640c883";
-
+      // DRM ClearKeys Configuration
       player.configure({
         drm: {
           clearKeys: {
             "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4"
           }
+        },
+        streaming: {
+          bufferingGoal: 30,
+          rebufferingGoal: 15
         }
       });
 
-      // Request Filtering for Jio Security
+      // Networking Engine for Jio Security
       player.getNetworkingEngine().registerRequestFilter((type, request) => {
-        request.headers['Referer'] = atob(_0x_c1);
-        request.headers['User-Agent'] = "plaYtv/7.1.5 (Linux;Android 13)";
+        // Headers set karna
+        request.headers['Referer'] = 'https://www.jiotv.com/';
+        request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13)';
         request.headers['Cookie'] = activeCookie;
 
+        // Har segment request mein cookie inject karna
         if (request.uris[0] && !request.uris[0].includes('__hdnea=')) {
           const joiner = request.uris[0].includes('?') ? '&' : '?';
           request.uris[0] += joiner + activeCookie;
         }
       });
 
+      // Load Stream
       try {
-        await player.load(atob(_0x_m1));
-        console.log("Stream Initialized...");
-      } catch (error) {
-        console.error("Playback Error:", error.code);
+        await player.load(streamUrl);
+        console.log("Jai Ho! Stream loaded successfully.");
+      } catch (e) {
+        console.error("Playback Error:", e.code, e);
       }
     }
 
-    // Security: Block F12 and View Source
+    // Security: Block F12 and Shortcuts
     document.onkeydown = (e) => {
       if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
         return false;
       }
     };
 
-    document.addEventListener('shaka-ui-loaded', startPlayer);
+    // UI Load hone par start karein
+    document.addEventListener('shaka-ui-loaded', initApp);
   </script>
 
 </body>
