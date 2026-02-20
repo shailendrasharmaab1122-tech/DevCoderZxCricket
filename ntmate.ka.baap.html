@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Player - JioTV</title>
+    <title>JioTV Stream Fix - Shaka Player</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #000; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; }
         
-        /* Container to isolate UI and prevent progress bar clash */
         .video-wrapper {
             width: 100%;
-            height: 500px; /* Aap ise 100vh bhi kar sakte hain full screen ke liye */
+            max-width: 900px;
+            aspect-ratio: 16 / 9;
             background: #000;
             position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         #video { width: 100%; height: 100%; }
@@ -27,62 +28,78 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: #ff4444;
+            color: #fff;
             z-index: 10;
             text-align: center;
-            background: rgba(0,0,0,0.6);
-            padding: 15px;
+            background: rgba(255, 0, 0, 0.7);
+            padding: 15px 25px;
             border-radius: 8px;
             display: none;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
 <div class="video-wrapper" id="player-container" data-shaka-player-container>
-    <video id="video" data-shaka-player autoplay playsinline muted></video>
-    <div id="status" class="status-msg">Link Expired! Please use a fresh JioTV Link.</div>
+    <video id="video" data-shaka-player autoplay playsinline></video>
+    <div id="status" class="status-msg">Error: Link Expired or Restricted!</div>
 </div>
 
 <script>
-async function initPlayer() {
+async function initApp() {
     shaka.polyfill.installAll();
-    
+
+    if (!shaka.Player.isBrowserSupported()) {
+        alert('Browser not supported!');
+        return;
+    }
+
     const video = document.getElementById('video');
     const container = document.getElementById('player-container');
     const status = document.getElementById('status');
 
-    // Player and UI Setup
     const player = new shaka.Player(video);
     const ui = new shaka.ui.Overlay(player, container, video);
-    
-    // Config for JioTV (Retries for better stability)
+    ui.configure({ 'controlPanelElements': ['play_pause', 'time_and_duration', 'spacer', 'mute', 'volume', 'fullscreen', 'overflow_menu'] });
+
+    // --- CONFIGURATION FOR JIO/HLS STREAMS ---
     player.configure({
-        streaming: { bufferingGoal: 30 },
-        manifest: { retryParameters: { maxAttempts: 3 } }
+        streaming: {
+            bufferingGoal: 30,
+            rebufferingGoal: 15,
+            jumpLargeGaps: true,
+        },
+        manifest: {
+            retryParameters: { maxAttempts: 5, baseDelay: 1000, backoffFactor: 2 }
+        }
     });
 
-    // --- YAHAN NAYA LINK DALEIN ---
-    const freshJioUri = 'https://waptv.wapka.xyz/hindi';
-
-    // Test Link (Check karne ke liye ki player sahi hai ya nahi)
-    const testUri = 'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd';
+    // JioTV Link (Using a CORS Proxy for testing if direct fails)
+    // Note: Proxy link is only for development, production mein apna server use karein.
+    const streamUrl = 'https://waptv.wapka.xyz/hindi';
 
     try {
-        // Sabse pehle aapka Jio link try karega
-        await player.load(freshJioUri);
-        console.log("Jio Stream Loaded!");
-    } catch (e) {
-        console.error("Error code", e.code);
-        status.style.display = 'block'; // Error dikhayega
+        // Attempt to load the HLS stream
+        // 'application/x-mpegurl' is critical for .m3u8 or non-extension HLS links
+        await player.load(streamUrl, null, 'application/x-mpegurl');
+        console.log("Success: Stream loaded!");
+    } catch (error) {
+        console.error("Shaka Error:", error.code, error);
+        status.style.display = 'block';
+        status.innerText = "Error " + error.code + ": Stream cannot be played.";
         
-        // Agar aap chahte hain ki player fail na ho aur test video chal jaye:
-        // await player.load(testUri); 
-        // status.style.display = 'none';
+        // Fallback to Test Link to verify player is working
+        /* setTimeout(async () => {
+            status.innerText = "Loading Test Stream...";
+            await player.load('https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd');
+            status.style.display = 'none';
+        }, 3000);
+        */
     }
 }
 
-document.addEventListener('shaka-ui-loaded', initPlayer);
+document.addEventListener('shaka-ui-loaded', initApp);
 </script>
 
 </body>
