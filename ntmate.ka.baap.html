@@ -1,76 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>DevCoderZ X Cricket | Live Stream</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DevCoderZ X Cricket</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
     <style>
-        body {
-            background-color: #0f172a; /* Dark Navy Blue Theme */
-            color: #38bdf8; /* Neon Blue */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .container {
-            text-align: center;
-            border: 2px solid #38bdf8;
-            border-radius: 15px;
-            padding: 20px;
-            background: rgba(30, 41, 59, 0.8);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        h1 { margin-bottom: 20px; font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
-        video {
-            width: 100%;
-            max-width: 854px;
-            border-radius: 8px;
-            outline: none;
-            background: #000;
-        }
-        .status { margin-top: 15px; font-size: 14px; color: #94a3b8; }
+        body { background: #050505; margin: 0; font-family: sans-serif; color: #fff; }
+        #main-wrapper { max-width: 960px; margin: 40px auto; padding: 10px; }
+        .player-title { background: #1a1a1a; padding: 12px; border-radius: 8px 8px 0 0; border-bottom: 2px solid #00ffcc; color: #00ffcc; font-weight: bold; text-align: center; letter-spacing: 1px; }
+        .video-holder { width: 100%; background: #000; position: relative; border-radius: 0 0 8px 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        video { width: 100%; height: auto; display: block; }
+        .info-row { margin-top: 10px; font-size: 12px; color: #666; display: flex; justify-content: space-between; padding: 0 5px; }
+        .red-dot { color: red; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>⚡ DevCoderZ X Cricket ⚡</h1>
-        
-        <video id="video" poster="https://i.imgur.com/8Nn3lXn.png" controls autoplay></video>
-        
-        <div class="status" id="status">Status: Connecting to Stream...</div>
+<div id="main-wrapper">
+    <div class="player-title">⚡ DEVCODERZ X CRICKET ⚡</div>
+    <div data-shaka-player-container class="video-holder">
+        <video id="video" autoplay playsinline></video>
     </div>
+    <div class="info-row">
+        <span><span class="red-dot">●</span> LIVE STREAM</span>
+        <span id="stat">status: booting...</span>
+    </div>
+</div>
 
-    <script>
-        async function initApp() {
-            shaka.polyfill.installAll();
-            const video = document.getElementById('video');
-            const player = new shaka.Player(video);
-            const statusBox = document.getElementById('status');
+<script>
+    const manifest = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
+    
+    // keys from your source
+    const keys = {
+        "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4"
+    };
 
-            player.addEventListener('error', (e) => {
-                console.error('Shaka Error:', e.detail);
-                statusBox.innerText = "Status: Stream Error (Token Expired or CORS)";
-                statusBox.style.color = "#ef4444";
-            });
+    // jio auth token
+    let auth = "hdnea=st=1770968162/exp=1771054562/acl=/*~hmac=a20b369ce7b0b48ea6f53ecd616f0e94ba595042495610cae245fed7b640c883";
 
-            try {
-                // Aapka dynamic link yahan
-                const manifestUri = 'https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd?__hdnea__=st=1771529762~exp=1771616162~acl=/*~hmac=cf31360fadcb5ea2c9771bece88d82d4b2a6e81d44ff5d80d22aec7ddaabc21c';
-                
-                await player.load(manifestUri);
-                statusBox.innerText = "Status: Live Now 🔴";
-                statusBox.style.color = "#22c55e";
-            } catch (e) {
-                console.error('Load Failed', e);
+    async function setup() {
+        shaka.polyfill.installAll();
+        
+        const video = document.getElementById('video');
+        const holder = document.querySelector('.video-holder');
+        const player = new shaka.Player(video);
+        const ui = new shaka.ui.Overlay(player, holder, video);
+
+        player.configure({
+            drm: { clearKeys: keys },
+            streaming: { lowLatencyMode: true }
+        });
+
+        player.getNetworkingEngine().registerRequestFilter((type, request) => {
+            request.headers['Referer'] = 'https://www.jiotv.com/';
+            request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6';
+            request.headers['Cookie'] = auth;
+
+            if (!request.uris[0].includes('hdnea')) {
+                const q = request.uris[0].includes('?') ? '&' : '?';
+                request.uris[0] += q + auth;
             }
-        }
+        });
 
-        document.addEventListener('DOMContentLoaded', initApp);
-    </script>
+        try {
+            await player.load(manifest);
+            document.getElementById('stat').innerHTML = "online";
+        } catch (err) {
+            document.getElementById('stat').innerHTML = "error: check token/keys";
+            console.error(err);
+        }
+    }
+
+    document.addEventListener('shaka-ui-loaded', setup);
+</script>
+
 </body>
 </html>
