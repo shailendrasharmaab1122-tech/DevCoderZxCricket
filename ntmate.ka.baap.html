@@ -1,155 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="DevCoderz X Assault Decoder">
-<meta name="theme-color" content="#ffffff">
-<title>DevCoderz X Assault Decoder // Live Stream</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevCoderZ X Cricket</title>
+    <style>
+        /* Manually Optimized Styles */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505; /* Deep black for better contrast */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
 
-<!-- Shaka Player -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
+        #main-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
 
-<!-- Fonts & Icons -->
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        /* Responsive Frame Wrapper */
+        .frame-inner {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+        }
 
-<style>
-:root {
-    --bg-deep: #f8fafc;
-    --bg-gradient: linear-gradient(to bottom, #ffffff 0%, #f1f5f9 100%);
-    --glass-bg: rgba(255, 255, 255, 0.75);
-    --glass-border: rgba(0, 0, 0, 0.08);
-    --glass-blur: blur(20px);
-    --glass-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
-    --accent-primary: #3b82f6;
-    --accent-glow: rgba(59, 130, 246, 0.25);
-    --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    --text-primary: #1e293b;
-    --text-secondary: #64748b;
-    --danger: #ef4444;
-    --danger-glow: rgba(239, 68, 68, 0.2);
-    --success: #10b981;
-}
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
 
-* { box-sizing: border-box; margin:0; padding:0; font-family:'Outfit',sans-serif; }
-body { background:var(--bg-gradient); color:var(--text-primary); min-height:100vh; display:flex; justify-content:center; padding:1.5rem; }
-body::before {
-    content:'';
-    position:fixed;
-    inset:-50% 0 0 0;
-    background:radial-gradient(circle at center, rgba(59,130,246,0.05) 0%, transparent 60%);
-    z-index:-1;
-}
-
-.container{ width:100%; max-width:1100px; animation:slideUpFade 0.8s ease forwards; }
-@keyframes slideUpFade { from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:translateY(0);} }
-
-.stream-header{
-    background:var(--glass-bg); backdrop-filter:var(--glass-blur);
-    border:1px solid var(--glass-border); border-radius:16px; padding:1rem 2rem;
-    display:flex; justify-content:space-between; align-items:center; box-shadow:var(--glass-shadow); margin-bottom:1.5rem;
-}
-.live-badge{ background:rgba(239,68,68,0.1); color:#dc2626; padding:0.4rem 1rem; border-radius:30px; font-weight:700; display:flex; align-items:center; gap:0.5rem;}
-
-#player-container{ aspect-ratio:16/9; background:#000; border-radius:16px; overflow:hidden; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);}
-iframe{ width:100%; height:100%; border:none;}
-
-.grid-panels{ margin-top:2rem; display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); }
-.info-card{ background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:16px; padding:1.5rem; text-align:center; box-shadow:var(--glass-shadow); }
-.action-button{ margin-top:1rem; display:flex; justify-content:center; gap:0.75rem; padding:1rem; background:var(--accent-gradient); color:#fff; border-radius:12px; font-weight:600; text-decoration:none; border:none; cursor:pointer; }
-
-</style>
+        /* Professional Overlay (Optional: remove if not needed) */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: -1; /* Behind the frame */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #444;
+        }
+    </style>
 </head>
 <body>
-<main class="container">
-    <div class="stream-header">
-        <h1>DevCoderz X Assault Decoder</h1>
-        <span class="live-badge"><i class="fa-solid fa-circle"></i> LIVE NOW</span>
+
+    <div id="main-container">
+        <div class="loading-overlay">Initializing Stream...</div>
+        
+        <iframe 
+            class="frame-inner"
+            src="https://waptv.wapka.xyz/hindi" 
+            allow="autoplay; encrypted-media; fullscreen" 
+            sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"
+            allowfullscreen>
+        </iframe>
     </div>
 
-    <div id="player-container">
-        <iframe src="https://waptv.wapka.xyz/hindi" allow="encrypted-media; autoplay" allowfullscreen></iframe>
-    </div>
-
-    <div class="grid-panels">
-        <div class="info-card">
-            <h2>📣 Follow us for updates</h2>
-            <a href="https://t.me/Cric_decoders" target="_blank" class="action-button">
-                <i class="fa-brands fa-telegram"></i> Join Telegram
-            </a>
-        </div>
-        <div class="info-card">
-            <h2><i class="fa-solid fa-share-nodes"></i> Share Stream</h2>
-            <button class="action-button" id="shareButton">Share This Page ❤️</button>
-        </div>
-    </div>
-</main>
-
-<!-- 1️⃣ ADS REMOVAL POPUP -->
-<div id="adsPopup" class="popup">
-  <div class="popup-box">
-    <h2>🛑 HOW TO REMOVE ADS</h2>
-    <ol>
-      <li>Open <b>Mobile Settings</b></li>
-      <li>Search <b>Private DNS</b></li>
-      <li>Click on <b>Custom / Private DNS</b></li>
-      <li>
-        Write: <span class="dns-text" onclick="copyDNS()">dns.adguard.com</span>
-        <small>(tap to copy)</small>
-      </li>
-      <li>Save it and come back to our website</li>
-    </ol>
-    <p class="success-text">✅ Ads will be removed successfully</p>
-    <button onclick="closeAdsPopup()">Next ➡️</button>
-  </div>
-</div>
-
-<!-- 2️⃣ TELEGRAM POPUP -->
-<div id="telegramPopup" class="popup" style="display:none;">
-  <div class="popup-box">
-    <h2>📣 Join Telegram</h2>
-    <p>Stay updated with latest streams & news</p>
-    <button onclick="joinTelegram()">Join Telegram ✅</button>
-    <button onclick="closeTelegramPopup()">Close ❌</button>
-  </div>
-</div>
-
-<style>
-.popup{
-  position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex;
-  justify-content:center; align-items:center; z-index:99999; font-family:'Outfit',sans-serif;
-}
-.popup-box{ background:#fff; padding:22px; max-width:420px; width:90%; border-radius:16px; text-align:left;}
-.popup-box h2{ text-align:center; margin-bottom:12px;}
-.popup-box ol{ padding-left:18px;}
-.popup-box li{ margin-bottom:8px;}
-.dns-text{ display:inline-block; margin-top:4px; padding:6px 10px; background:#e0f2fe; color:#0369a1; border-radius:8px; cursor:pointer; font-weight:600;}
-.success-text{ margin-top:10px; color:#059669; text-align:center; font-weight:600;}
-.popup-box button{ margin-top:14px; width:100%; padding:10px; border:none; border-radius:10px; background:#3b82f6; color:#fff; font-size:16px; cursor:pointer;}
-</style>
-
-<script>
-// Popup logic
-function closeAdsPopup(){
-  document.getElementById("adsPopup").style.display="none";
-  document.getElementById("telegramPopup").style.display="flex";
-}
-
-// Copy DNS
-function copyDNS(){
-  navigator.clipboard.writeText("dns.adguard.com").then(()=>{ alert("dns.adguard.com copied ✅"); });
-}
-
-// Telegram popup buttons
-function joinTelegram(){
-  window.open("https://t.me/Cric_decoders","_blank");
-}
-function closeTelegramPopup(){
-  document.getElementById("telegramPopup").style.display="none";
-}
-</script>
+    <script>
+        // Log status to console just like a dev would
+        console.log("Stream Container Initialized...");
+        
+        // Prevent accidental right clicks on the page
+        document.addEventListener('contextmenu', event => event.preventDefault());
+    </script>
 
 </body>
 </html>
