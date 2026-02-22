@@ -6,66 +6,64 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
 <style>
-    body{margin:0;background:#000;height:100vh;width:100vw;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:sans-serif;}
-    #player-container{width:100%;height:100%;position:relative;background:#000;}
-    video{width:100%;height:100%;}
-    .dev-tag{position:absolute;top:20px;left:20px;z-index:99;color:#fff;font-weight:bold;font-size:14px;letter-spacing:1px;text-shadow:0 0 10px #00d2ff,0 0 20px #00d2ff;animation:pulse 2s infinite alternate;pointer-events:none;}
-    @keyframes pulse{from{opacity:0.6;}to{opacity:1;text-shadow:0 0 15px #fff,0 0 30px #00d2ff;}}
+    body{margin:0;background:#000;height:100vh;width:100vw;overflow:hidden;font-family:sans-serif;}
+    #player-container{width:100%;height:100%;position:relative;}
+    video{width:100%;height:100%;object-fit:contain;}
+    .dev-tag{position:absolute;top:20px;left:20px;z-index:99;color:#fff;font-weight:bold;font-size:14px;text-shadow:0 0 10px #00d2ff;animation:pulse 2s infinite alternate;pointer-events:none;}
+    /* Click to Unmute Overlay */
+    #unmute-shield{position:absolute;top:0;left:0;width:100%;height:100%;z-index:100;cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.01);}
+    @keyframes pulse{from{opacity:0.6;}to{opacity:1;}}
 </style>
 </head>
 <body>
 
 <div id="player-container" data-shaka-player-container>
     <div class="dev-tag">Developer - Devansh Sharma</div>
-    <video id="video" data-shaka-player autoplay muted playsinline></video>
+    <div id="unmute-shield"></div> <video id="video" data-shaka-player autoplay muted playsinline></video>
 </div>
 
 <script>
-// Raw Obfuscated Strings
-var _v = 'aHR0cHM6Ly9qaW90dm1ibGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2Rhc2gvU3BvcnRzMThfMV9IRF9CVFMubXBk';
-var _u = 'Y29tLmppby5qaW90di83LjAuOCAoTGludXg7IEFuZHJvaWQgOSkgRXhvUGxheWVyTGliLzIuMTMuMg==';
-var _r = 'aHR0cHM6Ly93d3cuamlvdHYuY29tLw==';
-var _t = 'c3Q9MTc3MTczNjQzNn5leHA9MTc3MTgyMjgzNn5hY2w9Lyp+aG1hYz04ZWM4MmJhYWRjNWVmZTY2ZjBkMTk2YzA4Nzc1ZDcxNGNjY2FjNmMzMmRiZjdjNjczOTJjMjEyYTE0NDVhMWY4';
-var _k1 = 'YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=';
-var _k2 = 'MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=';
+var _0x1 = 'aHR0cHM6Ly9qaW90dm1ibGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2Rhc2gvU3BvcnRzMThfMV9IRF9CVFMubXBk';
+var _0x2 = 'Y29tLmppby5qaW90di83LjAuOCAoTGludXg7IEFuZHJvaWQgOSkgRXhvUGxheWVyTGliLzIuMTMuMg==';
+var _0x3 = 'aHR0cHM6Ly93d3cuamlvdHYuY29tLw==';
+var _0x4 = 'c3Q9MTc3MTczNjQzNn5leHA9MTc3MTgyMjgzNn5hY2w9Lyp+aG1hYz04ZWM4MmJhYWRjNWVmZTY2ZjBkMTk2YzA4Nzc1ZDcxNGNjY2FjNmMzMmRiZjdjNjczOTJjMjEyYTE0NDVhMWY4';
+var _0x5 = 'YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=';
+var _0x6 = 'MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=';
 
-function _dx(d){ return atob(d); }
+function _d(b){return atob(b)}
 
-async function startEngine() {
+async function init(){
     shaka.polyfill.installAll();
-    var vid = document.getElementById('video');
-    var cont = document.getElementById('player-container');
-    var plr = new shaka.Player(vid);
-    var ui = new shaka.ui.Overlay(plr, cont, vid);
+    var v = document.getElementById('video');
+    var c = document.getElementById('player-container');
+    var s = document.getElementById('unmute-shield');
+    var p = new shaka.Player(v);
+    new shaka.ui.Overlay(p, c, v);
 
-    // Speed up loading
-    plr.configure({
-        drm: { clearKeys: { [_dx(_k1)]: _dx(_k2) } },
-        streaming: { bufferingGoal: 10, rebufferingGoal: 2, lowLatencyMode: true }
+    p.configure({
+        drm:{clearKeys:{[_d(_0x5)]:_d(_0x6)}},
+        streaming:{lowLatencyMode:true,bufferingGoal:5}
     });
 
-    plr.getNetworkingEngine().registerRequestFilter(function(type, req) {
-        req.headers['User-Agent'] = _dx(_u);
-        req.headers['Referer'] = _dx(_r);
-        var s = req.uris[0].includes('?') ? '&' : '?';
-        req.uris[0] += s + "__hdnea__=" + _dx(_t);
+    p.getNetworkingEngine().registerRequestFilter(function(t,r){
+        r.headers['User-Agent']=_d(_0x2);
+        r.headers['Referer']=_d(_0x3);
+        r.uris[0]+=(r.uris[0].includes('?')?'&':'?')+"__hdnea__="+_d(_0x4);
     });
 
     try {
-        await plr.load(_dx(_v));
-        // Force play logic
-        vid.play();
-        console.log("DevCoderZ Engine Started...");
+        await p.load(_d(_0x1));
+        v.play(); 
         
-        // Auto-unmute attempt after user interaction anywhere
-        document.body.addEventListener('click', function() {
-            vid.muted = false;
-        }, {once: true});
-        
-    } catch (e) { console.error("Playback Failed", e); }
+        // Jab user screen pe tap karega, sound on ho jayega
+        s.addEventListener('click', function(){
+            v.muted = false;
+            s.style.display = 'none'; // Shield hat jayega
+        });
+    } catch(e){console.log('Dead');}
 }
 
-document.addEventListener('shaka-ui-loaded', startEngine);
+document.addEventListener('shaka-ui-loaded', init);
 </script>
 </body>
 </html>
