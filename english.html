@@ -1,123 +1,162 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LIVE | Assault Decoder Premium</title>
+    <title>DevCoderz X Assault Decoder | LIVE</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root { --primary: #3b82f6; --dark: #070b14; --glass: rgba(255, 255, 255, 0.05); --border: rgba(255, 255, 255, 0.1); }
+        :root { 
+            --primary: #3b82f6; 
+            --primary-dark: #2563eb;
+            --dark-bg: #070b14; 
+            --glass: rgba(255, 255, 255, 0.05); 
+            --glass-border: rgba(255, 255, 255, 0.1); 
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
         
-        body { background: var(--dark); background-image: radial-gradient(circle at top right, #1e293b, #070b14); color: #fff; min-height: 100vh; display: flex; justify-content: center; padding: 15px; overflow-x: hidden; }
-        
-        .container { width: 100%; max-width: 900px; animation: fadeIn 0.8s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        body { 
+            background: var(--dark-bg); 
+            background-image: radial-gradient(circle at top left, #1e293b, #070b14); 
+            color: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            padding: 15px; 
+            overflow-x: hidden; 
+        }
 
-        /* Header */
-        .header { background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .logo { font-weight: 800; font-size: 1.3rem; letter-spacing: -0.5px; }
-        .logo span { color: var(--primary); }
-        
-        .live-tag { background: rgba(239, 68, 68, 0.15); color: #ff4d4d; padding: 6px 12px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; border: 1px solid rgba(239, 68, 68, 0.3); display: flex; align-items: center; gap: 6px; }
-        .dot { height: 7px; width: 7px; background: #ff4d4d; border-radius: 50%; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
+        .container { width: 100%; max-width: 950px; animation: slideIn 0.7s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Video Section - Enhanced for Rotation */
-        .video-container { 
+        /* Full Header - Requested Change */
+        .header { 
+            background: var(--glass); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid var(--glass-border); 
+            border-radius: 20px; 
+            padding: 18px 25px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .brand-title { font-weight: 800; font-size: 1.25rem; letter-spacing: -0.5px; color: #fff; }
+        .brand-title span { color: var(--primary); }
+
+        .live-status { 
+            background: rgba(239, 68, 68, 0.1); 
+            color: #ff4d4d; 
+            padding: 6px 14px; 
+            border-radius: 50px; 
+            font-weight: 700; 
+            font-size: 0.75rem; 
+            border: 1px solid rgba(239, 68, 68, 0.2); 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        
+        .pulse-dot { height: 8px; width: 8px; background: #ff4d4d; border-radius: 50%; animation: pulse-anim 1.5s infinite; }
+        @keyframes pulse-anim { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
+
+        /* Video Box */
+        .video-box { 
             position: relative; 
-            width: 100%;
+            width: 100%; 
             aspect-ratio: 16/9; 
             background: #000; 
-            border-radius: 22px; 
+            border-radius: 24px; 
             overflow: hidden; 
-            border: 1px solid var(--border);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
-        
-        /* Force Landscape for App WebView when in Fullscreen */
-        .video-container:-webkit-full-screen { width: 100%; height: 100%; border-radius: 0; }
-        
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* Action Grid */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .card { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; padding: 20px; text-align: center; backdrop-filter: blur(10px); }
-        
-        .btn { 
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px; 
-            width: 100%; padding: 14px; margin-top: 10px; 
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8); 
-            color: white; text-decoration: none; border-radius: 14px; 
-            font-weight: 600; border: none; cursor: pointer; transition: 0.3s;
+        /* UI Panels */
+        .grid-ui { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 20px; }
+        .ui-card { 
+            background: var(--glass); 
+            border: 1px solid var(--glass-border); 
+            border-radius: 20px; 
+            padding: 22px; 
+            text-align: center; 
+            backdrop-filter: blur(10px); 
+            transition: 0.3s;
         }
-        .btn:active { transform: scale(0.96); }
+        .ui-card:hover { border-color: var(--primary); transform: translateY(-5px); }
 
-        /* Security Shield */
-        body { -webkit-user-select: none; user-select: none; }
+        .btn-action { 
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px; 
+            width: 100%; padding: 14px; margin-top: 15px; 
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
+            color: white; text-decoration: none; border-radius: 15px; 
+            font-weight: 600; border: none; cursor: pointer; 
+        }
+        
+        /* Protection Layer */
+        body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
 <div class="container">
     <header class="header">
-        <div class="logo">Assault <span>Decoder</span></div>
-        <div class="live-tag"><div class="dot"></div> LIVE NOW</div>
+        <div class="brand-title">DevCoderz <span>X</span> Assault Decoder</div>
+        <div class="live-status"><div class="pulse-dot"></div> LIVE</div>
     </header>
 
-    <div class="video-container" id="vidBox">
-        <iframe id="player" src="about:blank" allow="autoplay; encrypted-media; gyroscope; accelerometer; picture-in-picture" allowfullscreen></iframe>
+    <div class="video-box">
+        <iframe id="stream" src="about:blank" allow="autoplay; encrypted-media; gyroscope; accelerometer; picture-in-picture" allowfullscreen></iframe>
     </div>
 
-    <div class="grid">
-        <div class="card">
-            <button onclick="_tg()" class="btn"><i class="fa-brands fa-telegram"></i> Telegram</button>
+    <div class="grid-ui">
+        <div class="ui-card">
+            <h3>Community Channel</h3>
+            <button onclick="_goTG()" class="btn-action"><i class="fa-brands fa-telegram"></i> Join Telegram</button>
         </div>
-        <div class="card">
-            <button id="sh" class="btn"><i class="fa-solid fa-share-nodes"></i> Share</button>
+        <div class="ui-card">
+            <h3>Share Link</h3>
+            <button id="copyUrl" class="btn-action"><i class="fa-solid fa-share-nodes"></i> Share with Friends</button>
         </div>
     </div>
 </div>
 
 <script>
-    /* Hex-Encoded Links for Protection */
-    const _0x5f = [
+    /* Security: Hex Obfuscation */
+    const _0xData = [
         "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x64\x65\x76\x63\x6F\x64\x65\x72\x7A\x78\x63\x72\x69\x63\x6B\x65\x74\x2E\x76\x65\x72\x63\x65\x6C\x2E\x61\x70\x70\x2F\x70\x72\x69\x6E\x63\x65\x2E\x6D\x79\x2E\x73\x6F\x6E\x2E\x68\x74\x6D\x6C", 
         "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x74\x2E\x6D\x65\x2F\x43\x72\x69\x63\x5F\x64\x65\x63\x6F\x64\x65\x72\x73"
     ];
 
-    const frame = document.getElementById('player');
-    frame.src = _0x5f[0];
+    document.getElementById('stream').src = _0xData[0];
 
-    function _tg() { window.open(_0x5f[1], "_blank"); }
+    function _goTG() { window.open(_0xData[1], "_blank"); }
 
-    /* --- ROTATION FIX FOR APPS --- */
-    function requestRotation() {
-        const doc = document.documentElement;
-        if (doc.requestFullscreen) {
-            // Try locking orientation
-            if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('landscape').catch(e => console.log("Manual rotation needed"));
-            }
-        }
-    }
-
-    // Listen for Fullscreen event from Frame
-    window.addEventListener('message', function(e) {
-        if (e.data === 'requestFullScreen') {
-            requestRotation();
+    /* Rotation & Fullscreen Logic */
+    document.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement && screen.orientation.lock) {
+            screen.orientation.lock('landscape').catch(() => {});
         }
     });
 
-    // Share Logic
-    document.getElementById('sh').addEventListener('click', async () => {
-        if (navigator.share) await navigator.share({title: 'Live Stream', url: window.location.href});
+    /* Share Action */
+    document.getElementById('copyUrl').addEventListener('click', async () => {
+        if (navigator.share) {
+            await navigator.share({title: 'DevCoderz Live', url: window.location.href});
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Link copied!");
+        }
     });
 
-    // Disable DevTools
+    /* Block Inspect Tools */
     document.onkeydown = (e) => {
         if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) return false;
     };
