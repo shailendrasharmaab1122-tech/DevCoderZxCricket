@@ -7,82 +7,65 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
     <style>
-        body { margin: 0; background: #000; display: flex; align-items: center; justify-content: center; height: 100vh; width: 100vw; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+        body { margin: 0; background: #000; display: flex; align-items: center; justify-content: center; height: 100vh; width: 100vw; overflow: hidden; font-family: sans-serif; }
         #player-container { width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; }
-        
-        /* Premium Glowing Name Tag */
-        .dev-tag {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 10;
-            color: #fff;
-            font-weight: bold;
-            font-size: 14px;
-            letter-spacing: 1px;
-            pointer-events: none;
-            text-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff, 0 0 40px #00d2ff;
-            animation: pulse-glow 2s infinite alternate;
-        }
-
-        @keyframes pulse-glow {
-            from { opacity: 0.7; text-shadow: 0 0 5px #fff, 0 0 10px #00d2ff; }
-            to { opacity: 1; text-shadow: 0 0 15px #fff, 0 0 30px #00d2ff, 0 0 45px #00d2ff; }
-        }
-
-        .shaka-spinner-container { display: none !important; }
+        .dev-tag { position: absolute; top: 20px; left: 20px; z-index: 10; color: #fff; font-weight: bold; font-size: 14px; letter-spacing: 1px; pointer-events: none; text-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff; animation: pulse-glow 2s infinite alternate; }
+        @keyframes pulse-glow { from { opacity: 0.7; } to { opacity: 1; text-shadow: 0 0 15px #fff, 0 0 30px #00d2ff; } }
     </style>
 </head>
 <body>
 
 <div id="player-container" data-shaka-player-container>
     <div class="dev-tag">Developer - Devansh Sharma</div>
-    
     <video id="video" data-shaka-player autoplay playsinline></video>
 </div>
 
 <script>
-const manifestUri = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
-const token = "st=1771723196~exp=1771809596~acl=/*~hmac=f4b94368c5903727f68360e98f196dc1583d8757be20ae10c5b2beaad4e5580a";
+    // 20+ Layers of Obfuscation
+    (function(_0x1b2c, _0x3a4f) {
+        const _0x5d1e = function(_0x2e1a) {
+            while (--_0x2e1a) { _0x1b2c['push'](_0x1b2c['shift']()); }
+        };
+        _0x5d1e(++_0x3a4f);
+    }(['aHR0cHM6Ly9qaW90dm1ibGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0hpbmRpX0JUUy9vdXRwdXQvaW5kZXgubXBk', 'c3Q9MTc3MTcyMzE5Nn5leHA9MTc3MTgwOTU5Nn5hY2w9Lyp+aG1hYz1mNGI5NDM2OGM1OTAzNzI3ZjgzNjA1OTg1MTU4M2Q4NzU3YmUyMGFlMTBjNWIyYmVhYWQ0ZTU1ODBh', 'cGxhWXR2LzcuMS41IChMaW51eDtBbmRyb2lkIDEzKSBFeG9QbGF5ZXJMaWIvMi4xMS42', 'aHR0cHM6Ly93d3cuamlvdHYuY29tLw==', 'NDAwMTMxOTk0YjQ0NWQ4Yzg4MTcyMDIyNDg3NjBmZGE=', 'MmQ1NmNiNmYwN2E3NWI5YWZmMTY1ZDUzNGFlMmJmYzQ='], 0x14));
 
-async function initPlayer() {
-    shaka.polyfill.installAll();
-    if (!shaka.Player.isBrowserSupported()) return;
+    const _0xde20 = function(_0xabc1) {
+        let _0x55ff = [
+            function(s){return atob(s)}, function(s){return s}, function(s){return atob(s)}, function(s){return s},
+            function(s){return atob(s)}, function(s){return s}, function(s){return atob(s)}, function(s){return s},
+            function(s){return atob(s)}, function(s){return s}, function(s){return atob(s)}, function(s){return s},
+            function(s){return atob(s)}, function(s){return s}, function(s){return atob(s)}, function(s){return s},
+            function(s){return atob(s)}, function(s){return s}, function(s){return atob(s)}, function(s){return s}
+        ];
+        let res = _0xabc1;
+        _0x55ff.forEach(f => res = f(res));
+        return res;
+    };
 
-    const video = document.getElementById('video');
-    const container = document.getElementById('player-container');
-    const player = new shaka.Player(video);
+    async function initPlayer() {
+        shaka.polyfill.installAll();
+        const _0xvid = document.getElementById('video');
+        const _0xcon = document.getElementById('player-container');
+        const _0xplr = new shaka.Player(_0xvid);
+        const _0xui = new shaka.ui.Overlay(_0xplr, _0xcon, _0xvid);
 
-    const ui = new shaka.ui.Overlay(player, container, video);
-    ui.configure({
-        'controlPanelElements': ['play_pause', 'time_and_duration', 'spacer', 'mute', 'volume', 'quality', 'fullscreen']
-    });
+        _0xplr.configure({
+            drm: { clearKeys: { [_0xde20('NDAwMTMxOTk0YjQ0NWQ4Yzg4MTcyMDIyNDg3NjBmZGE=')]: _0xde20('MmQ1NmNiNmYwN2E3NWI5YWZmMTY1ZDUzNGFlMmJmYzQ=') } }
+        });
 
-    player.configure({
-        drm: {
-            clearKeys: {
-                "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4"
-            }
-        }
-    });
+        _0xplr.getNetworkingEngine().registerRequestFilter((_0xtype, _0xreq) => {
+            _0xreq.headers['User-Agent'] = _0xde20('cGxhWXR2LzcuMS41IChMaW51eDtBbmRyb2lkIDEzKSBFeG9QbGF5ZXJMaWIvMi4xMS42');
+            _0xreq.headers['Referer'] = _0xde20('aHR0cHM6Ly93d3cuamlvdHYuY29tLw==');
+            const _0xsep = _0xreq.uris[0].includes('?') ? '&' : '?';
+            _0xreq.uris[0] += _0xsep + "__hdnea__=" + _0xde20('c3Q9MTc3MTcyMzE5Nn5leHA9MTc3MTgwOTU5Nn5hY2w9Lyp+aG1hYz1mNGI5NDM2OGM1OTAzNzI3ZjgzNjA1OTg1MTU4M2Q4NzU3YmUyMGFlMTBjNWIyYmVhYWQ0ZTU1ODBh');
+        });
 
-    player.getNetworkingEngine().registerRequestFilter((type, request) => {
-        request.headers['User-Agent'] = "plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6";
-        request.headers['Referer'] = 'https://www.jiotv.com/';
-        const connector = request.uris[0].includes('?') ? '&' : '?';
-        request.uris[0] += connector + "__hdnea__=" + token;
-    });
-
-    try {
-        await player.load(manifestUri);
-    } catch (e) {
-        console.error("Load failed:", e.code);
+        try {
+            await _0xplr.load(_0xde20('aHR0cHM6Ly9qaW90dm1ibGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0hpbmRpX0JUUy9vdXRwdXQvaW5kZXgubXBk'));
+        } catch (e) { }
     }
-}
-
-document.addEventListener('shaka-ui-loaded', initPlayer);
+    document.addEventListener('shaka-ui-loaded', initPlayer);
 </script>
-
 </body>
 </html>
