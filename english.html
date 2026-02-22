@@ -1,154 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DevCoderz X Assault Decoder | LIVE</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>DevCoderz X Assault Decoder</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root { 
-            --primary: #3b82f6; 
-            --primary-dark: #2563eb;
-            --dark-bg: #070b14; 
-            --glass: rgba(255, 255, 255, 0.05); 
-            --glass-border: rgba(255, 255, 255, 0.1); 
+        :root {
+            --bg: #0b0f1a;
+            --accent: #2563eb;
+            --glass: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         
         body { 
-            background: var(--dark-bg); 
-            background-image: radial-gradient(circle at top left, #1e293b, #070b14); 
-            color: #ffffff; 
-            min-height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            padding: 15px; 
-            overflow-x: hidden; 
+            background: var(--bg); 
+            background-image: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.1) 0px, transparent 50%), 
+                              radial-gradient(at 100% 100%, rgba(30, 41, 59, 0.2) 0px, transparent 50%);
+            color: #fff; 
+            min-height: 100vh;
+            padding: 15px;
         }
 
-        .container { width: 100%; max-width: 900px; animation: slideIn 0.7s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .main-wrapper { max-width: 900px; margin: 0 auto; }
 
-        /* Header Section */
-        .header { 
-            background: var(--glass); 
-            backdrop-filter: blur(15px); 
-            border: 1px solid var(--glass-border); 
-            border-radius: 20px; 
-            padding: 18px 25px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        /* Custom Header */
+        .brand-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 18px; background: var(--glass); backdrop-filter: blur(10px);
+            border: 1px solid var(--border); border-radius: 20px; margin-bottom: 20px;
         }
+        .brand-text { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; }
+        .brand-text span { color: var(--accent); }
 
-        .brand-title { font-weight: 800; font-size: 1.25rem; letter-spacing: -0.5px; color: #fff; }
-        .brand-title span { color: var(--primary); }
-
-        .live-status { 
-            background: rgba(239, 68, 68, 0.1); 
-            color: #ff4d4d; 
-            padding: 6px 14px; 
-            border-radius: 50px; 
-            font-weight: 700; 
-            font-size: 0.75rem; 
-            border: 1px solid rgba(239, 68, 68, 0.2); 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
+        /* The Ultimate Rotation Fix Container */
+        .player-shell {
+            position: relative; width: 100%; aspect-ratio: 16/9;
+            background: #000; border-radius: 24px; overflow: hidden;
+            border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.4);
         }
         
-        .pulse-dot { height: 8px; width: 8px; background: #ff4d4d; border-radius: 50%; animation: pulse-anim 1.5s infinite; }
-        @keyframes pulse-anim { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
-
-        /* Video Container */
-        .video-box { 
-            position: relative; 
-            width: 100%; 
-            aspect-ratio: 16/9; 
-            background: #000; 
-            border-radius: 24px; 
-            overflow: hidden; 
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-        }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* Community Section */
-        .community-panel { 
-            margin-top: 20px;
-            background: var(--glass); 
-            border: 1px solid var(--glass-border); 
-            border-radius: 20px; 
-            padding: 25px; 
-            text-align: center; 
-            backdrop-filter: blur(10px); 
-            transition: 0.3s;
+        /* Force Rotation UI (Hidden on Desktop) */
+        .app-controls {
+            display: flex; gap: 10px; margin-top: 15px;
         }
         
-        .community-panel h3 { font-size: 1.1rem; margin-bottom: 5px; }
-        .community-panel p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 15px; }
+        .control-btn {
+            flex: 1; padding: 14px; border-radius: 15px; border: none;
+            background: var(--glass); color: #fff; font-weight: 600;
+            font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        
+        /* Telegram Button - Glowing Style */
+        .tg-card {
+            margin-top: 20px; background: linear-gradient(135deg, rgba(37,99,235,0.1), rgba(37,99,235,0.05));
+            border-radius: 24px; padding: 25px; text-align: center;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+        .tg-btn {
+            display: block; width: 100%; padding: 16px; 
+            background: var(--accent); color: #fff; text-decoration: none;
+            border-radius: 16px; font-weight: 800; margin-top: 15px;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+        }
 
-        .btn-tg { 
-            display: inline-flex; align-items: center; justify-content: center; gap: 10px; 
-            width: 100%; max-width: 400px; padding: 14px; 
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
-            color: white; text-decoration: none; border-radius: 15px; 
-            font-weight: 600; border: none; cursor: pointer; transition: 0.3s;
+        /* Fullscreen Landscape Override (The Hack) */
+        .force-land {
+            position: fixed !important; top: 0; left: 0; width: 100vh !important; height: 100vw !important;
+            transform: rotate(90deg) translateY(-100%); transform-origin: top left;
+            z-index: 999999; border-radius: 0 !important;
         }
-        .btn-tg:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4); }
-        .btn-tg:active { transform: scale(0.98); }
-        
-        /* Security */
-        body { -webkit-user-select: none; user-select: none; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-<div class="container">
-    <header class="header">
-        <div class="brand-title">DevCoderz <span>X</span> Assault Decoder</div>
-        <div class="live-status"><div class="pulse-dot"></div> LIVE</div>
+<div class="main-wrapper">
+    <header class="brand-header">
+        <div class="brand-text">DevCoderz <span>X</span> Assault Decoder</div>
+        <div style="font-size: 0.7rem; font-weight: 900; color: #ff4757; display: flex; align-items: center; gap: 5px;">
+            <i class="fa-solid fa-circle" style="font-size: 8px; animation: blink 1s infinite;"></i> LIVE
+        </div>
     </header>
 
-    <div class="video-box">
-        <iframe id="main-stream" src="about:blank" allow="autoplay; encrypted-media; gyroscope; accelerometer; picture-in-picture" allowfullscreen></iframe>
+    <div class="player-shell" id="vidFrame">
+        <iframe id="main-player" 
+            src="https://devcoderzxcricket.vercel.app/prince.my.son.html" 
+            allow="autoplay; encrypted-media; gyroscope; accelerometer" 
+            allowfullscreen>
+        </iframe>
     </div>
 
-    <div class="community-panel">
-        <h3>Official Updates</h3>
-        <p>Join our telegram for match schedules & premium links</p>
-        <button onclick="_join()" class="btn-tg"><i class="fa-brands fa-telegram"></i> JOIN TELEGRAM</button>
+    <div class="app-controls">
+        <button class="control-btn" onclick="toggleRotate()">
+            <i class="fa-solid fa-rotate"></i> Rotate Video
+        </button>
+        <button class="control-btn" onclick="location.reload()">
+            <i class="fa-solid fa-sync"></i> Refresh
+        </button>
+    </div>
+
+    <div class="tg-card">
+        <h3 style="font-size: 1.1rem;">Official Community</h3>
+        <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 5px;">Join for high speed premium links</p>
+        <a href="https://t.me/Cric_decoders" target="_blank" class="tg-btn">
+            <i class="fa-brands fa-telegram"></i> JOIN TELEGRAM
+        </a>
     </div>
 </div>
 
 <script>
-    /* Hex-Encoded Secure Links */
-    const _secure = [
-        "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x64\x65\x76\x63\x6F\x64\x65\x72\x7A\x78\x63\x72\x69\x63\x6B\x65\x74\x2E\x76\x65\x72\x63\x65\x6C\x2E\x61\x70\x70\x2F\x70\x72\x69\x6E\x63\x65\x2E\x6D\x79\x2E\x73\x6F\x6E\x2E\x68\x74\x6D\x6C", 
-        "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x74\x2E\x6D\x65\x2F\x43\x72\x69\x63\x5F\x64\x65\x63\x6F\x64\x65\x72\x73"
-    ];
-
-    document.getElementById('main-stream').src = _secure[0];
-
-    function _join() { window.open(_secure[1], "_blank"); }
-
-    /* Auto-Rotation Logic for Fullscreen */
-    document.addEventListener('fullscreenchange', () => {
-        if (document.fullscreenElement && screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock('landscape').catch(() => {});
+    // Manual Rotation Logic for Stubborn Apps
+    let isRotated = false;
+    function toggleRotate() {
+        const player = document.getElementById('vidFrame');
+        if(!isRotated) {
+            player.classList.add('force-land');
+            isRotated = true;
+        } else {
+            player.classList.remove('force-land');
+            isRotated = false;
         }
-    });
+    }
 
-    /* Basic Anti-Copy */
-    document.onkeydown = (e) => {
-        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) return false;
-    };
+    // Blink Animation
+    const style = document.createElement('style');
+    style.innerHTML = `@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }`;
+    document.head.appendChild(style);
+
+    // Disable Shortcuts
+    document.addEventListener('keydown', e => {
+        if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) e.preventDefault();
+    });
 </script>
 
 </body>
