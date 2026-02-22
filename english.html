@@ -30,10 +30,10 @@
             overflow-x: hidden; 
         }
 
-        .container { width: 100%; max-width: 950px; animation: slideIn 0.7s ease-out; }
+        .container { width: 100%; max-width: 900px; animation: slideIn 0.7s ease-out; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Full Header - Requested Change */
+        /* Header Section */
         .header { 
             background: var(--glass); 
             backdrop-filter: blur(15px); 
@@ -66,7 +66,7 @@
         .pulse-dot { height: 8px; width: 8px; background: #ff4d4d; border-radius: 50%; animation: pulse-anim 1.5s infinite; }
         @keyframes pulse-anim { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
 
-        /* Video Box */
+        /* Video Container */
         .video-box { 
             position: relative; 
             width: 100%; 
@@ -79,29 +79,33 @@
         }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* UI Panels */
-        .grid-ui { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 20px; }
-        .ui-card { 
+        /* Community Section */
+        .community-panel { 
+            margin-top: 20px;
             background: var(--glass); 
             border: 1px solid var(--glass-border); 
             border-radius: 20px; 
-            padding: 22px; 
+            padding: 25px; 
             text-align: center; 
             backdrop-filter: blur(10px); 
             transition: 0.3s;
         }
-        .ui-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        
+        .community-panel h3 { font-size: 1.1rem; margin-bottom: 5px; }
+        .community-panel p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 15px; }
 
-        .btn-action { 
+        .btn-tg { 
             display: inline-flex; align-items: center; justify-content: center; gap: 10px; 
-            width: 100%; padding: 14px; margin-top: 15px; 
+            width: 100%; max-width: 400px; padding: 14px; 
             background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
             color: white; text-decoration: none; border-radius: 15px; 
-            font-weight: 600; border: none; cursor: pointer; 
+            font-weight: 600; border: none; cursor: pointer; transition: 0.3s;
         }
+        .btn-tg:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4); }
+        .btn-tg:active { transform: scale(0.98); }
         
-        /* Protection Layer */
-        body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+        /* Security */
+        body { -webkit-user-select: none; user-select: none; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -113,50 +117,35 @@
     </header>
 
     <div class="video-box">
-        <iframe id="stream" src="about:blank" allow="autoplay; encrypted-media; gyroscope; accelerometer; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="main-stream" src="about:blank" allow="autoplay; encrypted-media; gyroscope; accelerometer; picture-in-picture" allowfullscreen></iframe>
     </div>
 
-    <div class="grid-ui">
-        <div class="ui-card">
-            <h3>Community Channel</h3>
-            <button onclick="_goTG()" class="btn-action"><i class="fa-brands fa-telegram"></i> Join Telegram</button>
-        </div>
-        <div class="ui-card">
-            <h3>Share Link</h3>
-            <button id="copyUrl" class="btn-action"><i class="fa-solid fa-share-nodes"></i> Share with Friends</button>
-        </div>
+    <div class="community-panel">
+        <h3>Official Updates</h3>
+        <p>Join our telegram for match schedules & premium links</p>
+        <button onclick="_join()" class="btn-tg"><i class="fa-brands fa-telegram"></i> JOIN TELEGRAM</button>
     </div>
 </div>
 
 <script>
-    /* Security: Hex Obfuscation */
-    const _0xData = [
+    /* Hex-Encoded Secure Links */
+    const _secure = [
         "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x64\x65\x76\x63\x6F\x64\x65\x72\x7A\x78\x63\x72\x69\x63\x6B\x65\x74\x2E\x76\x65\x72\x63\x65\x6C\x2E\x61\x70\x70\x2F\x70\x72\x69\x6E\x63\x65\x2E\x6D\x79\x2E\x73\x6F\x6E\x2E\x68\x74\x6D\x6C", 
         "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x74\x2E\x6D\x65\x2F\x43\x72\x69\x63\x5F\x64\x65\x63\x6F\x64\x65\x72\x73"
     ];
 
-    document.getElementById('stream').src = _0xData[0];
+    document.getElementById('main-stream').src = _secure[0];
 
-    function _goTG() { window.open(_0xData[1], "_blank"); }
+    function _join() { window.open(_secure[1], "_blank"); }
 
-    /* Rotation & Fullscreen Logic */
+    /* Auto-Rotation Logic for Fullscreen */
     document.addEventListener('fullscreenchange', () => {
-        if (document.fullscreenElement && screen.orientation.lock) {
+        if (document.fullscreenElement && screen.orientation && screen.orientation.lock) {
             screen.orientation.lock('landscape').catch(() => {});
         }
     });
 
-    /* Share Action */
-    document.getElementById('copyUrl').addEventListener('click', async () => {
-        if (navigator.share) {
-            await navigator.share({title: 'DevCoderz Live', url: window.location.href});
-        } else {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Link copied!");
-        }
-    });
-
-    /* Block Inspect Tools */
+    /* Basic Anti-Copy */
     document.onkeydown = (e) => {
         if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) return false;
     };
