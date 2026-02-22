@@ -1,104 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevCoderZ X Cricket</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; height: 100vh; width: 100vw; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevCoderz X Assault Decoder // Live Stream</title>
 
-        /* Fixed Container */
-        #container {
-            width: 100%;
-            height: 100%;
-            background: #000;
-        }
-        video {
-            width: 100%;
-            height: 100%;
-        }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        /* Spinner aur extra elements hide */
-        .shaka-spinner-container { display: none !important; }
+<style>
+:root {
+    --bg-gradient: linear-gradient(to bottom, #ffffff 0%, #f1f5f9 100%);
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    --text-primary: #1e293b;
+}
 
-        /* Seek bar styling as per your choice */
-        .shaka-seek-bar-container { height: 6px !important; }
-    </style>
+* { box-sizing: border-box; margin:0; padding:0; font-family:'Outfit',sans-serif; }
+body { background: var(--bg-gradient); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 10px; }
+
+/* Player Styles */
+#player-wrapper { width: 100%; max-width: 1000px; aspect-ratio: 16/9; background: #000; border-radius: 16px; overflow: hidden; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+video { width: 100%; height: 100%; object-fit: contain; }
+.dev-tag { position: absolute; top: 15px; left: 15px; z-index: 99; color: #fff; font-weight: bold; font-size: 12px; text-shadow: 0 0 10px #00d2ff; pointer-events: none; }
+#unmute-shield { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; cursor: pointer; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.1); color: white; font-size: 14px; text-shadow: 1px 1px 5px black; }
+
+/* Info Section Styles */
+.container { width: 100%; max-width: 1000px; margin-top: 15px; }
+.stream-header { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.live-badge { background: rgba(239,68,68,0.1); color: #dc2626; padding: 4px 12px; border-radius: 30px; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 5px; }
+.grid-panels { display: grid; gap: 15px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.info-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 15px; text-align: center; }
+.action-button { margin-top: 10px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 12px; background: var(--accent-gradient); color: #fff; border-radius: 10px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; }
+
+/* Popup */
+.popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 99999; }
+.popup-box { background: #fff; padding: 20px; max-width: 350px; width: 90%; border-radius: 16px; text-align: center; }
+.popup-box button { margin-top: 10px; width: 100%; padding: 10px; border: none; border-radius: 8px; background: #3b82f6; color: #fff; cursor: pointer; }
+</style>
 </head>
 <body>
 
-<div id="container" data-shaka-player-container>
-    <video id="video" data-shaka-player autoplay playsinline></video>
+<div class="stream-header" style="width: 100%; max-width: 1000px;">
+    <h1 style="font-size: 18px;">DevCoderz X Assault</h1>
+    <span class="live-badge"><i class="fa-solid fa-circle"></i> LIVE</span>
+</div>
+
+<div id="player-wrapper" data-shaka-player-container>
+    <div class="dev-tag">Developer - Devansh Sharma</div>
+    <div id="unmute-shield">Tap to Unmute 🔊</div>
+    <video id="video" data-shaka-player autoplay muted playsinline></video>
+</div>
+
+<div class="container">
+    <div class="grid-panels">
+        <div class="info-card">
+            <h3>📣 Join Telegram</h3>
+            <a href="https://t.me/Cric_decoders" target="_blank" class="action-button">
+                <i class="fa-brands fa-telegram"></i> Join Now
+            </a>
+        </div>
+        <div class="info-card">
+            <h3><i class="fa-solid fa-share-nodes"></i> Share App</h3>
+            <button class="action-button" id="shareButton">
+                <i class="fa-solid fa-copy"></i> Copy Link
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="telegramPopup" class="popup">
+  <div class="popup-box">
+    <h2>📣 Join Telegram</h2>
+    <p>Get latest match updates & links!</p>
+    <button onclick="window.open('https://t.me/Cric_decoders','_blank')">Join ✅</button>
+    <button onclick="document.getElementById('telegramPopup').style.display='none'" style="background:#64748b;">Close</button>
+  </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
+// --- Shaka Player Logic ---
+var _0x1 = 'aHR0cHM6Ly9qaW90dm1ibGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2Rhc2gvU3BvcnRzMThfMV9IRF9CVFMubXBk';
+var _0x2 = 'Y29tLmppby5qaW90di83LjAuOCAoTGludXg7IEFuZHJvaWQgOSkgRXhvUGxheWVyTGliLzIuMTMuMg==';
+var _0x3 = 'aHR0cHM6Ly93d3cuamlvdHYuY29tLw==';
+var _0x4 = 'c3Q9MTc3MTczNjQzNn5leHA9MTc3MTgyMjgzNn5hY2w9Lyp+aG1hYz04ZWM4MmJhYWRjNWVmZTY2ZjBkMTk2YzA4Nzc1ZDcxNGNjY2FjNmMzMmRiZjdjNjczOTJjMjEyYTE0NDVhMWY4';
+var _0x5 = 'YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=';
+var _0x6 = 'MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=';
+
+function _d(b){return atob(b)}
+
+async function initPlayer(){
     shaka.polyfill.installAll();
-    if (!shaka.Player.isBrowserSupported()) return;
+    var v = document.getElementById('video');
+    var c = document.getElementById('player-wrapper');
+    var s = document.getElementById('unmute-shield');
+    var p = new shaka.Player(v);
+    new shaka.ui.Overlay(p, c, v);
 
-    const video = document.getElementById('video');
-    const container = document.getElementById('container');
-    const player = new shaka.Player(video);
-
-    // UI Overlay setup - No duplicate containers
-    const ui = new shaka.ui.Overlay(player, container, video);
-    ui.configure({
-        controlPanelElements: [
-            'play_pause', 'time_and_duration', 'spacer', 'mute', 'volume', 'quality', 'fullscreen'
-        ],
-        seekBarColors: {
-            base: 'rgba(255,255,255,0.3)',
-            buffered: 'rgba(255,255,255,0.5)',
-            played: 'green'
-        }
+    p.configure({
+        drm:{clearKeys:{[_d(_0x5)]:_d(_0x6)}},
+        streaming:{lowLatencyMode:true,bufferingGoal:5}
     });
 
-    // DRM Config
-    let drmConfig = {
-        clearKeys: {
-            "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4"
-        }
-    };
-
-    // Jio Stream Config
-    let streamUrl = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
-    let cookieHeader = "hdnea=st=1770968162/exp=1771054562/acl=/*~hmac=a20b369ce7b0b48ea6f53ecd616f0e94ba595042495610cae245fed7b640c883";
-
-    // Auto-fetch fresh cookie logic (No changes here)
-    try {
-        const response = await fetch('https://allrounderid.pages.dev/api/jiotv2.json');
-        const data = await response.json();
-        const ch = data.find(c => c.channel_name === "Star Sports 1 Hindi");
-        if (ch && ch.cookie) cookieHeader = ch.cookie;
-    } catch (e) {}
-
-    player.configure({ drm: drmConfig });
-
-    // Request Filter for Security Bypass
-    player.getNetworkingEngine().registerRequestFilter((type, request) => {
-        request.headers['Referer'] = 'https://www.jiotv.com/';
-        request.headers['User-Agent'] = "plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6";
-        request.headers['Cookie'] = cookieHeader;
-
-        if (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT) {
-            if (!request.uris[0].includes('__hdnea=')) {
-                const sep = request.uris[0].includes('?') ? '&' : '?';
-                request.uris[0] += sep + cookieHeader;
-            }
-        }
+    p.getNetworkingEngine().registerRequestFilter(function(t,r){
+        r.headers['User-Agent']=_d(_0x2);
+        r.headers['Referer']=_d(_0x3);
+        r.uris[0]+=(r.uris[0].includes('?')?'&':'?')+"__hdnea__="+_d(_0x4);
     });
 
     try {
-        await player.load(streamUrl);
-        console.log("Stream Loaded!");
-    } catch (e) {
-        console.error("Load failed", e);
+        await p.load(_d(_0x1));
+        s.addEventListener('click', function(){
+            v.muted = false;
+            s.style.display = 'none';
+        });
+    } catch(e){console.log('Error Loading Stream');}
+}
+
+// --- General UI Logic ---
+window.onload = function() {
+    setTimeout(() => {
+        document.getElementById("telegramPopup").style.display = "flex";
+    }, 4000);
+};
+
+document.getElementById('shareButton').addEventListener('click', async () => {
+    if (navigator.share) {
+        navigator.share({title: 'Cricket Live', url: window.location.href});
+    } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link Copied!');
     }
 });
-</script>
 
+document.addEventListener('shaka-ui-loaded', initPlayer);
+</script>
 </body>
 </html>
