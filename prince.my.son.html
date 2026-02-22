@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stream Engine - DevCoderz</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; }
+        #player-ui-container { width: 100vw; height: 100vh; position: relative; }
+        video { width: 100%; height: 100%; object-fit: contain; }
+
+        /* The manual trigger for audio */
+        #click-to-unmute {
+            position: absolute; inset: 0; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.6); color: white; cursor: pointer;
+            font-family: sans-serif;
+        }
+        .dev-badge {
+            position: absolute; top: 15px; left: 15px; color: rgba(255,255,255,0.7);
+            font-size: 12px; pointer-events: none; z-index: 99;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="player-ui-container" data-shaka-player-container>
+        <div class="dev-badge">Developer - Devansh Sharma</div>
+
+        <div id="click-to-unmute">
+            <img src="https://cdn-icons-png.flaticon.com/512/727/727269.png" width="50" style="filter: invert(1);">
+            <p style="margin-top:10px; font-weight: bold;">TAP TO UNMUTE</p>
+        </div>
+
+        <video id="video-element" data-shaka-player autoplay muted playsinline></video>
+    </div>
+
+    <script>
+        // Security keys and URLs
+        const manifestUri = atob('aHR0cHM6Ly9qaW90dm1ibGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2Rhc2gvU3BvcnRzMThfMV9IRF9CVFMubXBk');
+        const licenseKey = atob('YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=');
+        const licenseValue = atob('MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=');
+        const token = atob('c3Q9MTc3MTczNjQzNn5leHA9MTc3MTgyMjgzNn5hY2w9Lyp+aG1hYz04ZWM4MmJhYWRjNWVmZTY2ZjBkMTk2YzA4Nzc1ZDcxNGNjY2FjNmMzMmRiZjdjNjczOTJjMjEyYTE0NDVhMWY4');
+
+        async function startStreaming() {
+            const video = document.getElementById('video-element');
+            const container = document.getElementById('player-ui-container');
+            const unmuteLayer = document.getElementById('click-to-unmute');
+
+            const player = new shaka.Player(video);
+            const ui = new shaka.ui.Overlay(player, container, video);
+
+            player.configure({
+                drm: { clearKeys: { [licenseKey]: licenseValue } }
+            });
+
+            player.getNetworkingEngine().registerRequestFilter((type, request) => {
+                request.headers['User-Agent'] = 'com.jio.jiotv/7.0.8 (Linux; Android 9) ExoPlayerLib/2.13.2';
+                request.uris[0] += (request.uris[0].includes('?') ? '&' : '?') + "__hdnea__=" + token;
+            });
+
+            try {
+                await player.load(manifestUri);
+
+                // Manual interaction to enable sound
+                unmuteLayer.addEventListener('click', () => {
+                    video.muted = false;
+                    unmuteLayer.style.display = 'none';
+                });
+            } catch (err) { console.log("Stream offline or error"); }
+        }
+
+        document.addEventListener('shaka-ui-loaded', startStreaming);
+    </script>
+</body>
+</html>
