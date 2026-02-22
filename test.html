@@ -1,72 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DevCoderz X Assault Decoder // Live Stream</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevCoderz X Assault // Live Stream</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href='data:application/json,{"name":"DevCoderz X Assault","short_name":"CricketApp","description":"Live Cricket Streaming and Updates by Devansh Sharma","start_url":"/","display":"standalone","background_color":"#ffffff","theme_color":"#3b82f6","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/5358/5358643.png","sizes":"512x512","type":"image/png"}]}'>
+    
+    <meta name="description" content="Live Cricket Streaming and Updates by Devansh Sharma">
+    <meta name="theme-color" content="#3b82f6">
 
-<style>
-:root {
-    --bg-gradient: linear-gradient(to bottom, #ffffff 0%, #f1f5f9 100%);
-    --glass-bg: rgba(255, 255, 255, 0.75);
-    --glass-border: rgba(0, 0, 0, 0.08);
-    --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    --text-primary: #1e293b;
-}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-* { box-sizing: border-box; margin:0; padding:0; font-family:'Outfit',sans-serif; }
-body { background: var(--bg-gradient); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 10px; }
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(to bottom, #ffffff 0%, #f1f5f9 100%);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            --text-primary: #1e293b;
+        }
 
-/* Player Styles */
-#player-wrapper { width: 100%; max-width: 1000px; aspect-ratio: 16/9; background: #000; border-radius: 16px; overflow: hidden; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-video { width: 100%; height: 100%; object-fit: contain; }
-.dev-tag { position: absolute; top: 15px; left: 15px; z-index: 99; color: #fff; font-weight: bold; font-size: 12px; text-shadow: 0 0 10px #00d2ff; pointer-events: none; }
-#unmute-shield { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; cursor: pointer; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.1); color: white; font-size: 14px; text-shadow: 1px 1px 5px black; }
+        * { box-sizing: border-box; margin:0; padding:0; font-family:'Outfit',sans-serif; }
+        body { background: var(--bg-gradient); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 10px; }
 
-/* Info Section Styles */
-.container { width: 100%; max-width: 1000px; margin-top: 15px; }
-.stream-header { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-.live-badge { background: rgba(239,68,68,0.1); color: #dc2626; padding: 4px 12px; border-radius: 30px; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 5px; }
-.grid-panels { display: grid; gap: 15px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-.info-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 15px; text-align: center; }
-.action-button { margin-top: 10px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 12px; background: var(--accent-gradient); color: #fff; border-radius: 10px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; }
+        /* Player Container */
+        #player-wrapper { width: 100%; max-width: 1000px; aspect-ratio: 16/9; background: #000; border-radius: 16px; overflow: hidden; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); margin-bottom: 20px; }
+        video { width: 100%; height: 100%; object-fit: contain; }
+        .dev-tag { position: absolute; top: 15px; left: 15px; z-index: 99; color: #fff; font-weight: bold; font-size: 12px; text-shadow: 0 0 10px #00d2ff; pointer-events: none; }
+        #unmute-shield { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; cursor: pointer; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); color: white; font-size: 16px; font-weight: 600; text-align: center; }
 
-/* Popup */
-.popup { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 99999; }
-.popup-box { background: #fff; padding: 20px; max-width: 350px; width: 90%; border-radius: 16px; text-align: center; }
-.popup-box button { margin-top: 10px; width: 100%; padding: 10px; border: none; border-radius: 8px; background: #3b82f6; color: #fff; cursor: pointer; }
-</style>
+        /* Header & Info */
+        .stream-header { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; width: 100%; max-width: 1000px; }
+        .live-badge { background: rgba(239,68,68,0.1); color: #dc2626; padding: 4px 12px; border-radius: 30px; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 5px; }
+        
+        .container { width: 100%; max-width: 1000px; }
+        .grid-panels { display: grid; gap: 15px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+        .info-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        
+        .action-button { margin-top: 10px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 12px; background: var(--accent-gradient); color: #fff; border-radius: 10px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; }
+        .action-button:active { transform: scale(0.98); }
+
+        /* Popup */
+        .popup { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 99999; padding: 20px; }
+        .popup-box { background: #fff; padding: 25px; max-width: 350px; width: 100%; border-radius: 20px; text-align: center; }
+        .popup-box h2 { margin-bottom: 10px; color: #1e293b; }
+        .popup-box p { color: #64748b; margin-bottom: 20px; }
+    </style>
 </head>
 <body>
 
-<div class="stream-header" style="width: 100%; max-width: 1000px;">
+<div class="stream-header">
     <h1 style="font-size: 18px;">DevCoderz X Assault</h1>
     <span class="live-badge"><i class="fa-solid fa-circle"></i> LIVE</span>
 </div>
 
 <div id="player-wrapper" data-shaka-player-container>
-    <div class="dev-tag">Developer - Devansh Sharma</div>
-    <div id="unmute-shield">Tap to Unmute 🔊</div>
+    <div class="dev-tag">Devansh Sharma</div>
+    <div id="unmute-shield">
+        <div>
+            <i class="fa-solid fa-volume-xmark" style="font-size: 30px; margin-bottom: 10px;"></i><br>
+            TAP TO UNMUTE
+        </div>
+    </div>
     <video id="video" data-shaka-player autoplay muted playsinline></video>
 </div>
 
 <div class="container">
     <div class="grid-panels">
         <div class="info-card">
-            <h3>📣 Join Telegram</h3>
+            <h3 style="font-size: 16px;">📣 Official Telegram</h3>
             <a href="https://t.me/Cric_decoders" target="_blank" class="action-button">
-                <i class="fa-brands fa-telegram"></i> Join Now
+                <i class="fa-brands fa-telegram"></i> Join for Updates
             </a>
         </div>
         <div class="info-card">
-            <h3><i class="fa-solid fa-share-nodes"></i> Share App</h3>
-            <button class="action-button" id="shareButton">
-                <i class="fa-solid fa-copy"></i> Copy Link
+            <h3 style="font-size: 16px;"><i class="fa-solid fa-share-nodes"></i> Share with Friends</h3>
+            <button class="action-button" id="shareButton" style="background: #10b981;">
+                <i class="fa-solid fa-paper-plane"></i> Share Link
             </button>
         </div>
     </div>
@@ -74,10 +88,11 @@ video { width: 100%; height: 100%; object-fit: contain; }
 
 <div id="telegramPopup" class="popup">
   <div class="popup-box">
-    <h2>📣 Join Telegram</h2>
-    <p>Get latest match updates & links!</p>
-    <button onclick="window.open('https://t.me/Cric_decoders','_blank')">Join ✅</button>
-    <button onclick="document.getElementById('telegramPopup').style.display='none'" style="background:#64748b;">Close</button>
+    <i class="fa-brands fa-telegram" style="font-size: 50px; color: #24A1DE; margin-bottom: 15px;"></i>
+    <h2>Join Telegram</h2>
+    <p>Don't miss any match! Get instant links on our channel.</p>
+    <button class="action-button" onclick="window.open('https://t.me/Cric_decoders','_blank')">JOIN NOW</button>
+    <button onclick="document.getElementById('telegramPopup').style.display='none'" style="background:none; border:none; color:#94a3b8; margin-top:15px; cursor:pointer; font-weight:600;">Maybe Later</button>
   </div>
 </div>
 
@@ -117,22 +132,22 @@ async function initPlayer(){
             v.muted = false;
             s.style.display = 'none';
         });
-    } catch(e){console.log('Error Loading Stream');}
+    } catch(e){console.log('Stream Error');}
 }
 
-// --- General UI Logic ---
+// UI Logic
 window.onload = function() {
     setTimeout(() => {
         document.getElementById("telegramPopup").style.display = "flex";
-    }, 4000);
+    }, 3000);
 };
 
 document.getElementById('shareButton').addEventListener('click', async () => {
     if (navigator.share) {
-        navigator.share({title: 'Cricket Live', url: window.location.href});
+        navigator.share({title: 'Live Cricket', url: window.location.href});
     } else {
         navigator.clipboard.writeText(window.location.href);
-        alert('Link Copied!');
+        alert('Link Copied to Clipboard!');
     }
 });
 
