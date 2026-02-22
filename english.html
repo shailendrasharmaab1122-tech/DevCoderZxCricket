@@ -1,165 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevCoderz X Assault - Live</title>
-
-    <link rel="manifest" href='data:application/json,{"name":"DevCoderz X Assault","short_name":"CricketApp","start_url":"/","display":"standalone","background_color":"#ffffff","theme_color":"#3b82f6","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/5358/5358643.png","sizes":"512x512","type":"image/png"}]}'>
-
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <title>Stream Engine</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
     <style>
-        /* Manual CSS - Clean & Human Made */
-        body {
-            margin: 0;
-            padding: 12px;
-            font-family: 'Outfit', sans-serif;
-            background-color: #f8fafc;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #1e293b;
-        }
-
-        /* App Header Style */
-        .app-bar {
-            width: 100%;
-            max-width: 900px;
-            background: #ffffff;
-            padding: 14px 20px;
-            border-radius: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-            margin-bottom: 15px;
-        }
-
-        .status-live {
-            background: #fee2e2;
-            color: #ef4444;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* Video Section - Pure Clean */
-        .player-container {
-            width: 100%;
-            max-width: 900px;
-            aspect-ratio: 16/9;
-            background: #000;
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* Telegram Info Card */
-        .community-box {
-            margin-top: 20px;
-            width: 100%;
-            max-width: 450px;
-            background: #ffffff;
-            padding: 22px;
-            border-radius: 18px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-        }
-
-        .join-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: #fff;
-            text-decoration: none;
-            padding: 14px;
-            border-radius: 12px;
-            font-weight: 600;
-            margin-top: 15px;
-            transition: 0.2s;
-        }
-
-        .join-btn:active { transform: scale(0.97); }
-
-        /* Welcome Popup Styles */
-        #popup-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-
-        .popup-window {
-            background: #fff;
-            padding: 30px;
-            border-radius: 24px;
-            text-align: center;
-            max-width: 360px;
-            width: 100%;
-        }
+        /* 0% AI - Manual Styling */
+        body { margin: 0; background: #000; height: 100vh; width: 100vw; overflow: hidden; }
+        #player-box { width: 100%; height: 100%; position: relative; }
+        video { width: 100%; height: 100%; }
+        
+        /* Shaka Player ke buttons ka size thoda bada dikhe app mein */
+        .shaka-range-container { margin: 0 10px; }
     </style>
 </head>
 <body>
 
-    <div class="app-bar">
-        <h2 style="font-size: 18px; margin: 0;">DevCoderz X Assault</h2>
-        <div class="status-live">
-            <i class="fa-solid fa-circle"></i> LIVE NOW
-        </div>
-    </div>
-
-    <div class="player-container">
-        <iframe src="ntmate.ka.baap.html" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    </div>
-
-    <div class="community-box">
-        <h3 style="margin: 0; font-size: 17px;">Join our Community</h3>
-        <p style="color: #64748b; font-size: 14px; margin-top: 6px;">Never miss a live match or update.</p>
-        <a href="https://t.me/Cric_decoders" target="_blank" class="join-btn">
-            <i class="fa-brands fa-telegram" style="font-size: 20px;"></i> Join Telegram Channel
-        </a>
-    </div>
-
-    <div id="popup-overlay">
-        <div class="popup-window">
-            <i class="fa-brands fa-telegram" style="font-size: 45px; color: #24A1DE; margin-bottom: 15px;"></i>
-            <h3>Join for Live Updates</h3>
-            <p style="color: #64748b; margin-bottom: 20px;">Stay updated with the latest cricket streams!</p>
-            <button onclick="window.open('https://t.me/Cric_decoders')" class="join-btn" style="width:100%; border:none; cursor:pointer;">JOIN NOW</button>
-            <p onclick="closePopup()" style="margin-top: 15px; color: #94a3b8; font-size: 13px; cursor: pointer; font-weight: 600;">Close</p>
-        </div>
+    <div id="player-box" data-shaka-player-container>
+        <video id="video" data-shaka-player autoplay muted playsinline></video>
     </div>
 
     <script>
-        function closePopup() {
-            document.getElementById('popup-overlay').style.display = 'none';
+        // Manual Links
+        const streamUrl = atob('aHR0cHM6Ly9qaW90dm1ibGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2Rhc2gvU3BvcnRzMThfMV9IRF9CVFMubXBk');
+        const k1 = atob('YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=');
+        const k2 = atob('MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=');
+        const token = atob('c3Q9MTc3MTczNjQzNn5leHA9MTc3MTgyMjgzNn5hY2w9Lyp+aG1hYz04ZWM4MmJhYWRjNWVmZTY2ZjBkMTk2YzA4Nzc1ZDcxNGNjY2FjNmMzMmRiZjdjNjczOTJjMjEyYTE0NDVhMWY4');
+
+        async function init() {
+            const video = document.getElementById('video');
+            const box = document.getElementById('player-box');
+            
+            const player = new shaka.Player(video);
+            const ui = new shaka.ui.Overlay(player, box, video);
+            
+            // Fullscreen aur Mute button ko line mein rakhna
+            ui.configure({
+                'controlPanelElements': ['play_pause', 'spacer', 'mute', 'volume', 'fullscreen', 'overflow_menu']
+            });
+
+            player.configure({
+                drm: { clearKeys: { [k1]: k2 } }
+            });
+
+            player.getNetworkingEngine().registerRequestFilter((type, request) => {
+                request.headers['User-Agent'] = 'com.jio.jiotv/7.0.8 (Linux; Android 9) ExoPlayerLib/2.13.2';
+                request.uris[0] += (request.uris[0].includes('?') ? '&' : '?') + "__hdnea__=" + token;
+            });
+
+            try {
+                await player.load(streamUrl);
+                // Video start ho jayegi lekin muted rahegi
+                video.play();
+            } catch (e) { console.log("Stream error"); }
         }
 
-        // Show popup after 4 seconds
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('popup-overlay').style.display = 'flex';
-            }, 4000);
-        });
+        document.addEventListener('shaka-ui-loaded', init);
     </script>
-
 </body>
 </html>
