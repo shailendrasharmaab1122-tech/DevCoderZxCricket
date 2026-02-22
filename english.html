@@ -1,121 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LIVE | DevCoderz X Assault Decoder</title>
+    <title>LIVE | Assault Decoder Premium</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root { --primary: #3b82f6; --dark: #0f172a; --glass: rgba(255, 255, 255, 0.03); --border: rgba(255, 255, 255, 0.08); }
+        :root { --primary: #3b82f6; --dark: #070b14; --glass: rgba(255, 255, 255, 0.05); --border: rgba(255, 255, 255, 0.1); }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
-        body { background: var(--dark); background-image: radial-gradient(circle at 50% -20%, #1e293b, #0f172a); color: #f8fafc; min-height: 100vh; display: flex; justify-content: center; padding: 15px; overflow-x: hidden; }
-        .wrapper { width: 100%; max-width: 1000px; animation: slideUp 0.6s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .top-bar { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 20px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .brand { font-weight: 800; font-size: 1.2rem; }
-        .brand span { color: var(--primary); }
-        .live-indicator { background: rgba(239, 68, 68, 0.1); color: #ff4d4d; padding: 5px 12px; border-radius: 100px; font-weight: 700; font-size: 0.7rem; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(239, 68, 68, 0.2); }
-        .dot { height: 8px; width: 8px; background: #ff4d4d; border-radius: 50%; animation: blink 1.2s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         
-        /* Video Container */
-        .video-box { position: relative; aspect-ratio: 16/9; background: #000; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        body { background: var(--dark); background-image: radial-gradient(circle at top right, #1e293b, #070b14); color: #fff; min-height: 100vh; display: flex; justify-content: center; padding: 15px; overflow-x: hidden; }
+        
+        .container { width: 100%; max-width: 900px; animation: fadeIn 0.8s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Header */
+        .header { background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logo { font-weight: 800; font-size: 1.3rem; letter-spacing: -0.5px; }
+        .logo span { color: var(--primary); }
+        
+        .live-tag { background: rgba(239, 68, 68, 0.15); color: #ff4d4d; padding: 6px 12px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; border: 1px solid rgba(239, 68, 68, 0.3); display: flex; align-items: center; gap: 6px; }
+        .dot { height: 7px; width: 7px; background: #ff4d4d; border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
+
+        /* Video Section - Enhanced for Rotation */
+        .video-container { 
+            position: relative; 
+            width: 100%;
+            aspect-ratio: 16/9; 
+            background: #000; 
+            border-radius: 22px; 
+            overflow: hidden; 
+            border: 1px solid var(--border);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        }
+        
+        /* Force Landscape for App WebView when in Fullscreen */
+        .video-container:-webkit-full-screen { width: 100%; height: 100%; border-radius: 0; }
+        
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* Buttons */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
-        .panel { background: var(--glass); border: 1px solid var(--border); border-radius: 18px; padding: 20px; text-align: center; backdrop-filter: blur(10px); }
-        .action-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; margin-top: 10px; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; border: none; cursor: pointer; }
+        /* Action Grid */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .card { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; padding: 20px; text-align: center; backdrop-filter: blur(10px); }
         
-        /* Modal */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 9999; }
-        .modal-body { background: #1e293b; padding: 30px; border-radius: 25px; max-width: 350px; width: 90%; text-align: center; border: 1px solid var(--border); }
+        .btn { 
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; 
+            width: 100%; padding: 14px; margin-top: 10px; 
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8); 
+            color: white; text-decoration: none; border-radius: 14px; 
+            font-weight: 600; border: none; cursor: pointer; transition: 0.3s;
+        }
+        .btn:active { transform: scale(0.96); }
+
+        /* Security Shield */
+        body { -webkit-user-select: none; user-select: none; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-<div class="wrapper">
-    <header class="top-bar">
-        <div class="brand">DevCoderz <span>X</span> Assault</div>
-        <div class="live-indicator"><div class="dot"></div> LIVE</div>
+<div class="container">
+    <header class="header">
+        <div class="logo">Assault <span>Decoder</span></div>
+        <div class="live-tag"><div class="dot"></div> LIVE NOW</div>
     </header>
 
-    <section class="video-box" id="fullscreen-target">
-        <iframe id="main-player" src="about:blank" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </section>
+    <div class="video-container" id="vidBox">
+        <iframe id="player" src="about:blank" allow="autoplay; encrypted-media; gyroscope; accelerometer; picture-in-picture" allowfullscreen></iframe>
+    </div>
 
     <div class="grid">
-        <div class="panel">
-            <button onclick="_openSafe()" class="action-btn"><i class="fa-brands fa-telegram"></i> Telegram</button>
+        <div class="card">
+            <button onclick="_tg()" class="btn"><i class="fa-brands fa-telegram"></i> Telegram</button>
         </div>
-        <div class="panel">
-            <button id="shareMe" class="action-btn"><i class="fa-solid fa-share-nodes"></i> Share</button>
+        <div class="card">
+            <button id="sh" class="btn"><i class="fa-solid fa-share-nodes"></i> Share</button>
         </div>
-    </div>
-</div>
-
-<div id="pop" class="modal-overlay">
-    <div class="modal-body">
-        <h2>Join Telegram</h2>
-        <p style="color:#94a3b8; margin: 15px 0;">Get high-quality links daily!</p>
-        <button onclick="_openSafe()" class="action-btn">JOIN NOW</button>
-        <button onclick="_hidePop()" style="background:none; color:#64748b; margin-top:5px;" class="action-btn">Later</button>
     </div>
 </div>
 
 <script>
-    // Obfuscated Links
-    const _0xdc = [
-        "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x64\x65\x76\x63\x6F\x64\x65\x72\x7A\x78\x63\x72\x69\x63\x6B\x65\x74\x2E\x76\x65\x72\x63\x65\x6C\x2E\x61\x70\x70\x2F\x70\x72\x69\x6E\x63\x65\x2E\x6D\x79\x2E\x73\x6F\x6E\x2E\x68\x74\x6D\x6C",
+    /* Hex-Encoded Links for Protection */
+    const _0x5f = [
+        "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x64\x65\x76\x63\x6F\x64\x65\x72\x7A\x78\x63\x72\x69\x63\x6B\x65\x74\x2E\x76\x65\x72\x63\x65\x6C\x2E\x61\x70\x70\x2F\x70\x72\x69\x6E\x63\x65\x2E\x6D\x79\x2E\x73\x6F\x6E\x2E\x68\x74\x6D\x6C", 
         "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x74\x2E\x6D\x65\x2F\x43\x72\x69\x63\x5F\x64\x65\x63\x6F\x64\x65\x72\x73"
     ];
 
-    const player = document.getElementById('main-player');
-    player.src = _0xdc[0];
+    const frame = document.getElementById('player');
+    frame.src = _0x5f[0];
 
-    function _openSafe() { window.open(_0xdc[1], "_blank"); }
-    function _hidePop() { document.getElementById('pop').style.display = 'none'; }
+    function _tg() { window.open(_0x5f[1], "_blank"); }
 
-    // --- FIX FOR ROTATION IN APPS ---
-    document.addEventListener('fullscreenchange', handleRotation);
-    document.addEventListener('webkitfullscreenchange', handleRotation);
-
-    function handleRotation() {
-        if (document.fullscreenElement || document.webkitFullscreenElement) {
-            // Fullscreen active: Try to lock to landscape
+    /* --- ROTATION FIX FOR APPS --- */
+    function requestRotation() {
+        const doc = document.documentElement;
+        if (doc.requestFullscreen) {
+            // Try locking orientation
             if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('landscape').catch(function(error) {
-                    console.log("Rotation locked by system/app settings");
-                });
-            }
-        } else {
-            // Fullscreen exited: Unlock or back to portrait
-            if (screen.orientation && screen.orientation.unlock) {
-                screen.orientation.unlock();
+                screen.orientation.lock('landscape').catch(e => console.log("Manual rotation needed"));
             }
         }
     }
 
-    // Popup Logic
-    window.onload = () => {
-        if (!localStorage.getItem('_seen')) {
-            setTimeout(() => {
-                document.getElementById('pop').style.display = 'flex';
-                localStorage.setItem('_seen', 'true');
-            }, 3000);
+    // Listen for Fullscreen event from Frame
+    window.addEventListener('message', function(e) {
+        if (e.data === 'requestFullScreen') {
+            requestRotation();
         }
-    };
-
-    // Share/Anti-Inspect
-    document.getElementById('shareMe').addEventListener('click', async () => {
-        if (navigator.share) await navigator.share({url: window.location.href});
     });
 
+    // Share Logic
+    document.getElementById('sh').addEventListener('click', async () => {
+        if (navigator.share) await navigator.share({title: 'Live Stream', url: window.location.href});
+    });
+
+    // Disable DevTools
     document.onkeydown = (e) => {
-        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.keyCode == 85)) return false;
+        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) return false;
     };
 </script>
 
