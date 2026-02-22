@@ -87,25 +87,6 @@ iframe{ width:100%; height:100%; border:none;}
     </div>
 </main>
 
-<!-- 1️⃣ ADS REMOVAL POPUP -->
-<div id="adsPopup" class="popup">
-  <div class="popup-box">
-    <h2>🛑 HOW TO REMOVE ADS</h2>
-    <ol>
-      <li>Open <b>Mobile Settings</b></li>
-      <li>Search <b>Private DNS</b></li>
-      <li>Click on <b>Custom / Private DNS</b></li>
-      <li>
-        Write: <span class="dns-text" onclick="copyDNS()">dns.adguard.com</span>
-        <small>(tap to copy)</small>
-      </li>
-      <li>Save it and come back to our website</li>
-    </ol>
-    <p class="success-text">✅ Ads will be removed successfully</p>
-    <button onclick="closeAdsPopup()">Next ➡️</button>
-  </div>
-</div>
-
 <!-- 2️⃣ TELEGRAM POPUP -->
 <div id="telegramPopup" class="popup" style="display:none;">
   <div class="popup-box">
@@ -137,10 +118,6 @@ function closeAdsPopup(){
   document.getElementById("telegramPopup").style.display="flex";
 }
 
-// Copy DNS
-function copyDNS(){
-  navigator.clipboard.writeText("dns.adguard.com").then(()=>{ alert("dns.adguard.com copied ✅"); });
-}
 
 // Telegram popup buttons
 function joinTelegram(){
