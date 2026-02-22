@@ -1,78 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>DevCoderZ - Stream Engine</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
-<style>
-    body{margin:0;background:#000;height:100vh;width:100vw;overflow:hidden;font-family:sans-serif;}
-    #player-container{width:100%;height:100%;position:relative;}
-    video{width:100%;height:100%;object-fit:contain;}
-    
-    /* Invisible Shield jo user ke pehle touch ko pakad legi */
-    #unmute-shield{
-        position:absolute;top:0;left:0;width:100%;height:100%;
-        z-index:100;cursor:pointer;
-        background: rgba(0,0,0,0.01); /* Bilkul invisible */
-    }
-    
-    .dev-tag{position:absolute;top:20px;left:20px;z-index:99;color:#fff;font-weight:bold;font-size:14px;text-shadow:0 0 10px #00d2ff;pointer-events:none;}
-</style>
+    <meta charset="UTF-8">
+    <title>Stream Engine - DevCoderz</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; }
+        #player-ui-container { width: 100vw; height: 100vh; position: relative; }
+        video { width: 100%; height: 100%; object-fit: contain; }
+
+        /* The manual trigger for audio */
+        #click-to-unmute {
+            position: absolute; inset: 0; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.6); color: white; cursor: pointer;
+            font-family: sans-serif;
+        }
+        .dev-badge {
+            position: absolute; top: 15px; left: 15px; color: rgba(255,255,255,0.7);
+            font-size: 12px; pointer-events: none; z-index: 99;
+        }
+    </style>
 </head>
 <body>
 
-<div id="player-container" data-shaka-player-container>
-    <div class="dev-tag">Developer - Devansh Sharma</div>
-    <div id="unmute-shield"></div> 
-    <video id="video" data-shaka-player autoplay muted playsinline></video>
-</div>
-
-<script>
-var _0x1 = 'aHR0cHM6Ly9qaW90dm1ibGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2Rhc2gvU3BvcnRzMThfMV9IRF9CVFMubXBk';
-var _0x2 = 'Y29tLmppby5qaW90di83LjAuOCAoTGludXg7IEFuZHJvaWQgOSkgRXhvUGxheWVyTGliLzIuMTMuMg==';
-var _0x3 = 'aHR0cHM6Ly93d3cuamlvdHYuY29tLw==';
-var _0x4 = 'c3Q9MTc3MTczNjQzNn5leHA9MTc3MTgyMjgzNn5hY2w9Lyp+aG1hYz04ZWM4MmJhYWRjNWVmZTY2ZjBkMTk2YzA4Nzc1ZDcxNGNjY2FjNmMzMmRiZjdjNjczOTJjMjEyYTE0NDVhMWY4';
-var _0x5 = 'YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=';
-var _0x6 = 'MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=';
-
-function _d(b){return atob(b)}
-
-async function init(){
-    shaka.polyfill.installAll();
-    var v = document.getElementById('video');
-    var c = document.getElementById('player-container');
-    var s = document.getElementById('unmute-shield');
-    var p = new shaka.Player(v);
-    
-    // UI controls hide karne ke liye agar zaroorat ho
-    new shaka.ui.Overlay(p, c, v);
-
-    p.configure({
-        drm:{clearKeys:{[_d(_0x5)]:_d(_0x6)}},
-        streaming:{lowLatencyMode:true,bufferingGoal:5}
-    });
-
-    p.getNetworkingEngine().registerRequestFilter(function(t,r){
-        r.headers['User-Agent']=_d(_0x2);
-        r.headers['Referer']=_d(_0x3);
-        r.uris[0]+=(r.uris[0].includes('?')?'&':'?')+"__hdnea__="+_d(_0x4);
-    });
-
-    try {
-        await p.load(_d(_0x1));
+    <div id="player-ui-container" data-shaka-player-container>
+        <div class="dev-badge">Devansh Sharma // DevCoderz</div>
         
-        // Asli Jadoo: User screen pe kahin bhi click karega, video unmute ho jayegi
-        s.addEventListener('click', function(){
-            v.muted = false;
-            v.volume = 1.0;
-            v.play(); // Double check for play
-            s.style.display = 'none'; // Shield gayab
-        });
-    } catch(e){console.log('Error');}
-}
+        <div id="click-to-unmute">
+            <img src="https://cdn-icons-png.flaticon.com/512/727/727269.png" width="50" style="filter: invert(1);">
+            <p style="margin-top:10px; font-weight: bold;">TAP TO UNMUTE</p>
+        </div>
 
-document.addEventListener('shaka-ui-loaded', init);
-</script>
+        <video id="video-element" data-shaka-player autoplay muted playsinline></video>
+    </div>
+
+    <script>
+        // Security keys and URLs
+        const manifestUri = atob('aHR0cHM6Ly9qaW90dm1ibGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2Rhc2gvU3BvcnRzMThfMV9IRF9CVFMubXBk');
+        const licenseKey = atob('YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=');
+        const licenseValue = atob('MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=');
+        const token = atob('c3Q9MTc3MTczNjQzNn5leHA9MTc3MTgyMjgzNn5hY2w9Lyp+aG1hYz04ZWM4MmJhYWRjNWVmZTY2ZjBkMTk2YzA4Nzc1ZDcxNGNjY2FjNmMzMmRiZjdjNjczOTJjMjEyYTE0NDVhMWY4');
+
+        async function startStreaming() {
+            const video = document.getElementById('video-element');
+            const container = document.getElementById('player-ui-container');
+            const unmuteLayer = document.getElementById('click-to-unmute');
+            
+            const player = new shaka.Player(video);
+            const ui = new shaka.ui.Overlay(player, container, video);
+
+            player.configure({
+                drm: { clearKeys: { [licenseKey]: licenseValue } }
+            });
+
+            player.getNetworkingEngine().registerRequestFilter((type, request) => {
+                request.headers['User-Agent'] = 'com.jio.jiotv/7.0.8 (Linux; Android 9) ExoPlayerLib/2.13.2';
+                request.uris[0] += (request.uris[0].includes('?') ? '&' : '?') + "__hdnea__=" + token;
+            });
+
+            try {
+                await player.load(manifestUri);
+                
+                // Manual interaction to enable sound
+                unmuteLayer.addEventListener('click', () => {
+                    video.muted = false;
+                    unmuteLayer.style.display = 'none';
+                });
+            } catch (err) { console.log("Stream offline or error"); }
+        }
+
+        document.addEventListener('shaka-ui-loaded', startStreaming);
+    </script>
 </body>
 </html>
