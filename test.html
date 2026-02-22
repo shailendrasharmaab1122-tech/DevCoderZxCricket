@@ -1,109 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="DevCoderz X Assault Decoder">
-<meta name="theme-color" content="#ffffff">
-<title>DevCoderz X Assault Decoder // Live Stream</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevCoderz X Assault - Live Cricket</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href='data:application/json,{"name":"DevCoderz X Assault","short_name":"CricketApp","description":"Live Cricket Streaming by Devansh Sharma","start_url":"/","display":"standalone","background_color":"#ffffff","theme_color":"#3b82f6","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/5358/5358643.png","sizes":"512x512","type":"image/png"}]}'>
+    <meta name="description" content="Official Live Streaming App by Devansh Sharma">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<style>
-:root {
-    --bg-gradient: linear-gradient(to bottom, #ffffff 0%, #f1f5f9 100%);
-    --glass-bg: rgba(255, 255, 255, 0.75);
-    --glass-border: rgba(0, 0, 0, 0.08);
-    --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    --text-primary: #1e293b;
-}
+    <style>
+        /* Custom Styles - Manual Design */
+        body {
+            margin: 0;
+            padding: 15px;
+            font-family: 'Outfit', sans-serif;
+            background-color: #f4f7fa;
+            color: #2d3436;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-* { box-sizing: border-box; margin:0; padding:0; font-family:'Outfit',sans-serif; }
-body { background:var(--bg-gradient); color:var(--text-primary); min-height:100vh; display:flex; justify-content:center; padding:1.5rem; }
+        .header-section {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
 
-.container{ width:100%; max-width:1100px; animation:slideUpFade 0.8s ease forwards; }
-@keyframes slideUpFade { from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:translateY(0);} }
+        .live-indicator {
+            color: #e74c3c;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-.stream-header{
-    background:var(--glass-bg); backdrop-filter:blur(20px);
-    border:1px solid var(--glass-border); border-radius:16px; padding:1rem 2rem;
-    display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;
-}
-.live-badge{ background:rgba(239,68,68,0.1); color:#dc2626; padding:0.4rem 1rem; border-radius:30px; font-weight:700; display:flex; align-items:center; gap:0.5rem;}
+        /* Player Container Styling */
+        .video-box {
+            width: 100%;
+            max-width: 900px;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            position: relative;
+        }
 
-/* Player Container & Shield */
-#player-container{ position:relative; aspect-ratio:16/9; background:#000; border-radius:16px; overflow:hidden; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);}
-iframe{ width:100%; height:100%; border:none;}
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
 
-/* Unmute Click Layer */
-#unmute-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.4); color: white; display: flex;
-    flex-direction: column; align-items: center; justify-content: center;
-    cursor: pointer; z-index: 10; font-weight: 600; font-size: 18px;
-    text-align: center; padding: 20px;
-}
+        /* Telegram Box */
+        .join-card {
+            margin-top: 25px;
+            width: 100%;
+            max-width: 450px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
 
-.grid-panels{ margin-top:2rem; display:flex; justify-content:center; }
-.info-card{ background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:16px; padding:1.5rem; text-align:center; width:100%; max-width:500px; }
-.action-button{ margin-top:1rem; width:100%; display:flex; justify-content:center; align-items:center; gap:0.75rem; padding:1rem; background:var(--accent-gradient); color:#fff; border-radius:12px; font-weight:600; text-decoration:none; border:none; cursor:pointer; }
+        .tg-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: transform 0.2s;
+        }
 
-.popup{ position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none; justify-content:center; align-items:center; z-index:99999; }
-.popup-box{ background:#fff; padding:22px; max-width:420px; width:90%; border-radius:16px; text-align:center;}
-.popup-box button{ margin-top:14px; width:100%; padding:10px; border:none; border-radius:10px; background:#3b82f6; color:#fff; cursor:pointer;}
-</style>
+        .tg-button:active { transform: scale(0.95); }
+
+        /* Welcome Popup */
+        #welcome-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            width: 85%;
+            max-width: 380px;
+        }
+    </style>
 </head>
 <body>
 
-<main class="container">
-    <div class="stream-header">
-        <h1>DevCoderz X Assault</h1>
-        <span class="live-badge"><i class="fa-solid fa-circle"></i> LIVE</span>
-    </div>
-
-    <div id="player-container">
-        <div id="unmute-overlay">
-            <i class="fa-solid fa-volume-high" style="font-size: 40px; margin-bottom: 10px;"></i>
-            <p>Tap to Play with Sound</p>
+    <header class="header-section">
+        <h2 style="margin:0; font-size: 1.2rem;">DevCoderz X Assault</h2>
+        <div class="live-indicator">
+            <i class="fa-solid fa-circle fa-beat-flash" style="font-size: 10px;"></i> LIVE
         </div>
-        <iframe id="stream-iframe" src="https://devcoderzxcricket.vercel.app/ntmate.ka.baap.html" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </header>
+
+    <section class="video-box">
+        <iframe src="ntmate.ka.baap.html" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </section>
+
+    <div class="join-card">
+        <h3 style="margin:0;">Stay Connected!</h3>
+        <p style="color:#636e72; font-size: 14px;">Join our Telegram for instant match updates.</p>
+        <a href="https://t.me/Cric_decoders" target="_blank" class="tg-button">
+            <i class="fa-brands fa-telegram"></i> Join Telegram
+        </a>
     </div>
 
-    <div class="grid-panels">
-        <div class="info-card">
-            <h2>📣 Join Telegram for Updates</h2>
-            <a href="https://t.me/Cric_decoders" target="_blank" class="action-button">
-                <i class="fa-brands fa-telegram"></i> Join Telegram
-            </a>
+    <div id="welcome-modal">
+        <div class="modal-content">
+            <i class="fa-brands fa-telegram" style="font-size: 45px; color: #3498db;"></i>
+            <h3>Join our Community</h3>
+            <p>Don't miss any live match links!</p>
+            <button onclick="window.open('https://t.me/Cric_decoders')" class="tg-button" style="width:100%; border:none; cursor:pointer;">Join Now</button>
+            <p onclick="closeModal()" style="margin-top:15px; color:#b2bec3; cursor:pointer; font-size:13px;">Maybe Later</p>
         </div>
     </div>
-</main>
 
-<div id="telegramPopup" class="popup">
-  <div class="popup-box">
-    <h2>📣 Welcome!</h2>
-    <p>Please join our Telegram for latest updates & match links.</p>
-    <button onclick="window.open('https://t.me/Cric_decoders')">Join Now ✅</button>
-    <button onclick="document.getElementById('telegramPopup').style.display='none'" style="background:#ccc; margin-top:8px;">Maybe Later</button>
-  </div>
-</div>
+    <script>
+        // Simple manual logic for popup
+        function closeModal() {
+            document.getElementById('welcome-modal').style.display = 'none';
+        }
 
-<script>
-    const overlay = document.getElementById('unmute-overlay');
-    const iframe = document.getElementById('stream-iframe');
-
-    overlay.addEventListener('click', () => {
-        overlay.style.display = 'none';
-        // Iframe ko refresh trigger karna taaki sound ke saath autoplay ho
-        iframe.src = iframe.src; 
-    });
-
-    // Popup logic (4 second baad dikhega)
-    setTimeout(() => {
-        document.getElementById('telegramPopup').style.display = 'flex';
-    }, 4000);
-</script>
-
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById('welcome-modal').style.display = 'flex';
+            }, 3500);
+        };
+    </script>
 </body>
 </html>
