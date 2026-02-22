@@ -1,80 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevCoderZ - Devansh Sharma</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
-    <style>
-        body { margin: 0; background: #000; display: flex; align-items: center; justify-content: center; height: 100vh; width: 100vw; overflow: hidden; font-family: sans-serif; }
-        #player-container { width: 100%; height: 100%; position: relative; background: #000; }
-        video { width: 100%; height: 100%; }
-        .dev-tag { position: absolute; top: 20px; left: 20px; z-index: 10; color: #fff; font-weight: bold; font-size: 14px; letter-spacing: 1px; pointer-events: none; text-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff; animation: pulse-glow 2s infinite alternate; }
-        @keyframes pulse-glow { from { opacity: 0.7; } to { opacity: 1; text-shadow: 0 0 15px #fff, 0 0 30px #00d2ff; } }
-    </style>
+<meta charset="UTF-8">
+<title>DevCoderZ - Devansh Sharma</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
+<style>
+    body{margin:0;background:#000;height:100vh;width:100vw;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:sans-serif;}
+    #player-container{width:100%;height:100%;position:relative;background:#000;}
+    video{width:100%;height:100%;}
+    .dev-tag{position:absolute;top:20px;left:20px;z-index:99;color:#fff;font-weight:bold;font-size:14px;letter-spacing:1px;text-shadow:0 0 10px #00d2ff,0 0 20px #00d2ff;animation:pulse 2s infinite alternate;pointer-events:none;}
+    @keyframes pulse{from{opacity:0.6;}to{opacity:1;text-shadow:0 0 15px #fff,0 0 30px #00d2ff;}}
+</style>
 </head>
 <body>
 
 <div id="player-container" data-shaka-player-container>
     <div class="dev-tag">Developer - Devansh Sharma</div>
-    <video id="video" data-shaka-player autoplay playsinline></video>
+    <video id="video" data-shaka-player autoplay muted playsinline></video>
 </div>
 
 <script>
-    // Obfuscated Data for Sports18 1 HD
-    const _0xDATA = {
-        src: 'aHR0cHM6Ly9qaW90dm1ibGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2Rhc2gvU3BvcnRzMThfMV9IRF9CVFMubXBk',
-        ua: 'Y29tLmppby5qaW90di83LjAuOCAoTGludXg7IEFuZHJvaWQgOSkgRXhvUGxheWVyTGliLzIuMTMuMg==',
-        ref: 'aHR0cHM6Ly93d3cuamlvdHYuY29tLw==',
-        token: 'c3Q9MTc3MTczNjQzNn5leHA9MTc3MTgyMjgzNn5hY2w9Lyp+aG1hYz04ZWM4MmJhYWRjNWVmZTY2ZjBkMTk2YzA4Nzc1ZDcxNGNjY2FjNmMzMmRiZjdjNjczOTJjMjEyYTE0NDVhMWY4',
-        k1: 'YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=', // Key ID
-        k2: 'MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc='  // Key
-    };
+// Raw Obfuscated Strings
+var _v = 'aHR0cHM6Ly9qaW90dm1ibGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2Rhc2gvU3BvcnRzMThfMV9IRF9CVFMubXBk';
+var _u = 'Y29tLmppby5qaW90di83LjAuOCAoTGludXg7IEFuZHJvaWQgOSkgRXhvUGxheWVyTGliLzIuMTMuMg==';
+var _r = 'aHR0cHM6Ly93d3cuamlvdHYuY29tLw==';
+var _t = 'c3Q9MTc3MTczNjQzNn5leHA9MTc3MTgyMjgzNn5hY2w9Lyp+aG1hYz04ZWM4MmJhYWRjNWVmZTY2ZjBkMTk2YzA4Nzc1ZDcxNGNjY2FjNmMzMmRiZjdjNjczOTJjMjEyYTE0NDVhMWY4';
+var _k1 = 'YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=';
+var _k2 = 'MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=';
 
-    const _0xdec = (s) => atob(s);
+function _dx(d){ return atob(d); }
 
-    async function init() {
-        shaka.polyfill.installAll();
-        if (!shaka.Player.isBrowserSupported()) return;
+async function startEngine() {
+    shaka.polyfill.installAll();
+    var vid = document.getElementById('video');
+    var cont = document.getElementById('player-container');
+    var plr = new shaka.Player(vid);
+    var ui = new shaka.ui.Overlay(plr, cont, vid);
 
-        const video = document.getElementById('video');
-        const container = document.getElementById('player-container');
-        const player = new shaka.Player(video);
-        const ui = new shaka.ui.Overlay(player, container, video);
+    // Speed up loading
+    plr.configure({
+        drm: { clearKeys: { [_dx(_k1)]: _dx(_k2) } },
+        streaming: { bufferingGoal: 10, rebufferingGoal: 2, lowLatencyMode: true }
+    });
 
-        // Configuration
-        player.configure({
-            drm: {
-                clearKeys: {
-                    [_0xdec(_0xDATA.k1)]: _0xdec(_0xDATA.k2)
-                }
-            },
-            streaming: {
-                lowLatencyMode: true,
-                jumpLargeGaps: true
-            }
-        });
+    plr.getNetworkingEngine().registerRequestFilter(function(type, req) {
+        req.headers['User-Agent'] = _dx(_u);
+        req.headers['Referer'] = _dx(_r);
+        var s = req.uris[0].includes('?') ? '&' : '?';
+        req.uris[0] += s + "__hdnea__=" + _dx(_t);
+    });
 
-        // Request Filter for Headers & Token
-        player.getNetworkingEngine().registerRequestFilter((type, request) => {
-            request.headers['User-Agent'] = _0xdec(_0xDATA.ua);
-            request.headers['Referer'] = _0xdec(_0xDATA.ref);
-            
-            // Append token to all stream requests
-            const separator = request.uris[0].includes('?') ? '&' : '?';
-            request.uris[0] += separator + "__hdnea__=" + _0xdec(_0xDATA.token);
-        });
+    try {
+        await plr.load(_dx(_v));
+        // Force play logic
+        vid.play();
+        console.log("DevCoderZ Engine Started...");
+        
+        // Auto-unmute attempt after user interaction anywhere
+        document.body.addEventListener('click', function() {
+            vid.muted = false;
+        }, {once: true});
+        
+    } catch (e) { console.error("Playback Failed", e); }
+}
 
-        try {
-            await player.load(_0xdec(_0xDATA.src));
-            console.log("Success: Sports18 Loading...");
-        } catch (e) {
-            console.error("Error loading stream:", e.code);
-        }
-    }
-
-    document.addEventListener('shaka-ui-loaded', init);
+document.addEventListener('shaka-ui-loaded', startEngine);
 </script>
 </body>
 </html>
