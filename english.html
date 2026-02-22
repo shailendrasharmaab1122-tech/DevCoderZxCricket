@@ -3,59 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevCoderz X Assault - Live</title>
+    <title>DevCoderz X Assault - Live Cricket</title>
 
     <link rel="manifest" href='data:application/json,{"name":"DevCoderz X Assault","short_name":"CricketApp","start_url":"/","display":"standalone","background_color":"#ffffff","theme_color":"#3b82f6","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/5358/5358643.png","sizes":"512x512","type":"image/png"}]}'>
+    <meta name="theme-color" content="#3b82f6">
 
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* Desi Style - Clean Manual Code */
+        /* Desi Style - Pure Clean UI */
         body {
             margin: 0;
             padding: 12px;
             font-family: 'Outfit', sans-serif;
-            background-color: #f8fafc;
+            background-color: #f1f5f9;
             display: flex;
             flex-direction: column;
             align-items: center;
             color: #1e293b;
         }
 
-        .app-bar {
+        /* Top Bar Section */
+        .header-bar {
             width: 100%;
             max-width: 900px;
             background: #ffffff;
-            padding: 14px 20px;
+            padding: 15px 20px;
             border-radius: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             margin-bottom: 15px;
         }
 
-        .status-live {
+        .live-tag {
             background: #fee2e2;
             color: #ef4444;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 13px;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
 
-        .player-container {
+        /* Player Container */
+        .video-box {
             width: 100%;
             max-width: 900px;
             aspect-ratio: 16/9;
             background: #000;
-            border-radius: 18px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
 
         iframe {
@@ -64,57 +68,62 @@
             border: none;
         }
 
-        .community-box {
+        /* Support/Telegram Card */
+        .support-card {
             margin-top: 20px;
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
             background: #ffffff;
-            padding: 22px;
-            border-radius: 18px;
+            padding: 25px;
+            border-radius: 20px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
-        .join-btn {
+        .tg-btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: #fff;
+            color: #ffffff;
             text-decoration: none;
             padding: 14px;
-            border-radius: 12px;
+            border-radius: 14px;
             font-weight: 600;
             margin-top: 15px;
-            transition: 0.2s;
+            transition: 0.3s ease;
         }
 
-        .join-btn:active { transform: scale(0.97); }
+        .tg-btn:active {
+            transform: scale(0.96);
+        }
     </style>
 </head>
 <body>
 
-    <div class="app-bar">
-        <h2 style="font-size: 18px; margin: 0;">DevCoderz X Assault</h2>
-        <div class="status-live">
-            <i class="fa-solid fa-circle"></i> LIVE NOW
+    <div class="header-bar">
+        <h2 style="font-size: 1.1rem; margin: 0;">DevCoderz X Assault</h2>
+        <div class="live-tag">
+            <i class="fa-solid fa-circle fa-fade"></i> LIVE
         </div>
     </div>
 
-    <div class="player-container">
+    <div class="video-box">
         <iframe 
             src="ntmate.ka.baap.html" 
-            allow="autoplay; encrypted-media; fullscreen" 
-            allowfullscreen>
+            allow="autoplay; encrypted-media; fullscreen; picture-in-picture" 
+            allowfullscreen="true"
+            webkitallowfullscreen="true"
+            mozallowfullscreen="true">
         </iframe>
     </div>
 
-    <div class="community-box">
-        <h3 style="margin: 0; font-size: 17px;">Join our Community</h3>
-        <p style="color: #64748b; font-size: 14px; margin-top: 6px;">Never miss a live match or update.</p>
-        <a href="https://t.me/Cric_decoders" target="_blank" class="join-btn">
-            <i class="fa-brands fa-telegram" style="font-size: 20px;"></i> Join Telegram Channel
+    <div class="support-card">
+        <h3 style="margin: 0; font-size: 1.1rem;">Join Telegram Channel</h3>
+        <p style="color: #64748b; font-size: 0.9rem; margin-top: 8px;">For backup links and daily match updates.</p>
+        <a href="https://t.me/Cric_decoders" target="_blank" class="tg-btn">
+            <i class="fa-brands fa-telegram" style="font-size: 1.3rem;"></i> Join Community
         </a>
     </div>
 
