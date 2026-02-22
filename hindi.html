@@ -7,11 +7,9 @@
 <meta name="theme-color" content="#ffffff">
 <title>DevCoderz X Assault Decoder // Live Stream</title>
 
-<!-- Shaka Player -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
 
-<!-- Fonts & Icons -->
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -58,11 +56,19 @@ iframe{ width:100%; height:100%; border:none;}
 
 .grid-panels{ margin-top:2rem; display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); }
 .info-card{ background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:16px; padding:1.5rem; text-align:center; box-shadow:var(--glass-shadow); }
-.action-button{ margin-top:1rem; display:flex; justify-content:center; gap:0.75rem; padding:1rem; background:var(--accent-gradient); color:#fff; border-radius:12px; font-weight:600; text-decoration:none; border:none; cursor:pointer; }
+.action-button{ margin-top:1rem; width:100%; display:flex; justify-content:center; align-items:center; gap:0.75rem; padding:1rem; background:var(--accent-gradient); color:#fff; border-radius:12px; font-weight:600; text-decoration:none; border:none; cursor:pointer; transition: 0.3s ease; }
 
+.popup{
+  position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none;
+  justify-content:center; align-items:center; z-index:99999; font-family:'Outfit',sans-serif;
+}
+.popup-box{ background:#fff; padding:22px; max-width:420px; width:90%; border-radius:16px; text-align:left;}
+.popup-box h2{ text-align:center; margin-bottom:12px;}
+.popup-box button{ margin-top:14px; width:100%; padding:10px; border:none; border-radius:10px; background:#3b82f6; color:#fff; font-size:16px; cursor:pointer;}
 </style>
 </head>
 <body>
+
 <main class="container">
     <div class="stream-header">
         <h1>DevCoderz X Assault Decoder</h1>
@@ -82,13 +88,14 @@ iframe{ width:100%; height:100%; border:none;}
         </div>
         <div class="info-card">
             <h2><i class="fa-solid fa-share-nodes"></i> Share Stream</h2>
-            <button class="action-button" id="shareButton">Share This Page ❤️</button>
+            <button class="action-button" id="shareButton">
+                <i class="fa-solid fa-copy"></i> Copy Stream Link
+            </button>
         </div>
     </div>
 </main>
 
-<!-- 2️⃣ TELEGRAM POPUP -->
-<div id="telegramPopup" class="popup" style="display:none;">
+<div id="telegramPopup" class="popup">
   <div class="popup-box">
     <h2>📣 Join Telegram</h2>
     <p>Stay updated with latest streams & news</p>
@@ -97,32 +104,56 @@ iframe{ width:100%; height:100%; border:none;}
   </div>
 </div>
 
-<style>
-.popup{
-  position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex;
-  justify-content:center; align-items:center; z-index:99999; font-family:'Outfit',sans-serif;
-}
-.popup-box{ background:#fff; padding:22px; max-width:420px; width:90%; border-radius:16px; text-align:left;}
-.popup-box h2{ text-align:center; margin-bottom:12px;}
-.popup-box ol{ padding-left:18px;}
-.popup-box li{ margin-bottom:8px;}
-.dns-text{ display:inline-block; margin-top:4px; padding:6px 10px; background:#e0f2fe; color:#0369a1; border-radius:8px; cursor:pointer; font-weight:600;}
-.success-text{ margin-top:10px; color:#059669; text-align:center; font-weight:600;}
-.popup-box button{ margin-top:14px; width:100%; padding:10px; border:none; border-radius:10px; background:#3b82f6; color:#fff; font-size:16px; cursor:pointer;}
-</style>
-
 <script>
-// Popup logic
-function closeAdsPopup(){
-  document.getElementById("adsPopup").style.display="none";
-  document.getElementById("telegramPopup").style.display="flex";
-}
+// --- Share Functionality ---
+document.getElementById('shareButton').addEventListener('click', async () => {
+    const btn = document.getElementById('shareButton');
+    const originalContent = btn.innerHTML;
+    const shareUrl = window.location.href;
 
+    try {
+        // Desktop par copy karega, Mobile par share menu khol sakta hai
+        if (navigator.share) {
+            await navigator.share({
+                title: 'DevCoderz X Assault Decoder',
+                url: shareUrl
+            });
+        } else {
+            await navigator.clipboard.writeText(shareUrl);
+            
+            // UI Feedback (Button color changes to green)
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Link Copied!';
+            btn.style.background = '#10b981'; // Green color
+            
+            setTimeout(() => {
+                btn.innerHTML = originalContent;
+                btn.style.background = ''; // Revert to CSS gradient
+            }, 2000);
+        }
+    } catch (err) {
+        // Fallback for older browsers
+        const input = document.createElement('input');
+        input.value = shareUrl;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        alert('Link Copied to Clipboard!');
+    }
+});
 
-// Telegram popup buttons
+// --- Popup Logic ---
+window.onload = function() {
+    // 3 second baad popup show karega
+    setTimeout(() => {
+        document.getElementById("telegramPopup").style.display = "flex";
+    }, 3000);
+};
+
 function joinTelegram(){
   window.open("https://t.me/Cric_decoders","_blank");
 }
+
 function closeTelegramPopup(){
   document.getElementById("telegramPopup").style.display="none";
 }
