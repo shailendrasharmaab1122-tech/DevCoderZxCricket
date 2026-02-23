@@ -1,104 +1,77 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports18 HD Live - DevCoderz</title>
-    
+    <title>DevCoderz</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
-    
     <style>
-        body { margin: 0; background-color: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        #player-wrapper { width: 100vw; height: 100vh; background: #000; }
-        video { width: 100%; height: 100%; }
+        body { margin: 0; background: #000; overflow: hidden; }
+        #player-ui-container { width: 100vw; height: 100vh; position: relative; }
+        video { width: 100%; height: 100%; object-fit: contain; }
 
-        /* Custom Unmute Overlay */
-        #unmute-overlay {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        /* The manual trigger for audio */
+        #click-to-unmute {
+            position: absolute; inset: 0; z-index: 100;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.8); color: #fff; z-index: 10; cursor: pointer;
-            transition: opacity 0.3s ease;
+            background: rgba(0,0,0,0.6); color: white; cursor: pointer;
+            font-family: sans-serif;
         }
-        #unmute-overlay img { width: 60px; margin-bottom: 15px; opacity: 0.8; }
-        #unmute-overlay span { font-size: 14px; letter-spacing: 2px; font-weight: 600; }
-
-        .brand-tag {
-            position: absolute; top: 20px; left: 20px; color: #ffffff50;
-            font-size: 11px; z-index: 5; pointer-events: none;
+        .dev-badge {
+            position: absolute; top: 15px; left: 15px; color: rgba(255,255,255,0.7);
+            font-size: 12px; pointer-events: none; z-index: 99;
         }
     </style>
 </head>
 <body>
 
-    <div id="player-wrapper" data-shaka-player-container>
-        <div class="brand-tag">STREAM ENGINE v2.0 | DEV-SHARMA</div>
-        
-        <div id="unmute-overlay">
-            <img src="https://cdn-icons-png.flaticon.com/512/727/727269.png" style="filter: invert(1);">
-            <span>CLICK TO ACTIVATE AUDIO</span>
+    <div id="player-ui-container" data-shaka-player-container>
+        <div class="dev-badge">Developer - Devansh Sharma</div>
+
+        <div id="click-to-unmute">
+            <img src="https://cdn-icons-png.flaticon.com/512/727/727269.png" width="50" style="filter: invert(1);">
+            <p style="margin-top:10px; font-weight: bold;">TAP TO UNMUTE</p>
         </div>
 
-        <video id="main-video" data-shaka-player autoplay muted playsinline></video>
+        <video id="video-element" data-shaka-player autoplay muted playsinline></video>
     </div>
 
     <script>
-        // Direct source for the stream
-        const streamUrl = "https://jiotvmblive.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/dash/Sports18_1_HD_BTS.mpd";
-        
-        // Headers & Auth (decoded logic)
-        const AUTH_TOKEN = "st=1771822833~exp=1771909233~acl=/*~hmac=832db0a3594e0c64f46dd588fe7f8303ae15142a98351e784d85607e158e86b0";
-        const DRM_KEY_ID = "b2cf15bfd938452188d457e3cdce6e02";
-        const DRM_KEY_VAL = "2b57ec437b7257b5af165d634ae2bfc7";
+        // Updated manifest with your new URL parameters
+        const manifestUri = 'https://jiotvmblive.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/dash/Sports18_1_HD_BTS.mpd';
+        const licenseKey = 'b2cf15bfd938452188d457e3cdce6e02';
+        const licenseValue = '2b57ec437b7257b5af165d634ae2bfc7';
+        const token = 'st=1771822833~exp=1771909233~acl=/*~hmac=832db0a3594e0c64f46dd588fe7f8303ae15142a98351e784d85607e158e86b0';
 
-        async function initApp() {
-            const video = document.getElementById('main-video');
-            const container = document.getElementById('player-wrapper');
-            const overlay = document.getElementById('unmute-overlay');
+        async function startStreaming() {
+            const video = document.getElementById('video-element');
+            const container = document.getElementById('player-ui-container');
+            const unmuteLayer = document.getElementById('click-to-unmute');
 
             const player = new shaka.Player(video);
             const ui = new shaka.ui.Overlay(player, container, video);
 
-            // DRM Setup
             player.configure({
-                drm: {
-                    clearKeys: {
-                        [DRM_KEY_ID]: DRM_KEY_VAL
-                    }
-                },
-                streaming: {
-                    bufferingGoal: 30,
-                    rebufferingGoal: 15
-                }
+                drm: { clearKeys: { [licenseKey]: licenseValue } }
             });
 
-            // Intercepting requests for Token & User-Agent spoofing
             player.getNetworkingEngine().registerRequestFilter((type, request) => {
-                // Add the JioTV User-Agent
                 request.headers['User-Agent'] = 'com.jio.jiotv/7.0.8 (Linux; Android 9) ExoPlayerLib/2.13.2';
-                
-                // Append token to all segment requests
-                const separator = request.uris[0].includes('?') ? '&' : '?';
-                request.uris[0] += `${separator}__hdnea__=${AUTH_TOKEN}`;
+                request.uris[0] += (request.uris[0].includes('?') ? '&' : '?') + "__hdnea__=" + token;
             });
 
             try {
-                await player.load(streamUrl);
-                console.log("Stream loaded successfully");
-            } catch (e) {
-                console.error("Playback Error:", e.code);
-            }
+                await player.load(manifestUri);
 
-            // Click to unmute logic
-            overlay.addEventListener('click', () => {
-                video.muted = false;
-                video.play();
-                overlay.style.display = 'none';
-            });
+                unmuteLayer.addEventListener('click', () => {
+                    video.muted = false;
+                    unmuteLayer.style.display = 'none';
+                    video.play();
+                });
+            } catch (err) { console.log("Stream offline or error"); }
         }
 
-        // Initialize when UI is ready
-        document.addEventListener('shaka-ui-loaded', initApp);
+        document.addEventListener('shaka-ui-loaded', startStreaming);
     </script>
 </body>
 </html>
