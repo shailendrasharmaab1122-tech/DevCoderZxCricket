@@ -9,8 +9,7 @@
     <meta name="theme-color" content="#2563eb">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="apple-touch-icon" href="/icon.png.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -25,9 +24,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         body { 
             background: var(--bg); 
-            background-image: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.1) 0px, transparent 50%), 
-                              radial-gradient(at 100% 100%, rgba(30, 41, 59, 0.2) 0px, transparent 50%);
-            color: #fff; min-height: 100vh; padding: 15px; overflow-x: hidden;
+            background-image: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.1) 0px, transparent 50%);
+            color: #fff; min-height: 100vh; padding: 15px;
         }
         .main-wrapper { max-width: 900px; margin: 0 auto; }
         .brand-header {
@@ -35,77 +33,64 @@
             padding: 18px; background: var(--glass); backdrop-filter: blur(10px);
             border: 1px solid var(--border); border-radius: 20px; margin-bottom: 20px;
         }
-        .brand-text { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; }
+        .brand-text { font-weight: 800; font-size: 1.2rem; }
         .brand-text span { color: var(--accent); }
         .player-shell {
-            position: relative; width: 100%; aspect-ratio: 16/9;
-            background: #000; border-radius: 24px; overflow: hidden;
-            border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            width: 100%; aspect-ratio: 16/9; background: #000; 
+            border-radius: 24px; overflow: hidden; border: 1px solid var(--border);
         }
         iframe { width: 100%; height: 100%; border: none; }
         .app-controls { display: flex; gap: 10px; margin-top: 15px; }
         .control-btn {
-            flex: 1; padding: 14px; border-radius: 15px; border: none;
-            background: var(--glass); color: #fff; font-weight: 600;
-            font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: 0.3s;
-        }
-        .tg-card {
-            margin-top: 20px; background: linear-gradient(135deg, rgba(37,99,235,0.1), rgba(37,99,235,0.05));
-            border-radius: 24px; padding: 25px; text-align: center; border: 1px solid rgba(37, 99, 235, 0.2);
+            flex: 1; padding: 14px; border-radius: 15px; border: 1px solid var(--border);
+            background: var(--glass); color: #fff; font-weight: 600; cursor: pointer;
         }
         .tg-btn {
-            display: block; width: 100%; padding: 16px; background: var(--accent); color: #fff; 
-            text-decoration: none; border-radius: 16px; font-weight: 800; margin-top: 15px;
+            display: block; width: 100%; padding: 16px; background: var(--accent); 
+            color: #fff; text-decoration: none; border-radius: 16px; 
+            font-weight: 800; margin-top: 15px; text-align: center;
         }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
 <div class="main-wrapper">
     <header class="brand-header">
         <div class="brand-text">DevCoderz <span>X</span> Assault Decoder</div>
-        <div style="font-size: 0.7rem; font-weight: 900; color: #ff4757; display: flex; align-items: center; gap: 5px;">
-            <i class="fa-solid fa-circle" style="font-size: 8px; animation: blink 1s infinite;"></i> LIVE
-        </div>
+        <div style="color: #ff4757; font-weight: 900;">LIVE</div>
     </header>
 
     <div class="player-shell" id="vidFrame">
-        <iframe id="main-player" src="https://devcoderzxcricket.vercel.app/prince.my.son.html" 
-            allow="autoplay; encrypted-media; gyroscope; accelerometer; fullscreen" allowfullscreen></iframe>
+        <iframe src="/prince.my.son.html" allowfullscreen></iframe>
     </div>
 
     <div class="app-controls">
-        <button class="control-btn" onclick="toggleRotate()"><i class="fa-solid fa-expand"></i> Fullscreen</button>
-        <button class="control-btn" onclick="location.reload()"><i class="fa-solid fa-sync"></i> Refresh</button>
+        <button class="control-btn" onclick="toggleRotate()">Fullscreen</button>
+        <button class="control-btn" onclick="location.reload()">Refresh</button>
     </div>
 
-    <div class="tg-card">
-        <h3>Official Community</h3>
-        <a href="https://t.me/Cric_decoders" target="_blank" class="tg-btn"><i class="fa-brands fa-telegram"></i> JOIN TELEGRAM</a>
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="https://t.me/Cric_decoders" target="_blank" class="tg-btn">JOIN TELEGRAM</a>
     </div>
 </div>
 
 <script>
-    // Register Service Worker
+    // Service Worker Register karne ka desi tareeka
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error', err));
+            navigator.serviceWorker.register('/sw.js')
+            .then(() => console.log("App Ready!"))
+            .catch(() => console.log("App Error!"));
         });
     }
 
-    async function toggleRotate() {
+    function toggleRotate() {
         const player = document.getElementById('vidFrame');
-        try {
-            if (!document.fullscreenElement) {
-                if (player.requestFullscreen) { await player.requestFullscreen(); }
-                if (screen.orientation && screen.orientation.lock) {
-                    setTimeout(() => screen.orientation.lock('landscape').catch(e => {}), 200);
-                }
-            } else { document.exitFullscreen(); }
-        } catch (err) { console.error(err); }
+        if (!document.fullscreenElement) {
+            player.requestFullscreen().catch(e => console.log(e));
+        } else {
+            document.exitFullscreen();
+        }
     }
 </script>
 </body>
