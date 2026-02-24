@@ -9,139 +9,103 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
     
     <style>
-        :root {
-            --accent: #2563eb;
-            --glass: rgba(0, 0, 0, 0.8);
+        body { margin: 0; background: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #video-container { width: 100vw; height: 100vh; background: #000; position: relative; }
+        video { width: 100%; height: 100%; }
+
+        /* Modern Landing Overlay */
+        #gatekeeper {
+            position: absolute; inset: 0; z-index: 1000;
+            background: radial-gradient(circle, #1a1a2e 0%, #000 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        body { margin: 0; background: #000; font-family: 'Segoe UI', Roboto, sans-serif; overflow: hidden; }
+        .play-wrapper {
+            padding: 40px; border-radius: 30px; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            text-align: center; cursor: pointer;
+        }
+        .play-btn {
+            width: 80px; height: 80px; background: #2563eb; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px; box-shadow: 0 0 30px rgba(37, 99, 235, 0.5);
+            font-size: 30px; color: white;
+        }
+        .status-text { color: white; letter-spacing: 2px; font-weight: 600; margin: 0; }
+        .error-tag { color: #ff4757; font-size: 14px; margin-top: 15px; display: none; }
         
-        #player-ui-container { 
-            width: 100vw; 
-            height: 100vh; 
-            background: #000;
+        .watermark {
+            position: absolute; top: 20px; left: 20px; color: rgba(255,255,255,0.3);
+            font-size: 13px; pointer-events: none; z-index: 10;
         }
-
-        /* Modern Overlay for Unmute */
-        #interaction-overlay {
-            position: absolute;
-            inset: 0;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: var(--glass);
-            backdrop-filter: blur(8px);
-            transition: opacity 0.5s ease;
-        }
-
-        .play-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px 50px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .play-card:hover { transform: scale(1.05); }
-
-        .play-icon {
-            font-size: 50px;
-            color: white;
-            margin-bottom: 15px;
-        }
-
-        .dev-tag {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 12px;
-            letter-spacing: 1px;
-            z-index: 10;
-        }
-
-        video { width: 100%; height: 100%; object-fit: contain; }
     </style>
 </head>
 <body>
 
-    <div id="player-ui-container" data-shaka-player-container>
-        <div id="interaction-overlay">
-            <div class="play-card" id="start-stream">
-                <div class="play-icon">▶</div>
-                <p style="color: white; font-weight: bold; margin: 0;">TAP TO WATCH LIVE</p>
-                <small style="color: #aaa;">DevCoderz X Assault</small>
+    <div id="video-container" data-shaka-player-container>
+        <div class="watermark">DEVCODERZ X ASSAULT</div>
+        
+        <div id="gatekeeper">
+            <div class="play-wrapper" id="launch-trigger">
+                <div class="play-btn">▶</div>
+                <p class="status-text">CLICK TO PLAY LIVE</p>
+                <div id="error-msg" class="error-tag">STREAM OFFLINE - CHECK TOKEN</div>
             </div>
         </div>
 
-        <video id="video-element" data-shaka-player autoplay muted playsinline></video>
-        <div class="dev-tag">DEV: DEVANSH SHARMA</div>
+        <video id="video-feed" data-shaka-player autoplay muted playsinline></video>
     </div>
 
     <script>
-        // Configuration Constants
-        const STREAM_CONFIG = {
+        // Updated configurations based on your new link
+        const LIVE_DATA = {
             manifest: 'https://jiotvmblive.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/dash/Sports18_1_HD_BTS.mpd',
-            licenseKey: 'b2cf15bfd938452188d457e3cdce6e02',
-            licenseValue: '2b57ec437b7257b5af165d634ae2bfc7',
-            token: 'st=1771822833~exp=1771909233~acl=/*~hmac=832db0a3594e0c64f46dd588fe7f8303ae15142a98351e784d85607e158e86b0',
-            userAgent: 'com.jio.jiotv/7.0.8 (Linux; Android 9) ExoPlayerLib/2.13.2'
+            token: 'st=1771898442~exp=1771984842~acl=/*~hmac=2a5fbf41872bf78460f38b11e59b6b22f0c01a9ade555e219669e96c10a9d716',
+            keyId: 'b2cf15bfd938452188d457e3cdce6e02',
+            keyValue: '2b57ec437b7257b5af165d634ae2bfc7'
         };
 
-        async function initApp() {
-            const video = document.getElementById('video-element');
-            const container = document.getElementById('player-ui-container');
-            const overlay = document.getElementById('interaction-overlay');
-            const startBtn = document.getElementById('start-stream');
+        async function bootstrap() {
+            const video = document.getElementById('video-feed');
+            const container = document.getElementById('video-container');
+            const gate = document.getElementById('gatekeeper');
+            const errorTag = document.getElementById('error-msg');
+            const trigger = document.getElementById('launch-trigger');
 
             const player = new shaka.Player(video);
             const ui = new shaka.ui.Overlay(player, container, video);
 
-            // Configure ClearKey DRM
+            // DRM & Buffer Settings
             player.configure({
-                drm: {
-                    clearKeys: {
-                        [STREAM_CONFIG.licenseKey]: STREAM_CONFIG.licenseValue
-                    }
-                },
+                drm: { clearKeys: { [LIVE_DATA.keyId]: LIVE_DATA.keyValue } },
                 streaming: {
-                    bufferingGoal: 30,
-                    rebufferingGoal: 15
+                    bufferingGoal: 10,
+                    failureCallback: () => location.reload() 
                 }
             });
 
-            // Network Filter for Headers and Tokens
+            // Token Implementation
             player.getNetworkingEngine().registerRequestFilter((type, request) => {
-                // Add User-Agent via Request
-                request.headers['User-Agent'] = STREAM_CONFIG.userAgent;
-                
-                // Append Token to URI
-                const separator = request.uris[0].includes('?') ? '&' : '?';
-                request.uris[0] += `${separator}__hdnea__=${STREAM_CONFIG.token}`;
+                const glue = request.uris[0].includes('?') ? '&' : '?';
+                request.uris[0] += `${glue}__hdnea__=${LIVE_DATA.token}`;
             });
 
             try {
-                await player.load(STREAM_CONFIG.manifest);
+                await player.load(LIVE_DATA.manifest);
                 
-                // Interaction to start audio
-                startBtn.addEventListener('click', () => {
+                trigger.addEventListener('click', () => {
                     video.muted = false;
-                    overlay.style.opacity = '0';
-                    setTimeout(() => overlay.style.display = 'none', 500);
+                    gate.style.opacity = '0';
+                    setTimeout(() => gate.style.display = 'none', 600);
                     video.play();
                 });
-
-            } catch (error) {
-                console.error("Playback failed", error);
-                startBtn.innerHTML = "<p style='color:red;'>STREAM OFFLINE</p>";
+            } catch (err) {
+                console.error("Critical Error", err);
+                errorTag.style.display = 'block';
             }
         }
 
-        // Initialize when Shaka UI is ready
-        document.addEventListener('shaka-ui-loaded', initApp);
+        document.addEventListener('shaka-ui-loaded', bootstrap);
     </script>
 </body>
 </html>
