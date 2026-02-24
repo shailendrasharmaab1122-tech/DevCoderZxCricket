@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>DevCoderz X Assault Decoder</title>
 
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/circle-play.svg">
+
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -38,18 +44,16 @@
         .brand-text { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; }
         .brand-text span { color: var(--accent); }
 
-        /* Player Container */
         .player-shell {
             position: relative; width: 100%; aspect-ratio: 16/9;
             background: #000; border-radius: 24px; overflow: hidden;
             border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.4);
         }
 
-        /* Fullscreen Specific Styles */
         #vidFrame:fullscreen {
             width: 100vw; height: 100vh; border-radius: 0; background: #000;
         }
-        
+
         #vidFrame:fullscreen iframe {
             width: 100%; height: 100%; border: none;
         }
@@ -119,46 +123,47 @@
 </div>
 
 <script>
+    // Service Worker Registration for PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker Registered!'))
+                .catch(err => console.log('Service Worker Error', err));
+        });
+    }
+
     async function toggleRotate() {
         const player = document.getElementById('vidFrame');
-
         try {
             if (!document.fullscreenElement) {
-                // 1. Request Fullscreen
                 if (player.requestFullscreen) {
                     await player.requestFullscreen();
                 } else if (player.webkitRequestFullscreen) {
                     await player.webkitRequestFullscreen();
                 }
-
-                // 2. Lock Orientation to Landscape
                 if (screen.orientation && screen.orientation.lock) {
-                    // Timeout is used to ensure fullscreen is active before locking
                     setTimeout(async () => {
                         try {
                             await screen.orientation.lock('landscape');
                         } catch (e) {
-                            console.log("Orientation lock not supported on this device.");
+                            console.log("Orientation lock not supported.");
                         }
                     }, 200);
                 }
             } else {
-                // Exit Fullscreen
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
                 }
             }
         } catch (err) {
-            console.error("Error attempting to enable full-screen mode:", err);
+            console.error("Error:", err);
         }
     }
 
-    // Disable Shortcuts
     document.addEventListener('keydown', e => {
         if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) e.preventDefault();
     });
 
-    // Handle Fullscreen Change (Clean up orientation)
     document.addEventListener('fullscreenchange', () => {
         if (!document.fullscreenElement && screen.orientation && screen.orientation.unlock) {
             screen.orientation.unlock();
