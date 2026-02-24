@@ -1,16 +1,24 @@
 {
-  "name": "DevCoderz",
-  "short_name": "CricketApp",
-  "description": "Live Cricket Streaming and Updates by Devansh Sharma",
-  "start_url": "/",
+  "name": "DevCoderz X Assault Decoder",
+  "short_name": "DevCoderz",
+  "description": "High Speed Premium Cricket Streaming",
+  "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#3b82f6",
+  "background_color": "#0b0f1a",
+  "theme_color": "#2563eb",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/5358/5358643.png",
+      "src": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/circle-play.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/circle-play.svg",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }
