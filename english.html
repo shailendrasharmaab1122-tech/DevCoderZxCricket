@@ -9,7 +9,7 @@
     <meta name="theme-color" content="#2563eb">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/icon.png.png">
+    <link rel="apple-touch-icon" href="/icon.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -25,7 +25,7 @@
         body { 
             background: var(--bg); 
             background-image: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.1) 0px, transparent 50%);
-            color: #fff; min-height: 100vh; padding: 15px;
+            color: #fff; min-height: 100vh; padding: 15px; overflow-x: hidden;
         }
         .main-wrapper { max-width: 900px; margin: 0 auto; }
         .brand-header {
@@ -52,7 +52,7 @@
         }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
 <div class="main-wrapper">
     <header class="brand-header">
@@ -61,7 +61,7 @@
     </header>
 
     <div class="player-shell" id="vidFrame">
-        <iframe src="/prince.my.son.html" allowfullscreen></iframe>
+        <iframe id="main-player" src="/prince.my.son.html" allowfullscreen></iframe>
     </div>
 
     <div class="app-controls">
@@ -69,25 +69,24 @@
         <button class="control-btn" onclick="location.reload()">Refresh</button>
     </div>
 
-    <div style="margin-top: 20px; text-align: center;">
+    <div style="margin-top: 20px;">
         <a href="https://t.me/Cric_decoders" target="_blank" class="tg-btn">JOIN TELEGRAM</a>
     </div>
 </div>
 
 <script>
-    // Service Worker Register karne ka desi tareeka
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sw.js')
-            .then(() => console.log("App Ready!"))
-            .catch(() => console.log("App Error!"));
+            .then(() => console.log("Success"))
+            .catch(() => console.log("Error"));
         });
     }
 
     function toggleRotate() {
         const player = document.getElementById('vidFrame');
         if (!document.fullscreenElement) {
-            player.requestFullscreen().catch(e => console.log(e));
+            player.requestFullscreen().catch(e => {});
         } else {
             document.exitFullscreen();
         }
