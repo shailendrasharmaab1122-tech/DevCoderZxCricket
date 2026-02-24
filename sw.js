@@ -1,15 +1,8 @@
-const CACHE_NAME = 'devcoderz-v1';
-
-// Service worker install hone par basic caching (optional)
-self.addEventListener('install', (event) => {
-    console.log('SW Installed');
+const cacheName = 'v1';
+self.addEventListener('install', e => {
+  console.log('Service Worker: Installed');
 });
 
-// Network requests handle karne ke liye (important for PWA)
-self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        fetch(event.request).catch(() => {
-            return caches.match(event.request);
-        })
-    );
+self.addEventListener('fetch', e => {
+  e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
 });
