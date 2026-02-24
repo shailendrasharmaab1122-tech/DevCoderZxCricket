@@ -1,19 +1,15 @@
-const version = 'v2'; // Iska version badalne se cache saaf ho jata hai
-
+// Service Worker Code
 self.addEventListener('install', (event) => {
-  self.skipWaiting();
-  console.log('SW Installed');
+    self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim());
-  console.log('SW Activated');
+    event.waitUntil(clients.claim());
 });
 
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.match(event.request);
-    })
-  );
+    // Ye code internet se file laata hai, nahi milne par purani file dikhata hai
+    event.respondWith(
+        fetch(event.request).catch(() => caches.match(event.request))
+    );
 });
