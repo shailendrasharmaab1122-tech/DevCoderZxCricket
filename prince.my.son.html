@@ -9,11 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
 
     <style>
-        /* Base Styles */
         body { 
             margin: 0; 
             background: #000; 
-            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             overflow: hidden;
         }
 
@@ -29,53 +28,42 @@
             height: 100%; 
         }
 
-        /* --- Premium Neon Watermark --- */
-        .dev-watermark {
+        /* --- Minimalist & Human-Coded Watermark --- */
+        .dev-tag {
             position: absolute;
-            top: 25px;
-            left: 25px;
+            top: 20px;
+            left: 20px;
             z-index: 2000;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 18px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 14px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            gap: 8px;
+            padding: 5px 12px;
+            /* Blur hata diya gaya hai - clean transperent look */
+            background: rgba(0, 0, 0, 0.4); 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
             pointer-events: none;
         }
 
-        .status-dot {
-            height: 8px;
-            width: 8px;
-            background: #00f2fe;
+        .dot {
+            height: 6px;
+            width: 6px;
+            background: #00d2ff;
             border-radius: 50%;
-            box-shadow: 0 0 12px #00f2fe;
-            animation: pulse-glow 2s infinite ease-in-out;
+            box-shadow: 0 0 8px #00d2ff;
         }
 
-        .dev-text {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 13px;
+        .dev-info {
+            color: #eee;
+            font-size: 11px;
             font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-
-        .dev-name {
-            font-weight: 800;
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.8px;
             text-transform: uppercase;
         }
 
-        @keyframes pulse-glow {
-            0% { opacity: 0.5; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.1); }
-            100% { opacity: 0.5; transform: scale(0.9); }
+        .dev-name-bold {
+            color: #00d2ff;
+            font-weight: 700;
         }
 
         /* --- Landing Overlay --- */
@@ -83,75 +71,65 @@
             position: absolute; 
             inset: 0; 
             z-index: 1000;
-            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            background: #000;
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: center;
-            transition: opacity 0.8s ease, visibility 0.8s;
+            transition: opacity 0.6s ease;
         }
 
         .play-wrapper {
-            padding: 50px; 
-            border-radius: 40px; 
+            padding: 40px; 
+            border-radius: 20px; 
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
             text-align: center; 
             cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .play-wrapper:hover {
-            transform: scale(1.02);
-            background: rgba(255, 255, 255, 0.05);
         }
 
         .play-btn {
-            width: 90px; 
-            height: 90px; 
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            width: 80px; 
+            height: 80px; 
+            background: #2563eb;
             border-radius: 50%;
             display: flex; 
             align-items: center; 
             justify-content: center;
-            margin: 0 auto 25px; 
-            box-shadow: 0 10px 40px rgba(79, 172, 254, 0.4);
-            font-size: 32px; 
+            margin: 0 auto 20px; 
+            font-size: 28px; 
             color: white;
-            padding-left: 5px; /* Visual center for play icon */
         }
 
         .status-text { 
             color: #fff; 
-            letter-spacing: 3px; 
-            font-size: 14px;
-            font-weight: 700; 
+            letter-spacing: 2px; 
+            font-size: 13px;
+            font-weight: 600; 
             margin: 0; 
         }
 
         .error-tag { 
             color: #ff4757; 
             font-size: 13px; 
-            margin-top: 20px; 
+            margin-top: 15px; 
             display: none; 
-            font-weight: 500;
         }
     </style>
 </head>
 <body>
 
     <div id="video-container" data-shaka-player-container>
-        <div class="dev-watermark">
-            <div class="status-dot"></div>
-            <div class="dev-text">DEVELOPER <span class="dev-name">Devansh Sharma</span></div>
+        <div class="dev-tag">
+            <div class="dot"></div>
+            <div class="dev-info">Dev: <span class="dev-name-bold">Devansh Sharma</span></div>
         </div>
 
         <div id="gatekeeper">
             <div class="play-wrapper" id="launch-trigger">
                 <div class="play-btn">▶</div>
-                <p class="status-text">INITIALIZE STREAM</p>
-                <div id="error-msg" class="error-tag">CONNECTION FAILED - CHECK TOKEN</div>
+                <p class="status-text">CLICK TO PLAY</p>
+                <div id="error-msg" class="error-tag">STREAM OFFLINE</div>
             </div>
         </div>
 
@@ -159,10 +137,6 @@
     </div>
 
     <script>
-        /**
-         * Stream Configuration
-         * Note: Ensure token is valid for current session
-         */
         const CONFIG = {
             manifest: 'https://jiotvmblive.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/dash/Sports18_1_HD_BTS.mpd',
             token: 'st=1771898442~exp=1771984842~acl=/*~hmac=2a5fbf41872bf78460f38b11e59b6b22f0c01a9ade555e219669e96c10a9d716',
@@ -179,51 +153,32 @@
             const errorTag = document.getElementById('error-msg');
             const trigger = document.getElementById('launch-trigger');
 
-            // Initialize Shaka Player
             const player = new shaka.Player(video);
             const ui = new shaka.ui.Overlay(player, container, video);
 
-            // Configure Player Settings
             player.configure({
-                drm: { 
-                    clearKeys: { 
-                        [CONFIG.drm.keyId]: CONFIG.drm.keyValue 
-                    } 
-                },
-                streaming: {
-                    bufferingGoal: 15,
-                    rebufferingGoal: 2,
-                    lowLatencyMode: true
-                }
+                drm: { clearKeys: { [CONFIG.drm.keyId]: CONFIG.drm.keyValue } },
+                streaming: { bufferingGoal: 10 }
             });
 
-            // Handle Authorization Token
             player.getNetworkingEngine().registerRequestFilter((type, request) => {
-                const separator = request.uris[0].includes('?') ? '&' : '?';
-                request.uris[0] += `${separator}__hdnea__=${CONFIG.token}`;
+                const glue = request.uris[0].includes('?') ? '&' : '?';
+                request.uris[0] += `${glue}__hdnea__=${CONFIG.token}`;
             });
 
             try {
-                // Pre-load manifest
                 await player.load(CONFIG.manifest);
-
-                // Entry interaction
                 trigger.addEventListener('click', () => {
                     video.muted = false;
                     gate.style.opacity = '0';
-                    setTimeout(() => {
-                        gate.style.visibility = 'hidden';
-                    }, 800);
+                    setTimeout(() => gate.style.display = 'none', 600);
                     video.play();
                 });
-
             } catch (e) {
-                console.error("Stream Load Error:", e);
                 errorTag.style.display = 'block';
             }
         }
 
-        // Listen for Shaka UI load event
         document.addEventListener('shaka-ui-loaded', initApp);
     </script>
 </body>
