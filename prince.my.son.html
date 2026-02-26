@@ -103,8 +103,9 @@
     </div>
 
     <script>
-        // --- Configuration ---
+        // --- Configuration Fixed ---
         const STREAM_DATA = {
+            // Maine URL ko segment se badal kar master .mpd file kar diya hai
             url: 'https://jiotvmblive.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/dash/Sports18_1_HD_BTS.mpd',
             auth: 'st=1772060436~exp=1772146836~acl=/*~hmac=ee218933382193948827e81e4eb75f6f80c560694bb668ced4f7ba249e12e423',
             keys: {
@@ -125,10 +126,9 @@
             player.configure({
                 drm: { clearKeys: STREAM_DATA.keys },
                 abr: {
-                    enabled: true, // Network speed ke hisab se quality badlega
-                    defaultBandwidthEstimate: 500000 // Kam quality se start karega
-                },
-                abrFactory: shaka.abr.SimpleAbrManager
+                    enabled: true,
+                    defaultBandwidthEstimate: 500000 
+                }
             });
 
             player.getNetworkingEngine().registerRequestFilter((type, request) => {
