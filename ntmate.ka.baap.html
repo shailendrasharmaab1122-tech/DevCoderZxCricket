@@ -3,84 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Live Stream</title>
+<title>Live Stream Player</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
 <style>
     body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;font-family:sans-serif}
-    #vid_container{width:100%;height:100%;position:relative}
+    #player_wrap{width:100%;height:100%;position:relative}
     video{width:100%;height:100%}
-    .overlay_dev{position:absolute;top:15px;left:15px;z-index:9;background:rgba(0,0,0,0.5);padding:6px 12px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;pointer-events:none}
-    .live_dot{height:7px;width:7px;background:#00f0ff;border-radius:50%;margin-right:8px;box-shadow:0 0 8px #00f0ff}
-    .dev_name{color:#ddd;font-size:11px;letter-spacing:1px;font-weight:600}
-    .dev_name span{color:#00f0ff}
-    #gate_screen{position:absolute;inset:0;background:#0a0a0a;display:flex;justify-content:center;align-items:center;z-index:99}
-    .play_box{text-align:center;cursor:pointer}
-    .p_icon{font-size:45px;color:#fff;background:#1a3eb3;width:85px;height:85px;line-height:85px;border-radius:50%;margin:0 auto 15px;display:block;box-shadow:0 10px 20px rgba(0,0,0,0.3)}
-    .p_msg{color:#fff;font-size:14px;letter-spacing:1px}
+    
+    /* Developer Credits Overlay */
+    .dev_header{
+        position:absolute;top:15px;left:15px;z-index:10;
+        background:rgba(0,0,0,0.7);padding:7px 15px;
+        border-radius:50px;border:1px solid rgba(255,255,255,0.1);
+        display:flex;align-items:center;pointer-events:none;
+        backdrop-filter:blur(5px);
+    }
+    .live_dot{
+        height:8px;width:8px;background:#00f0ff;
+        border-radius:50%;margin-right:10px;
+        box-shadow:0 0 10px #00f0ff;animation:blink_live 1.2s infinite;
+    }
+    .dev_name{color:#fff;font-size:12px;font-weight:600;letter-spacing:0.5px}
+    .dev_name span{color:#00f0ff;font-weight:800}
+
+    #splash_gate{position:absolute;inset:0;background:#080808;display:flex;justify-content:center;align-items:center;z-index:100}
+    .play_btn_card{text-align:center;cursor:pointer;background:#111;padding:35px;border-radius:20px;border:1px solid #222;transition:0.3s}
+    .play_btn_card:hover{border-color:#00f0ff;transform:scale(1.02)}
+    .p_icon{font-size:40px;color:#fff;background:#1e40af;width:75px;height:75px;line-height:75px;border-radius:50%;margin-bottom:15px;display:inline-block;padding-left:5px}
+    .p_label{color:#fff;font-size:15px;font-weight:600;display:block}
+
+    @keyframes blink_live{0%{opacity:1}50%{opacity:.3}100%{opacity:1}}
     .shaka-spinner-container{display:none!important}
 </style>
 </head>
 <body oncontextmenu="return false">
 
-<div id="vid_container" data-shaka-player-container>
-    <div class="overlay_dev">
+<div id="player_wrap" data-shaka-player-container>
+    <div class="dev_header">
         <div class="live_dot"></div>
-        <div class="dev_name">DEVELOPER <span>DEVANSH SHARMA</span></div>
+        <div class="dev_name">Developer <span>Devansh Sharma</span></div>
     </div>
 
-    <div id="gate_screen">
-        <div class="play_box" id="trigger">
-            <i class="p_icon">▶</i>
-            <span class="p_msg">CLICK TO PLAY LIVE</span>
+    <div id="splash_gate">
+        <div class="play_btn_card" id="start_trigger">
+            <div class="p_icon">▶</div>
+            <span class="p_label">TAP TO WATCH LIVE</span>
         </div>
     </div>
 
-    <video id="main_vid" data-shaka-player autoplay playsinline></video>
+    <video id="main_player" data-shaka-player autoplay playsinline></video>
 </div>
 
 <script>
 (function(){
-    // Raw obfuscated strings - Layer 1
-    var _0xURL = "YUhSMGNITTZMeTlrWlhadmRubHdjMjF2WWk1amRIUjVjbWx2TG1OdmJTOVljR3N0ZEhZdVVISnZjbVJOYVZKek1VaEVSRjk0VTFCNWNIUnpNVTFGUkZOVWRIUnBaMnhsY3k5cGJuUmxlQzV0Y0dRO19faGRuZWFfXz1zdD0xNzcyMDg3NDAzfmV4cD0xNzcyMTczODAzfmFjbD0vKn5obWFjPTIwYzgwYzk2NmVkMzllNWI1YTkwYTFkMDcxNzE2OTk0MjUwNmNmMGQwMzFhY2NhOWY5ZmUyOTA4MjlhMzk5NTM=";
+    // Obfuscated Stream Data
+    var _0xM = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0hpbmRpX0JUUy9vdXRwdXQvaW5kZXgubXBk"; 
+    var _0xT = "c3Q9MTc3MjA4NzQwM35leHA9MTc3MjE3MzgwM35hY2w9Lyp+aG1hYz0yMGM4MGM5NjZlZDM5ZTViNWE5MGExZDA3MTcxNjk5NDI1MDZjZjBkMDMxYWNjYTlmOWZlMjkwODI5YTM5OTUz";
     var _0xK1 = "YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=";
     var _0xK2 = "MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=";
 
-    async function _initApp(){
-        var v = document.getElementById('main_vid');
-        var c = document.getElementById('vid_container');
-        var t = document.getElementById('trigger');
-        var s = document.getElementById('gate_screen');
+    async function _loadStream(){
+        var vid = document.getElementById('main_player');
+        var wrap = document.getElementById('player_wrap');
+        var gate = document.getElementById('splash_gate');
+        
+        var p = new shaka.Player(vid);
+        new shaka.ui.Overlay(p, wrap, vid);
 
-        var p = new shaka.Player(v);
-        new shaka.ui.Overlay(p, c, v);
-
-        // DRM config
         p.configure({
-            drm: { clearKeys: { [atob(_0xK1)]: atob(_0xK2) } }
+            drm: { clearKeys: { [atob(_0xK1)]: atob(_0xK2) } },
+            streaming: { lowLatencyMode: true }
         });
 
-        // Request handler
         p.getNetworkingEngine().registerRequestFilter(function(type, request){
-            var parts = atob(_0xURL).split(';');
+            // Adding Headers for Bypass
+            request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36';
+            request.headers['Referer'] = 'https://www.jiotv.com/';
+            
+            var token = atob(_0xT);
             var uri = request.uris[0];
-            request.uris[0] = uri + (uri.includes('?') ? '&' : '?') + parts[1];
+            request.uris[0] = uri + (uri.includes('?') ? '&' : '?') + "__hdnea__=" + token;
         });
 
         try {
-            var fullUrl = atob(_0xURL).split(';')[0];
-            await p.load(fullUrl);
-            t.onclick = function(){
-                v.muted = false;
-                s.style.display = 'none';
-                v.play();
+            await p.load(atob(_0xM));
+            document.getElementById('start_trigger').onclick = function(){
+                vid.muted = false;
+                gate.style.display = 'none';
+                vid.play();
             };
-        } catch(e) { 
-            console.log('err', e);
+        } catch(e) {
+            console.error("Load Error");
         }
     }
 
-    document.addEventListener('shaka-ui-loaded', _initApp);
+    document.addEventListener('shaka-ui-loaded', _loadStream);
 })();
 </script>
 </body>
