@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Live Stream Player</title>
+<title>Sports18 1 HD - Live</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
 <style>
     body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;font-family:sans-serif}
     #player_wrap{width:100%;height:100%;position:relative}
     video{width:100%;height:100%}
-    
-    /* Developer Credits Overlay */
+
+    /* Developer Credits Overlay - Restore Original */
     .dev_header{
         position:absolute;top:15px;left:15px;z-index:10;
         background:rgba(0,0,0,0.7);padding:7px 15px;
@@ -57,9 +57,11 @@
 
 <script>
 (function(){
-    // Obfuscated Stream Data
-    var _0xM = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0hpbmRpX0JUUy9vdXRwdXQvaW5kZXgubXBk"; 
+    // Sports18 1 HD URL (Encoded)
+    var _0xM = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2luZGV4Lm1wZA=="; 
     var _0xT = "c3Q9MTc3MjA4NzQwM35leHA9MTc3MjE3MzgwM35hY2w9Lyp+aG1hYz0yMGM4MGM5NjZlZDM5ZTViNWE5MGExZDA3MTcxNjk5NDI1MDZjZjBkMDMxYWNjYTlmOWZlMjkwODI5YTM5OTUz";
+    
+    // ClearKeys
     var _0xK1 = "YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=";
     var _0xK2 = "MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=";
 
@@ -67,7 +69,7 @@
         var vid = document.getElementById('main_player');
         var wrap = document.getElementById('player_wrap');
         var gate = document.getElementById('splash_gate');
-        
+
         var p = new shaka.Player(vid);
         new shaka.ui.Overlay(p, wrap, vid);
 
@@ -77,10 +79,9 @@
         });
 
         p.getNetworkingEngine().registerRequestFilter(function(type, request){
-            // Adding Headers for Bypass
             request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36';
             request.headers['Referer'] = 'https://www.jiotv.com/';
-            
+
             var token = atob(_0xT);
             var uri = request.uris[0];
             request.uris[0] = uri + (uri.includes('?') ? '&' : '?') + "__hdnea__=" + token;
