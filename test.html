@@ -1,208 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="DevCoderz Premium Streaming">
-    <title>LIVE | DevCoderz X Assault Decoder</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Live Stream Player | Clean Version</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
+<style>
+    body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;font-family:sans-serif}
+    #player_wrap{width:100%;height:100%;position:relative}
+    video{width:100%;height:100%}
+    
+    /* Header Credits */
+    .dev_header{
+        position:absolute;top:15px;left:15px;z-index:10;
+        background:rgba(0,0,0,0.7);padding:7px 15px;
+        border-radius:50px;border:1px solid rgba(255,255,255,0.1);
+        display:flex;align-items:center;pointer-events:none;
+        backdrop-filter:blur(5px);
+    }
+    .live_dot{
+        height:8px;width:8px;background:#00f0ff;
+        border-radius:50%;margin-right:10px;
+        box-shadow:0 0 10px #00f0ff;animation:blink_live 1.2s infinite;
+    }
+    .dev_name{color:#fff;font-size:12px;font-weight:600;letter-spacing:0.5px}
+    .dev_name span{color:#00f0ff;font-weight:800}
 
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    /* Clean Splash Screen */
+    #splash_gate{position:absolute;inset:0;background:#080808;display:flex;justify-content:center;align-items:center;z-index:100}
+    .play_btn_card{text-align:center;cursor:pointer;background:#111;padding:35px;border-radius:20px;border:1px solid #222;transition:0.3s}
+    .play_btn_card:hover{border-color:#00f0ff;transform:scale(1.02)}
+    .p_icon{font-size:40px;color:#fff;background:#1e40af;width:75px;height:75px;line-height:75px;border-radius:50%;margin-bottom:15px;display:inline-block;padding-left:5px}
+    .p_label{color:#fff;font-size:15px;font-weight:600;display:block}
 
-    <style>
-        :root {
-            --primary: #3b82f6;
-            --dark: #0f172a;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
-
-        body { 
-            background-color: var(--dark);
-            background-image: radial-gradient(circle at 50% -20%, #1e293b, #0f172a);
-            color: #f8fafc; 
-            min-height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            padding: 15px;
-            overflow-x: hidden;
-        }
-
-        .wrapper { width: 100%; max-width: 1000px; animation: slideUp 0.6s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Custom Header */
-        .top-bar {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .brand { font-weight: 800; font-size: 1.4rem; letter-spacing: -0.5px; }
-        .brand span { color: var(--primary); }
-
-        .live-indicator {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ff4d4d;
-            padding: 6px 14px;
-            border-radius: 100px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-
-        .dot { height: 8px; width: 8px; background: #ff4d4d; border-radius: 50%; animation: blink 1.2s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-        /* Video Section */
-        .video-box {
-            position: relative;
-            aspect-ratio: 16/9;
-            background: #000;
-            border-radius: 28px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-        }
-        iframe { width: 100%; height: 100%; border: none; }
-
-        /* Action Buttons */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 25px; }
-        .panel {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 22px;
-            padding: 25px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            transition: 0.3s ease;
-        }
-        .panel:hover { border-color: var(--primary); transform: translateY(-5px); }
-
-        .action-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 14px;
-            margin-top: 15px;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: white;
-            text-decoration: none;
-            border-radius: 15px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .action-btn:active { transform: scale(0.97); }
-
-        /* Popups */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px); display: none;
-            justify-content: center; align-items: center; z-index: 9999;
-        }
-        .modal-body {
-            background: #1e293b; padding: 35px; border-radius: 30px;
-            max-width: 380px; width: 90%; text-align: center;
-            border: 1px solid var(--border);
-        }
-
-        /* Security */
-        body { -webkit-user-select: none; user-select: none; }
-    </style>
+    @keyframes blink_live{0%,100%{opacity:1}50%{opacity:.3}}
+    .shaka-spinner-container{display:none!important}
+</style>
 </head>
-<body oncontextmenu="return false;">
+<body oncontextmenu="return false">
 
-<div class="wrapper">
-    <header class="top-bar">
-        <div class="brand">DevCoderz <span>X</span> Assault Decoder</div>
-        <div class="live-indicator"><div class="dot"></div> LIVE NOW</div>
-    </header>
+<div id="player_wrap" data-shaka-player-container>
+    <div class="dev_header">
+        <div class="live_dot"></div>
+        <div class="dev_name">Developer <span>Devansh Sharma</span></div>
+    </div>
 
-    <section class="video-box">
-        <iframe id="main-player" src="about:blank" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    </section>
-
-    <div class="grid">
-        <div class="panel">
-            <h3>Telegram Group</h3>
-            <button onclick="_openSafe()" class="action-btn"><i class="fa-brands fa-telegram"></i> Join for Updates</button>
-        </div>
-        <div class="panel">
-            <h3>Share Stream</h3>
-            <button id="shareMe" class="action-btn"><i class="fa-solid fa-link"></i> Copy Link</button>
+    <div id="splash_gate">
+        <div class="play_btn_card" id="start_trigger">
+            <div class="p_icon">▶</div>
+            <span class="p_label">TAP TO WATCH LIVE</span>
         </div>
     </div>
-</div>
 
-<div id="pop" class="modal-overlay">
-    <div class="modal-body">
-        <h2 style="margin-bottom:10px">Support Us!</h2>
-        <p style="color:#94a3b8; margin-bottom:20px">Join our Telegram for daily live links and cricket updates.</p>
-        <button onclick="_openSafe()" class="action-btn">JOIN TELEGRAM</button>
-        <button onclick="_hidePop()" style="background:none; color:#64748b; margin-top:10px;" class="action-btn">Close</button>
-    </div>
+    <video id="main_player" data-shaka-player autoplay playsinline></video>
 </div>
 
 <script>
-    /* --- SECURE DATA --- */
-    // [0] = Stream URL, [1] = Telegram URL
-    const _0xdc = [
-        "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x64\x65\x76\x63\x6F\x64\x65\x72\x7A\x78\x63\x72\x69\x63\x6B\x65\x74\x2E\x76\x65\x72\x63\x65\x6C\x2E\x61\x70\x70\x2F\x70\x72\x69\x6E\x63\x65\x2E\x6D\x79\x2E\x73\x6F\x6E\x2E\x68\x74\x6D\x6C",
-        "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x74\x2E\x6D\x65\x2F\x43\x72\x69\x63\x5F\x64\x65\x63\x6F\x64\x65\x72\x73"
-    ];
+(function(){
+    // Clean Config (No Redirects / No Ads)
+    var _0xU = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0hpbmRpX0JUUy9vdXRwdXQvaW5kZXgubXBk"; 
+    var _0xT = "c3Q9MTc3MjA4NzQwM35leHA9MTc3MjE3MzgwM35hY2w9Lyp+aG1hYz0yMGM4MGM5NjZlZDM5ZTViNWE5MGExZDA3MTcxNjk5NDI1MDZjZjBkMDMxYWNjYTlmOWZlMjkwODI5YTM5OTUz";
+    var _0xK1 = "YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=";
+    var _0xK2 = "MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=";
 
-    // Load Stream
-    document.getElementById('main-player').src = _0xdc[0];
+    async function setupPlayer(){
+        var vid = document.getElementById('main_player');
+        var wrap = document.getElementById('player_wrap');
+        var gate = document.getElementById('splash_gate');
+        
+        var p = new shaka.Player(vid);
+        new shaka.ui.Overlay(p, wrap, vid);
 
-    function _openSafe() { window.open(_0xdc[1], "_blank"); }
-    function _hidePop() { document.getElementById('pop').style.display = 'none'; }
+        p.configure({
+            drm: { clearKeys: { [atob(_0xK1)]: atob(_0xK2) } },
+            streaming: { lowLatencyMode: true }
+        });
 
-    // Logic: Show popup only once
-    window.onload = () => {
-        if (!localStorage.getItem('seen_v2')) {
-            setTimeout(() => {
-                document.getElementById('pop').style.display = 'flex';
-                localStorage.setItem('seen_v2', 'true');
-            }, 3000);
-        }
-    };
+        p.getNetworkingEngine().registerRequestFilter(function(type, request){
+            request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
+            request.headers['Referer'] = 'https://www.jiotv.com/';
+            
+            var token = atob(_0xT);
+            var uri = request.uris[0];
+            request.uris[0] = uri + (uri.includes('?') ? '&' : '?') + "__hdnea__=" + token;
+        });
 
-    // Copy/Share Logic
-    document.getElementById('shareMe').addEventListener('click', async function() {
-        try {
-            if (navigator.share) {
-                await navigator.share({ title: 'Live Cricket', url: window.location.href });
-            } else {
-                await navigator.clipboard.writeText(window.location.href);
-                this.innerHTML = "Copied ✅";
-                setTimeout(() => { this.innerHTML = '<i class="fa-solid fa-link"></i> Copy Link'; }, 2000);
+        document.getElementById('start_trigger').onclick = async function(){
+            try {
+                await p.load(atob(_0xU));
+                gate.style.display = 'none';
+                vid.play();
+            } catch(e) {
+                console.log("Error loading stream");
             }
-        } catch (err) {}
-    });
+        };
+    }
 
-    // Anti-DevTools
-    document.onkeydown = (e) => {
-        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
-            return false;
-        }
-    };
+    document.addEventListener('shaka-ui-loaded', setupPlayer);
+})();
 </script>
-
 </body>
 </html>
