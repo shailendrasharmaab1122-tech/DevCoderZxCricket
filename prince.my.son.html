@@ -10,30 +10,15 @@
     body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;font-family:sans-serif}
     #player_wrap{width:100%;height:100%;position:relative}
     video{width:100%;height:100%}
-    
-    /* Developer Credits Overlay */
-    .dev_header{
-        position:absolute;top:15px;left:15px;z-index:10;
-        background:rgba(0,0,0,0.7);padding:7px 15px;
-        border-radius:50px;border:1px solid rgba(255,255,255,0.1);
-        display:flex;align-items:center;pointer-events:none;
-        backdrop-filter:blur(5px);
-    }
-    .live_dot{
-        height:8px;width:8px;background:#00f0ff;
-        border-radius:50%;margin-right:10px;
-        box-shadow:0 0 10px #00f0ff;animation:blink_live 1.2s infinite;
-    }
+    .dev_header{position:absolute;top:15px;left:15px;z-index:10;background:rgba(0,0,0,0.7);padding:7px 15px;border-radius:50px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;pointer-events:none;backdrop-filter:blur(5px)}
+    .live_dot{height:8px;width:8px;background:#00f0ff;border-radius:50%;margin-right:10px;box-shadow:0 0 10px #00f0ff;animation:blink_live 1.2s infinite}
     .dev_name{color:#fff;font-size:12px;font-weight:600;letter-spacing:0.5px}
     .dev_name span{color:#00f0ff;font-weight:800}
-
     #splash_gate{position:absolute;inset:0;background:#080808;display:flex;justify-content:center;align-items:center;z-index:100}
     .play_btn_card{text-align:center;cursor:pointer;background:#111;padding:35px;border-radius:20px;border:1px solid #222;transition:0.3s}
-    .play_btn_card:hover{border-color:#00f0ff;transform:scale(1.02)}
     .p_icon{font-size:40px;color:#fff;background:#1e40af;width:75px;height:75px;line-height:75px;border-radius:50%;margin-bottom:15px;display:inline-block;padding-left:5px}
     .p_label{color:#fff;font-size:15px;font-weight:600;display:block}
-
-    @keyframes blink_live{0%{opacity:1}50%{opacity:.3}100%{opacity:1}}
+    @keyframes blink_live{0%,100%{opacity:1}50%{opacity:.3}}
     .shaka-spinner-container{display:none!important}
 </style>
 </head>
@@ -57,48 +42,50 @@
 
 <script>
 (function(){
-    // Obfuscated Stream Data
-    var _0xM = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0hpbmRpX0JUUy9vdXRwdXQvaW5kZXgubXBk"; 
+    // Updated Stream Config
+    var _0xU = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0hpbmRpX0JUUy9vdXRwdXQvaW5kZXgubXBk"; 
     var _0xT = "c3Q9MTc3MjA4NzQwM35leHA9MTc3MjE3MzgwM35hY2w9Lyp+aG1hYz0yMGM4MGM5NjZlZDM5ZTViNWE5MGExZDA3MTcxNjk5NDI1MDZjZjBkMDMxYWNjYTlmOWZlMjkwODI5YTM5OTUz";
     var _0xK1 = "YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=";
     var _0xK2 = "MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=";
 
-    async function _loadStream(){
-        var vid = document.getElementById('main_player');
-        var wrap = document.getElementById('player_wrap');
-        var gate = document.getElementById('splash_gate');
-        
-        var p = new shaka.Player(vid);
-        new shaka.ui.Overlay(p, wrap, vid);
+    var player, video, gate;
 
-        p.configure({
+    async function setup() {
+        video = document.getElementById('main_player');
+        gate = document.getElementById('splash_gate');
+        player = new shaka.Player(video);
+
+        // UI setup
+        new shaka.ui.Overlay(player, document.getElementById('player_wrap'), video);
+
+        player.configure({
             drm: { clearKeys: { [atob(_0xK1)]: atob(_0xK2) } },
-            streaming: { lowLatencyMode: true }
+            streaming: { lowLatencyMode: true, retryParameters: { maxAttempts: 5 } }
         });
 
-        p.getNetworkingEngine().registerRequestFilter(function(type, request){
-            // Adding Headers for Bypass
-            request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36';
+        player.getNetworkingEngine().registerRequestFilter(function(type, request) {
+            request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
             request.headers['Referer'] = 'https://www.jiotv.com/';
-            
             var token = atob(_0xT);
-            var uri = request.uris[0];
-            request.uris[0] = uri + (uri.includes('?') ? '&' : '?') + "__hdnea__=" + token;
+            request.uris[0] += (request.uris[0].includes('?') ? '&' : '?') + "__hdnea__=" + token;
         });
 
-        try {
-            await p.load(atob(_0xM));
-            document.getElementById('start_trigger').onclick = function(){
-                vid.muted = false;
+        document.getElementById('start_trigger').addEventListener('click', async function() {
+            try {
+                this.innerHTML = '<span class="p_label">LOADING...</span>';
+                await player.load(atob(_0xU));
                 gate.style.display = 'none';
-                vid.play();
-            };
-        } catch(e) {
-            console.error("Load Error");
-        }
+                video.play();
+            } catch (e) {
+                alert("Stream Expired. Need New Token.");
+                console.error(e);
+            }
+        });
     }
 
-    document.addEventListener('shaka-ui-loaded', _loadStream);
+    if (shaka.Player.isBrowserSupported()) {
+        document.addEventListener('DOMContentLoaded', setup);
+    }
 })();
 </script>
 </body>
