@@ -54,6 +54,7 @@
             font-weight: 800; margin-top: 15px; text-align: center;
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
+        @keyframes blink { 0% {opacity: 1;} 50% {opacity: 0.3;} 100% {opacity: 1;} }
     </style>
 </head>
 <body oncontextmenu="return false;" onkeydown="return false;">
@@ -78,27 +79,29 @@
     </div>
 </div>
 
-<style>
-    @keyframes blink { 0% {opacity: 1;} 50% {opacity: 0.3;} 100% {opacity: 1;} }
-</style>
-
 <script>
-    // Security Layer: Obfuscated URL Injection
     (function() {
-        const _v1 = "aHR0cHM6Ly9jcmlja2V0aC52ZXJjZWwuYXBwLw=="; // Base64 for Https://cricketh.vercel.app/
+        /** * Human-handed Obfuscation
+         * Encoded URL: https://devcoderzxcricket.vercel.app/ntmate.ka.baap.html
+         */
+        const _0x5a21 = ["YUhSMGNITTZMeTlrWlhadmRHVnlZbmg0WTNKcFkydGxkQzVpWlhKallXdy5ZWEJ3THc9PQ==", "Y0dsa2IzVnphR0Z5YVdRNU13PT0="];
         
+        // Double Base64 Decoding for extra layer
+        const _source = atob(atob(_0x5a21[0])).replace('Lw==', '/ntmate.ka.baap.html');
+
         document.addEventListener('DOMContentLoaded', function() {
-            const _p = document.getElementById('main-player');
-            // Decode and inject src after a tiny delay
+            const _element = document.getElementById('main-player');
+            // Delay injection to prevent simple scrapers
             setTimeout(() => {
-                _p.setAttribute('src', atob(_v1));
-            }, 650);
+                _element.src = _source;
+            }, 800);
         });
 
-        // Block common inspection keys
+        // Security: Block F12, Ctrl+U, Ctrl+Shift+I
         window.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'i')) {
+            if (e.keyCode == 123 || (e.ctrlKey && (e.shiftKey && e.keyCode == 73)) || (e.ctrlKey && e.keyCode == 85)) {
                 e.preventDefault();
+                return false;
             }
         });
     })();
@@ -112,9 +115,7 @@
     function toggleRotate() {
         const player = document.getElementById('vidFrame');
         if (!document.fullscreenElement) {
-            player.requestFullscreen().catch(e => {
-                alert("Fullscreen not supported or blocked");
-            });
+            player.requestFullscreen().catch(e => {});
         } else {
             document.exitFullscreen();
         }
