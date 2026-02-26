@@ -4,84 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DevCoderz X Assault Decoder</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none !important; }
-        body { background: #000; height: 100vh; width: 100vw; overflow: hidden; display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; }
-        
-        #container { width: 100%; height: 100%; background: #000; position: relative; }
+        body { background: #000; height: 100vh; width: 100vw; overflow: hidden; display: flex; align-items: center; justify-content: center; font-family: sans-serif; }
+        #container { width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; }
-
-        /* --- Updated Brand Overlay --- */
-        .brand-overlay {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            display: flex;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 8px 16px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            z-index: 10;
-            pointer-events: none;
-            backdrop-filter: blur(5px);
-        }
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #ff4757;
-            border-radius: 50%;
-            margin-right: 10px;
-            box-shadow: 0 0 10px #ff4757;
-            animation: blink 1.2s infinite;
-        }
-        .brand-text { color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; }
-        .highlight { color: #2563eb; font-weight: 800; } /* Blue highlight for name */
-
-        /* Splash Screen */
-        #splash-screen {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: #080808;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-        .play-card {
-            background: #151515;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            cursor: pointer;
-            border: 1px solid #222;
-        }
-        .play-icon {
-            font-size: 35px;
-            color: #fff;
-            background: #2563eb;
-            width: 70px;
-            height: 70px;
-            line-height: 70px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-            display: inline-block;
-            padding-left: 5px;
-        }
-        .btn-label { color: #fff; font-size: 16px; font-weight: 600; display: block; }
-
-        @keyframes blink { 0% {opacity: 1;} 50% {opacity: 0.3;} 100% {opacity: 1;} }
+        .brand-overlay { position: absolute; top: 15px; left: 15px; display: flex; align-items: center; background: rgba(0, 0, 0, 0.7); padding: 8px 16px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.15); z-index: 10; backdrop-filter: blur(5px); }
+        .status-dot { width: 8px; height: 8px; background: #ff4757; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #ff4757; animation: blink 1.2s infinite; }
+        .brand-text { color: #fff; font-size: 13px; font-weight: 600; }
+        .highlight { color: #2563eb; font-weight: 800; }
+        #splash-screen { position: absolute; inset: 0; background: #080808; display: flex; align-items: center; justify-content: center; z-index: 100; }
+        .play-card { background: #151515; padding: 40px; border-radius: 20px; text-align: center; cursor: pointer; border: 1px solid #222; }
+        .play-icon { font-size: 35px; color: #fff; background: #2563eb; width: 70px; height: 70px; line-height: 70px; border-radius: 50%; margin-bottom: 15px; display: inline-block; padding-left: 5px; }
+        .btn-label { color: #fff; font-size: 16px; font-weight: 600; }
+        @keyframes blink { 0%, 100% {opacity: 1;} 50% {opacity: 0.3;} }
         .shaka-spinner-container { display: none !important; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div id="container" data-shaka-player-container="">
-        
         <div class="brand-overlay">
             <div class="status-dot"></div>
             <div class="brand-text">Developer <span class="highlight">Devansh Sharma</span></div>
@@ -93,56 +37,54 @@
                 <span class="btn-label">TAP TO WATCH LIVE</span>
             </div>
         </div>
-
-        <video id="video" data-shaka-player="" playsinline=""></video>
+        <video id="video" data-shaka-player="" playsinline="" autoplay></video>
     </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
-    shaka.polyfill.installAll();
-    if (!shaka.Player.isBrowserSupported()) return;
+(function() {
+    // Obfuscated Keys & URL
+    const _0x1 = "aHR0cHM6Ly9qaW90dm1ibGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0hpbmRpX0JUUy9vdXRwdXQvaW5kZXgubXBk"; // Stream URL
+    const _0x2 = "NDAwMTMxOTk0YjQ0NWQ4Yzg4MTcyMDIyNDg3NjBmZGE="; // Key ID
+    const _0x3 = "MmQ1NmNiNmYwN2E3NWI5YWZmMTY1ZDUzNGFlMmJmYzQ="; // Key Value
 
-    const video = document.getElementById('video');
-    const container = document.getElementById('container');
-    const startBtn = document.getElementById('start-btn');
-    const splash = document.getElementById('splash-screen');
-    const player = new shaka.Player(video);
+    document.addEventListener('DOMContentLoaded', async () => {
+        shaka.polyfill.installAll();
+        const video = document.getElementById('video');
+        const player = new shaka.Player(video);
+        const ui = new shaka.ui.Overlay(player, document.getElementById('container'), video);
 
-    const ui = new shaka.ui.Overlay(player, container, video);
-    ui.configure({
-        controlPanelElements: ['play_pause', 'time_and_duration', 'spacer', 'mute', 'volume', 'quality', 'fullscreen'],
-        seekBarColors: { base: 'rgba(255,255,255,0.3)', buffered: 'rgba(255,255,255,0.5)', played: '#2563eb' }
-    });
+        // UI Config
+        ui.configure({
+            seekBarColors: { base: 'rgba(255,255,255,.3)', buffered: 'rgba(255,255,255,.5)', played: '#2563eb' }
+        });
 
-    let drmConfig = {
-        clearKeys: { "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4" }
-    };
-    player.configure({ drm: drmConfig });
+        // DRM Setup
+        player.configure({
+            drm: { clearKeys: { [atob(_0x2)]: atob(_0x3) } }
+        });
 
-    player.getNetworkingEngine().registerRequestFilter((type, request) => {
-        let _auth = "hdnea=st=1770968162/exp=1771054562/acl=/*~hmac=a20b369ce7b0b48ea6f53ecd616f0e94ba595042495610cae245fed7b640c883";
-        request.headers['Referer'] = 'https://www.jiotv.com/';
-        request.headers['User-Agent'] = "plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6";
-
-        if (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT) {
-            if (!request.uris[0].includes('__hdnea=')) {
-                const sep = request.uris[0].includes('?') ? '&' : '?';
-                request.uris[0] += sep + _auth;
+        // Request Filter (Security Bypass)
+        player.getNetworkingEngine().registerRequestFilter((type, request) => {
+            const _auth = "hdnea=st=1770968162/exp=1771054562/acl=/*~hmac=a20b369ce7b0b48ea6f53ecd616f0e94ba595042495610cae245fed7b640c883";
+            request.headers['Referer'] = 'https://www.jiotv.com/';
+            
+            if (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT) {
+                if (!request.uris[0].includes('__hdnea=')) {
+                    request.uris[0] += (request.uris[0].includes('?') ? '&' : '?') + _auth;
+                }
             }
-        }
-    });
+        });
 
-    startBtn.addEventListener('click', async () => {
-        splash.style.display = 'none';
-        try {
-            await player.load("https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd");
-            video.play();
-        } catch (e) {
-            alert("Stream Error. Please Refresh.");
-        }
+        document.getElementById('start-btn').addEventListener('click', async () => {
+            document.getElementById('splash-screen').style.display = 'none';
+            try {
+                await player.load(atob(_0x1));
+            } catch (e) {
+                console.error("Load Failed");
+            }
+        });
     });
-});
+})();
 </script>
-
 </body>
 </html>
