@@ -1,156 +1,87 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream Player | DevCoderz</title>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
-
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; }
-
-        #main-container { width: 100vw; height: 100vh; position: relative; }
-        video { width: 100%; height: 100%; }
-
-        /* Custom Watermark Style */
-        .brand-overlay {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 5px 12px;
-            border-radius: 5px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            pointer-events: none;
-        }
-
-        .status-dot {
-            height: 6px;
-            width: 6px;
-            background: #00e5ff;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .brand-text {
-            color: #eee;
-            font-size: 11px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .highlight { color: #00e5ff; font-weight: bold; }
-
-        /* Splash Screen / Play Button */
-        #splash-screen {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: #080808;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-
-        .play-card {
-            background: #151515;
-            padding: 40px;
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            border: 1px solid #222;
-        }
-
-        .play-icon {
-            font-size: 40px;
-            color: #fff;
-            background: #1e40af;
-            width: 80px;
-            height: 80px;
-            line-height: 80px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-            display: inline-block;
-        }
-
-        .btn-label { color: #fff; font-size: 14px; display: block; }
-        #error-txt { color: #ff5252; font-size: 12px; margin-top: 10px; display: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Live Stream</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
+<style>
+    body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;font-family:sans-serif}
+    #vid_container{width:100%;height:100%;position:relative}
+    video{width:100%;height:100%}
+    .overlay_dev{position:absolute;top:15px;left:15px;z-index:9;background:rgba(0,0,0,0.5);padding:6px 12px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;pointer-events:none}
+    .live_dot{height:7px;width:7px;background:#00f0ff;border-radius:50%;margin-right:8px;box-shadow:0 0 8px #00f0ff}
+    .dev_name{color:#ddd;font-size:11px;letter-spacing:1px;font-weight:600}
+    .dev_name span{color:#00f0ff}
+    #gate_screen{position:absolute;inset:0;background:#0a0a0a;display:flex;justify-content:center;align-items:center;z-index:99}
+    .play_box{text-align:center;cursor:pointer}
+    .p_icon{font-size:45px;color:#fff;background:#1a3eb3;width:85px;height:85px;line-height:85px;border-radius:50%;margin:0 auto 15px;display:block;box-shadow:0 10px 20px rgba(0,0,0,0.3)}
+    .p_msg{color:#fff;font-size:14px;letter-spacing:1px}
+    .shaka-spinner-container{display:none!important}
+</style>
 </head>
-<body>
+<body oncontextmenu="return false">
 
-    <div id="main-container" data-shaka-player-container>
-        <div class="brand-overlay">
-            <div class="status-dot"></div>
-            <div class="brand-text">Developer <span class="highlight">Devansh Sharma</span></div>
-        </div>
-
-        <div id="splash-screen">
-            <div class="play-card" id="start-btn">
-                <div class="play-icon">▶</div>
-                <span class="btn-label">TAP TO LIVE STREAM</span>
-                <div id="error-txt">STREAM IS CURRENTLY OFFLINE</div>
-            </div>
-        </div>
-
-        <video id="my-video" data-shaka-player autoplay playsinline></video>
+<div id="vid_container" data-shaka-player-container>
+    <div class="overlay_dev">
+        <div class="live_dot"></div>
+        <div class="dev_name">DEVELOPER <span>DEVANSH SHARMA</span></div>
     </div>
 
-    <script>
-        // --- Configuration Fixed ---
-        const STREAM_DATA = {
-            // Maine URL ko segment se badal kar master .mpd file kar diya hai
-            url: 'https://jiotvmblive.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/dash/Sports18_1_HD_BTS.mpd',
-            auth: 'st=1772060436~exp=1772146836~acl=/*~hmac=ee218933382193948827e81e4eb75f6f80c560694bb668ced4f7ba249e12e423',
-            keys: {
-                'b2cf15bfd938452188d457e3cdce6e02': '2b57ec437b7257b5af165d634ae2bfc7'
-            }
-        };
+    <div id="gate_screen">
+        <div class="play_box" id="trigger">
+            <i class="p_icon">▶</i>
+            <span class="p_msg">CLICK TO PLAY LIVE</span>
+        </div>
+    </div>
 
-        async function setupPlayer() {
-            const videoElem = document.getElementById('my-video');
-            const containerElem = document.getElementById('main-container');
-            const startBtn = document.getElementById('start-btn');
-            const splash = document.getElementById('splash-screen');
+    <video id="main_vid" data-shaka-player autoplay playsinline></video>
+</div>
 
-            const player = new shaka.Player(videoElem);
-            const ui = new shaka.ui.Overlay(player, containerElem, videoElem);
+<script>
+(function(){
+    // Raw obfuscated strings - Layer 1
+    var _0xURL = "YUhSMGNITTZMeTlrWlhadmRubHdjMjF2WWk1amRIUjVjbWx2TG1OdmJTOVljR3N0ZEhZdVVISnZjbVJOYVZKek1VaEVSRjk0VTFCNWNIUnpNVTFGUkZOVWRIUnBaMnhsY3k5cGJuUmxlQzV0Y0dRO19faGRuZWFfXz1zdD0xNzcyMDg3NDAzfmV4cD0xNzcyMTczODAzfmFjbD0vKn5obWFjPTIwYzgwYzk2NmVkMzllNWI1YTkwYTFkMDcxNzE2OTk0MjUwNmNmMGQwMzFhY2NhOWY5ZmUyOTA4MjlhMzk5NTM=";
+    var _0xK1 = "YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=";
+    var _0xK2 = "MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=";
 
-            // DRM aur Data Saving Setup
-            player.configure({
-                drm: { clearKeys: STREAM_DATA.keys },
-                abr: {
-                    enabled: true,
-                    defaultBandwidthEstimate: 500000 
-                }
-            });
+    async function _initApp(){
+        var v = document.getElementById('main_vid');
+        var c = document.getElementById('vid_container');
+        var t = document.getElementById('trigger');
+        var s = document.getElementById('gate_screen');
 
-            player.getNetworkingEngine().registerRequestFilter((type, request) => {
-                const separator = request.uris[0].includes('?') ? '&' : '?';
-                request.uris[0] += `${separator}__hdnea__=${STREAM_DATA.auth}`;
-            });
+        var p = new shaka.Player(v);
+        new shaka.ui.Overlay(p, c, v);
 
-            try {
-                await player.load(STREAM_DATA.url);
+        // DRM config
+        p.configure({
+            drm: { clearKeys: { [atob(_0xK1)]: atob(_0xK2) } }
+        });
 
-                startBtn.onclick = () => {
-                    videoElem.muted = false;
-                    splash.style.display = 'none';
-                    videoElem.play();
-                };
-            } catch (err) {
-                console.error("Player Error:", err);
-                document.getElementById('error-txt').style.display = 'block';
-            }
+        // Request handler
+        p.getNetworkingEngine().registerRequestFilter(function(type, request){
+            var parts = atob(_0xURL).split(';');
+            var uri = request.uris[0];
+            request.uris[0] = uri + (uri.includes('?') ? '&' : '?') + parts[1];
+        });
+
+        try {
+            var fullUrl = atob(_0xURL).split(';')[0];
+            await p.load(fullUrl);
+            t.onclick = function(){
+                v.muted = false;
+                s.style.display = 'none';
+                v.play();
+            };
+        } catch(e) { 
+            console.log('err', e);
         }
+    }
 
-        document.addEventListener('shaka-ui-loaded', setupPlayer);
-    </script>
+    document.addEventListener('shaka-ui-loaded', _initApp);
+})();
+</script>
 </body>
 </html>
