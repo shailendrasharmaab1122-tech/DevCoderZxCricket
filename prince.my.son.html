@@ -103,7 +103,7 @@
     </div>
 
     <script>
-        // --- Configuration Yahan Badlein ---
+        // --- Configuration ---
         const STREAM_DATA = {
             url: 'https://jiotvmblive.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/dash/Sports18_1_HD_BTS.mpd',
             auth: 'st=1772060436~exp=1772146836~acl=/*~hmac=ee218933382193948827e81e4eb75f6f80c560694bb668ced4f7ba249e12e423',
@@ -118,16 +118,19 @@
             const startBtn = document.getElementById('start-btn');
             const splash = document.getElementById('splash-screen');
 
-            // Initialize Shaka
             const player = new shaka.Player(videoElem);
             const ui = new shaka.ui.Overlay(player, containerElem, videoElem);
 
-            // DRM Setup
+            // DRM aur Data Saving Setup
             player.configure({
-                drm: { clearKeys: STREAM_DATA.keys }
+                drm: { clearKeys: STREAM_DATA.keys },
+                abr: {
+                    enabled: true, // Network speed ke hisab se quality badlega
+                    defaultBandwidthEstimate: 500000 // Kam quality se start karega
+                },
+                abrFactory: shaka.abr.SimpleAbrManager
             });
 
-            // Network Token Filter
             player.getNetworkingEngine().registerRequestFilter((type, request) => {
                 const separator = request.uris[0].includes('?') ? '&' : '?';
                 request.uris[0] += `${separator}__hdnea__=${STREAM_DATA.auth}`;
@@ -136,7 +139,6 @@
             try {
                 await player.load(STREAM_DATA.url);
 
-                // Click to play handling
                 startBtn.onclick = () => {
                     videoElem.muted = false;
                     splash.style.display = 'none';
@@ -148,7 +150,6 @@
             }
         }
 
-        // Run when UI is ready
         document.addEventListener('shaka-ui-loaded', setupPlayer);
     </script>
 </body>
