@@ -1,95 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Live Stream Player</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
-<style>
-    body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;font-family:sans-serif}
-    #player_wrap{width:100%;height:100%;position:relative}
-    video{width:100%;height:100%}
-    .dev_header{position:absolute;top:15px;left:15px;z-index:10;background:rgba(0,0,0,0.7);padding:7px 15px;border-radius:50px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;pointer-events:none;backdrop-filter:blur(5px)}
-    .live_dot{height:8px;width:8px;background:#00f0ff;border-radius:50%;margin-right:10px;box-shadow:0 0 10px #00f0ff;animation:blink_live 1.2s infinite}
-    .dev_name{color:#fff;font-size:12px;font-weight:600;letter-spacing:0.5px}
-    .dev_name span{color:#00f0ff;font-weight:800}
-    #splash_gate{position:absolute;inset:0;background:#080808;display:flex;justify-content:center;align-items:center;z-index:100}
-    .play_btn_card{text-align:center;cursor:pointer;background:#111;padding:35px;border-radius:20px;border:1px solid #222;transition:0.3s}
-    .p_icon{font-size:40px;color:#fff;background:#1e40af;width:75px;height:75px;line-height:75px;border-radius:50%;margin-bottom:15px;display:inline-block;padding-left:5px}
-    .p_label{color:#fff;font-size:15px;font-weight:600;display:block}
-    @keyframes blink_live{0%,100%{opacity:1}50%{opacity:.3}}
-    .shaka-spinner-container{display:none!important}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nitro Player</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
+    <style>
+        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        #container { width: 100%; height: 100%; }
+        video { width: 100%; height: 100%; }
+    </style>
 </head>
-<body oncontextmenu="return false">
+<body>
 
-<div id="player_wrap" data-shaka-player-container>
-    <div class="dev_header">
-        <div class="live_dot"></div>
-        <div class="dev_name">Developer <span>Devansh Sharma</span></div>
-    </div>
-
-    <div id="splash_gate">
-        <div class="play_btn_card" id="start_trigger">
-            <div class="p_icon">▶</div>
-            <span class="p_label">TAP TO WATCH LIVE</span>
-        </div>
-    </div>
-
-    <video id="main_player" data-shaka-player autoplay playsinline></video>
+<div id="container" data-shaka-player-container>
+    <video id="video" data-shaka-player autoplay playsinline></video>
 </div>
 
 <script>
-(function(){
-    // Naya MPD URL (AIV Nitro CDN)
-    var streamUrl = "https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/rxhxc14ikz/out/v1/bb976c39247941f3b4c9fa0a0735426d/cenc.mpd";
-    
-    // Aapki link se nikali gayi Hex Keys
-    var KID = "3b1768e88fe20087baaa029ece65cc59";
-    var KEY = "8ab5b1d0808ac9e3811750a0713d114e";
+    async function startPlayer() {
+        const video = document.getElementById('video');
+        const container = document.getElementById('container');
+        const player = new shaka.Player(video);
 
-    var player, video, gate;
+        // UI Setup
+        const ui = new shaka.ui.Overlay(player, container, video);
 
-    async function setup() {
-        video = document.getElementById('main_player');
-        gate = document.getElementById('splash_gate');
-        player = new shaka.Player(video);
-
-        new shaka.ui.Overlay(player, document.getElementById('player_wrap'), video);
-
-        // AIV Nitro ke liye DRM setup
+        // Configuration: Direct Keys from your link
         player.configure({
             drm: {
                 clearKeys: {
-                    [KID]: KEY
+                    '3b1768e88fe20087baaa029ece65cc59': '8ab5b1d0808ac9e3811750a0713d114e'
                 }
-            },
-            streaming: {
-                bufferingGoal: 30,
-                rebufferingGoal: 2,
-                jumpLargeGaps: true
             }
         });
 
-        document.getElementById('start_trigger').addEventListener('click', async function() {
-            try {
-                this.innerHTML = '<span class="p_label">CONNECTING...</span>';
-                await player.load(streamUrl);
-                gate.style.display = 'none';
-                video.play();
-            } catch (e) {
-                // Agar ab bhi error aaye, toh console check karein
-                alert("Playback Failed. Ye link ya toh expired hai ya block hai.");
-                console.error('Error Code:', e.code, e);
-            }
-        });
+        // Load the manifest
+        const uri = 'https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/rxhxc14ikz/out/v1/bb976c39247941f3b4c9fa0a0735426d/cenc.mpd';
+        
+        try {
+            await player.load(uri);
+            console.log('Stream loaded successfully!');
+        } catch (error) {
+            console.error('Error loading stream:', error);
+            alert('Link Expired or Error: ' + error.code);
+        }
     }
 
-    if (shaka.Player.isBrowserSupported()) {
-        document.addEventListener('DOMContentLoaded', setup);
-    }
-})();
+    // Initialize on load
+    document.addEventListener('shaka-ui-loaded', startPlayer);
 </script>
+
 </body>
 </html>
