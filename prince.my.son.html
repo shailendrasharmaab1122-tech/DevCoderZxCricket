@@ -42,7 +42,7 @@
 
 <script>
 (function(){
-    // Sports18 1 HD Updated Config
+    // Updated Logic for new Sports18 link
     var _0xU = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2Rhc2gvU3BvcnRzMThfMV9IRF9CVFMubXBk"; 
     var _0xT = "c3Q9MTc3MjE5MTY5N35leHA9MTc3MjI3ODA5N35hY2w9Lyp+aG1hYz05ZWViOWI5MWM1YTI0ZWRiNjUxYjM2NThkNDNiMGMwZjg2Y2U1MjI2ZjdlZWU0NDMzOGNlMzY0ZGNiZjhlZDBj";
     var _0xK1 = "YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=";
@@ -59,24 +59,33 @@
 
         player.configure({
             drm: { clearKeys: { [atob(_0xK1)]: atob(_0xK2) } },
-            streaming: { lowLatencyMode: true, retryParameters: { maxAttempts: 5 } }
+            streaming: { 
+                lowLatencyMode: true, 
+                retryParameters: { maxAttempts: 5 },
+                jumpLargeGaps: true
+            }
         });
 
         player.getNetworkingEngine().registerRequestFilter(function(type, request) {
-            request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
-            request.headers['Referer'] = 'https://www.jiotv.com/';
+            // Adding Headers and Token properly
+            request.headers['User-Agent'] = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36';
+            
             var token = atob(_0xT);
-            request.uris[0] += (request.uris[0].includes('?') ? '&' : '?') + "__hdnea__=" + token;
+            // Check if token already exists to prevent double tagging
+            if (!request.uris[0].includes('__hdnea__')) {
+                request.uris[0] += (request.uris[0].includes('?') ? '&' : '?') + "__hdnea__=" + token;
+            }
         });
 
         document.getElementById('start_trigger').addEventListener('click', async function() {
             try {
                 this.innerHTML = '<span class="p_label">LOADING...</span>';
+                // Load the manifest URL
                 await player.load(atob(_0xU));
                 gate.style.display = 'none';
                 video.play();
             } catch (e) {
-                alert("Stream Expired. Need New Token.");
+                alert("Playback Error: Check if Keys or Token are still valid.");
                 console.error(e);
             }
         });
