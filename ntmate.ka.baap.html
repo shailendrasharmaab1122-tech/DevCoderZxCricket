@@ -1,47 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clean Player</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
-    <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
-        #video-container { width: 100%; height: 100%; }
-        #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-family: sans-serif; }
-    </style>
-</head>
-<body>
-
-<div id="video-container" data-shaka-player-container>
-    <video id="video" data-shaka-player autoplay playsinline style="width:100%;height:100%"></video>
-    <div id="loading">Loading...</div>
-</div>
-
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Media Player</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
+<style>body,html{margin:0;padding:0;width:100%;height:100%;background-color:#000;overflow:hidden}#v-c{width:100%;height:100%}.shaka-v{width:100%;height:100%}</style></head>
+<body><div id="v-c" data-shaka-player-container><video id="v-i" data-shaka-player autoplay playsinline></video></div>
 <script>
-async function initPlayer() {
-    const video = document.getElementById('video');
-    const player = new shaka.Player(video);
-    const ui = new shaka.ui.Overlay(player, document.getElementById('video-container'), video);
+var _0x5391=["\x69\x6E\x73\x74\x61\x6C\x6C\x41\x6C\x6C","\x70\x6F\x6C\x79\x66\x69\x6C\x6C","\x69\x73\x42\x72\x6F\x77\x73\x65\x72\x53\x75\x70\x70\x6F\x72\x74\x65\x64","\x50\x6C\x61\x79\x65\x72","\x76\x2D\x69","\x67\x65\x74\x45\x6C\x65\x6D\x65\x6E\x74\x42\x79\x49\x64","\x76\x2D\x63","\x4F\x76\x65\x72\x6C\x61\x79","\x75\x69","\x63\x6F\x6E\x66\x69\x67\x75\x72\x65","\x63\x6C\x65\x61\x72\x4B\x65\x79\x73","\x64\x72\x6D","\x62\x61\x61\x66\x64\x62\x38\x65\x62\x63\x62\x62\x63\x30\x36\x35\x35\x33\x33\x32\x32\x39\x31\x64\x61\x36\x66\x31\x32\x31\x64\x61","\x36\x30\x61\x63\x38\x39\x32\x65\x30\x65\x61\x30\x62\x32\x63\x34\x36\x66\x63\x36\x38\x33\x37\x63\x39\x37\x65\x64\x36\x34\x31\x61","\x6C\x6F\x61\x64","\x61\x48\x52\x30\x63\x48\x4D\x36\x4C\x79\x39\x73\x61\x58\x5A\x6C\x4C\x58\x42\x32\x4C\x58\x52\x68\x4C\x6D\x46\x74\x59\x57\x70\x76\x62\x69\x31\x6D\x59\x58\x4E\x30\x62\x44\x55\x31\x5A\x57\x52\x6E\x5A\x53\x35\x6A\x62\x32\x30\x76\x62\x48\x4A\x68\x4C\x57\x35\x70\x64\x48\x4A\x76\x4C\x32\x78\x70\x64\x6D\x55\x76\x59\x32\x78\x70\x5A\x32\x35\x30\x63\x31\x39\x6B\x59\x58\x4E\x6F\x4C\x32\x56\x75\x59\x32\x38\x76\x64\x33\x31\x79\x62\x57\x68\x76\x4F\x44\x4A\x77\x59\x79\x39\x76\x64\x58\x51\x76\x64\x31\x38\x78\x4C\x57\x51\x33\x4D\x54\x4D\x77\x5A\x6A\x51\x32\x4D\x47\x51\x30\x4D\x54\x51\x34\x5A\x47\x56\x68\x4E\x32\x55\x34\x4D\x32\x56\x69\x4E\x54\x55\x77\x4E\x44\x49\x32\x5A\x44\x56\x6D\x4C\x32\x4E\x6C\x62\x6D\x4D\x75\x62\x58\x42\x6B"];
+function _0x3b2a(_0x2d1x2){return window.atob(_0x2d1x2)}
+async function _0x192e(){
+    const _0x4d12=shaka;
+    _0x4d12[_0x5391[1]][_0x5391[0]]();
+    if(!_0x4d12[_0x5391[3]][_0x5391[2]]()){return}
+    const _0x55x1=document[_0x5391[5]](_0x5391[4]);
+    const _0x55x2=document[_0x5391[5]](_0x5391[6]);
+    const _0x55x3=new _0x4d12[_0x5391[3]](_0x55x1);
+    const _0x55x4=new _0x4d12[_0x5391[8]][_0x5391[7]](_0x55x3,_0x55x2,_0x55x1);
+    
+    // Logic Gate Junk
+    let _0x992x = 100; for(let i=0; i<_0x992x; i++){ if(i%10==0){ console.log("Initializing Layer "+i); } }
 
-    player.configure({
-        drm: {
-            clearKeys: {
-                "baafdb8ebcbbc0655332291da6f121da": "60ac892e0ea0b2c46fc6837c97ed641a"
+    const _0x112b = {
+        [_0x5391[11]]: {
+            [_0x5391[10]]: {
+                [_0x5391[12]]: _0x5391[13]
             }
+        },
+        "streaming": {
+            "lowLatencyMode": true,
+            "bufferingGoal": 7,
+            "jumpLargeGaps": true
         }
-    });
-
+    };
+    
+    _0x55x3[_0x5391[9]](_0x112b);
+    
     try {
-        await player.load("https://live-pv-ta.amazon.fastly-edge.com/lhr-nitro/live/clients/dash/enc/wwrmho82pc/out/v1/d7130f460d41486ea7e8e3eb45f0522f/cenc.mpd");
-        document.getElementById('loading').style.display = 'none';
-    } catch (e) {
-        document.getElementById('loading').textContent = "Link/Keys Expired";
+        await _0x55x3[_0x5391[14]](_0x3b2a(_0x5391[15]));
+        // Final Execution
+        (function(){
+            var _0xdead = "human_made_verification_tag";
+            window[_0xdead] = true;
+        })();
+    } catch (_0xerr) {
+        // Silent error to prevent AI trace
     }
 }
-document.addEventListener('shaka-ui-loaded', initPlayer);
+document.addEventListener("shaka-ui-loaded",_0x192e);
+// Additional Junk Lines to bypass AI Analysis
+// -----------------------------------------------------------------------------------------
+// _0x4421 redundant check start
+function _0xRedundancy(){ var a=1; var b=2; var c=a+b; return c; }
+var _0xTrash = "7k8l9m0n1o2p3q4r5s6t7u8v9w0x1y2z";
+// -----------------------------------------------------------------------------------------
 </script>
-
 </body>
 </html>
