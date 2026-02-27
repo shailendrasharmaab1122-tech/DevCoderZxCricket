@@ -3,52 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports18 Live | Devansh Sharma</title>
+    <title>DevCoderz | Fixed</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { background: #000; height: 100%; width: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+        body, html { background: #000; height: 100%; width: 100%; overflow: hidden; font-family: sans-serif; }
 
-        /* Developer Branding */
+        /* Devansh Sharma Branding */
         .branding {
             position: absolute;
             top: 20px;
             left: 20px;
             z-index: 10;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px 20px;
-            border-radius: 30px;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 10px 18px;
+            border-radius: 50px;
             border: 1px solid #00f0ff;
             color: #fff;
-            font-size: 14px;
-            backdrop-filter: blur(10px);
+            font-size: 13px;
             display: flex;
             align-items: center;
+            backdrop-filter: blur(5px);
         }
-        .dot {
-            height: 10px; width: 10px;
+        .live-dot {
+            height: 8px; width: 8px;
             background: #ff0000;
             border-radius: 50%;
-            margin-right: 12px;
-            box-shadow: 0 0 10px #ff0000;
-            animation: pulse 1.5s infinite;
+            margin-right: 10px;
+            box-shadow: 0 0 8px #ff0000;
+            animation: blink 1s infinite;
         }
         .branding b { color: #00f0ff; margin-left: 5px; }
 
         #container { width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; }
 
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
 <body>
 
 <div id="container" data-shaka-player-container>
     <div class="branding">
-        <div class="dot"></div>
+        <div class="live-dot"></div>
         Developer: <b>Devansh Sharma</b>
     </div>
     <video id="video" data-shaka-player autoplay playsinline></video>
@@ -56,41 +56,53 @@
 
 <script>
     // 1. Aapki Fresh MPD Link
-    const manifestUri = "https://jiotvbpkmob.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/index.mpd?__hdnea__=st=1772191697~exp=1772278097~acl=/*~hmac=9eeb9b91c5a24edb651b3658d43b0c0f86ce5226f7eee44338ce364dcbf8ed0c";
+    const rawUrl = "https://jiotvbpkmob.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/index.mpd?__hdnea__=st=1772191697~exp=1772278097~acl=/*~hmac=9eeb9b91c5a24edb651b3658d43b0c0f86ce5226f7eee44338ce364dcbf8ed0c";
     
     // 2. ClearKeys (Sports18)
-    const keys = {
+    const clearKeys = {
         'b2cf15bfd938452188d457e3cdce6e02': '2b57ec437b7257b5af165d634ae2bfc7'
     };
+
+    // 3. CORS Proxy (Bypass for Vercel)
+    // Hum "m3u8.dev" ya "cors-anywhere" ka logic use kar rahe hain
+    const proxyUrl = "https://cors-proxy.htmldriven.com/?url="; 
 
     async function init() {
         const video = document.getElementById('video');
         const container = document.getElementById('container');
         const player = new shaka.Player(video);
 
-        // UI Overlay
         new shaka.ui.Overlay(player, container, video);
 
-        // DRM Config
         player.configure({
-            drm: { clearKeys: keys },
-            streaming: { jumpLargeGaps: true }
+            drm: { clearKeys: clearKeys },
+            streaming: { 
+                jumpLargeGaps: true,
+                alwaysStreamText: true 
+            }
         });
 
-        // Vercel/Production Bypass Headers
+        // Network Filter to inject headers even through proxy
         player.getNetworkingEngine().registerRequestFilter(function(type, request) {
             request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
             request.headers['Referer'] = 'https://www.jiotv.com/';
-            request.headers['Origin'] = 'https://www.jiotv.com';
         });
 
         try {
-            await player.load(manifestUri);
-            console.log("Stream Loaded Successfully");
+            // Hum direct load karne ke bajaye request ko force kar rahe hain
+            await player.load(rawUrl);
+            console.log("Fixed by Devansh Sharma - Stream Running");
         } catch (e) {
-            console.error("Load Error:", e);
-            if (e.code == 1001) {
-                alert("CORS Error: JioTV is blocking Vercel. You need a Proxy or 'Allow CORS' extension.");
+            console.error("Error Code:", e.code);
+            
+            // Auto-retry with Proxy if direct fails
+            if (e.code == 1001 || e.code == 1002) {
+                console.log("Direct blocked. Trying via Proxy...");
+                try {
+                    await player.load(proxyUrl + encodeURIComponent(rawUrl));
+                } catch (proxyError) {
+                    alert("Bhai, Jio ne Proxy bhi block kar di hai. Token check karo!");
+                }
             }
         }
     }
