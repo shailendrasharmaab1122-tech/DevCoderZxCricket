@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports18 HD Player</title>
+    <title>Sports18 LIVE</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
+        body, html { margin: 0; background: #000; height: 100%; overflow: hidden; }
         #player_wrap { width: 100%; height: 100%; }
         video { width: 100%; height: 100%; }
     </style>
@@ -15,19 +15,19 @@
 <body>
 
 <div id="player_wrap" data-shaka-player-container>
-    <video id="main_player" data-shaka-player autoplay playsinline></video>
+    <video id="video" data-shaka-player autoplay playsinline></video>
 </div>
 
 <script>
-async function setupPlayer() {
-    const video = document.getElementById('main_player');
-    const container = document.getElementById('player_wrap');
+async function initPlayer() {
+    const video = document.getElementById('video');
     const player = new shaka.Player(video);
+    const container = document.getElementById('player_wrap');
 
-    // UI interface setup
+    // UI Overlay Setup
     new shaka.ui.Overlay(player, container, video);
 
-    // DRM Configuration (Sports18 Keys)
+    // Sports18 DRM Configuration
     player.configure({
         drm: {
             clearKeys: {
@@ -35,34 +35,37 @@ async function setupPlayer() {
             }
         },
         streaming: {
-            jumpLargeGaps: true
+            jumpLargeGaps: true,
+            lowLatencyMode: true
         }
     });
 
-    // JioTV Network Filter
+    // JioTV Headers Bypass Logic
     player.getNetworkingEngine().registerRequestFilter(function(type, request) {
-        // Essential Headers
-        request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
+        request.headers['User-Agent'] = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36';
         request.headers['Referer'] = 'https://www.jiotv.com/';
         request.headers['Origin'] = 'https://www.jiotv.com';
     });
 
-    const m3u8Url = "https://jiotvbpkmob.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/index.mpd?__hdnea__=st=1772191697~exp=1772278097~acl=/*~hmac=9eeb9b91c5a24edb651b3658d43b0c0f86ce5226f7eee44338ce364dcbf8ed0c";
+    const url = "https://jiotvbpkmob.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/index.mpd?__hdnea__=st=1772191697~exp=1772278097~acl=/*~hmac=9eeb9b91c5a24edb651b3658d43b0c0f86ce5226f7eee44338ce364dcbf8ed0c";
 
     try {
-        await player.load(m3u8Url);
-        console.log("Success: Stream Loaded");
+        await player.load(url);
+        console.log("Success! Stream loaded.");
     } catch (e) {
-        console.error("Error Detail:", e);
-        if(e.code == 1001) {
-            alert("DNS/CORS Error: Browser ne request block kar di hai.");
-        } else {
-            alert("Error Code: " + e.code + " - Check Console.");
-        }
+        // Asli error code dekhne ke liye alert
+        alert("Shaka Error Code: " + e.code + "\nIska matlab hai: " + getErrorDescription(e.code));
     }
 }
 
-document.addEventListener('shaka-ui-loaded', setupPlayer);
+function getErrorDescription(code) {
+    if (code == 1001) return "Network error ya CORS block (Domain issue)";
+    if (code == 6007) return "DRM License error (Keys galat hain)";
+    if (code == 1002) return "Bad URL (Token expire ho gaya)";
+    return "Unknown error, console check karo.";
+}
+
+document.addEventListener('shaka-ui-loaded', initPlayer);
 </script>
 </body>
 </html>
