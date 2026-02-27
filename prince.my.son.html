@@ -42,10 +42,12 @@
 
 <script>
 (function(){
-    // Naya MPD URL aur ClearKeys
+    // Naya MPD URL (AIV Nitro CDN)
     var streamUrl = "https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/rxhxc14ikz/out/v1/bb976c39247941f3b4c9fa0a0735426d/cenc.mpd";
-    var keyId = "3b1768e88fe20087baaa029ece65cc59";
-    var key = "8ab5b1d0808ac9e3811750a0713d114e";
+    
+    // Aapki link se nikali gayi Hex Keys
+    var KID = "3b1768e88fe20087baaa029ece65cc59";
+    var KEY = "8ab5b1d0808ac9e3811750a0713d114e";
 
     var player, video, gate;
 
@@ -56,32 +58,30 @@
 
         new shaka.ui.Overlay(player, document.getElementById('player_wrap'), video);
 
-        // DRM Configuration using the keys from your link
+        // AIV Nitro ke liye DRM setup
         player.configure({
             drm: {
                 clearKeys: {
-                    [keyId]: key
+                    [KID]: KEY
                 }
             },
             streaming: {
-                lowLatencyMode: true,
+                bufferingGoal: 30,
+                rebufferingGoal: 2,
                 jumpLargeGaps: true
             }
         });
 
-        player.getNetworkingEngine().registerRequestFilter(function(type, request) {
-            request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
-        });
-
         document.getElementById('start_trigger').addEventListener('click', async function() {
             try {
-                this.innerHTML = '<span class="p_label">LOADING...</span>';
+                this.innerHTML = '<span class="p_label">CONNECTING...</span>';
                 await player.load(streamUrl);
                 gate.style.display = 'none';
                 video.play();
             } catch (e) {
-                alert("Playback Error: Stream ya Keys expire ho gayi hain.");
-                console.error(e);
+                // Agar ab bhi error aaye, toh console check karein
+                alert("Playback Failed. Ye link ya toh expired hai ya block hai.");
+                console.error('Error Code:', e.code, e);
             }
         });
     }
