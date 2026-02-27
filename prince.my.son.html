@@ -1,56 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nitro Player</title>
+    <title>Live Sports</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
     <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        #container { width: 100%; height: 100%; }
-        video { width: 100%; height: 100%; }
+        body { margin:0; background:#000; height:100vh; display:flex; flex-direction:column; justify-content:center; }
+        #wrapper { width:100%; height:100%; position:relative; }
+        video { width:100%; height:100%; }
     </style>
 </head>
 <body>
 
-<div id="container" data-shaka-player-container>
+<div id="wrapper" data-shaka-player-container>
     <video id="video" data-shaka-player autoplay playsinline></video>
 </div>
 
 <script>
-    async function startPlayer() {
-        const video = document.getElementById('video');
-        const container = document.getElementById('container');
-        const player = new shaka.Player(video);
+async function init() {
+    const video = document.getElementById('video');
+    const wrapper = document.getElementById('wrapper');
+    const player = new shaka.Player(video);
 
-        // UI Setup
-        const ui = new shaka.ui.Overlay(player, container, video);
+    // UI interface setup
+    new shaka.ui.Overlay(player, wrapper, video);
 
-        // Configuration: Direct Keys from your link
-        player.configure({
-            drm: {
-                clearKeys: {
-                    '3b1768e88fe20087baaa029ece65cc59': '8ab5b1d0808ac9e3811750a0713d114e'
-                }
+    // Sports18 DRM Keys (Ye keys valid honi chahiye)
+    player.configure({
+        drm: {
+            clearKeys: {
+                'b2cf15bfd938452188d457e3cdce6e02': '2b57ec437b7257b5af165d634ae2bfc7'
             }
-        });
-
-        // Load the manifest
-        const uri = 'https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/rxhxc14ikz/out/v1/bb976c39247941f3b4c9fa0a0735426d/cenc.mpd';
-        
-        try {
-            await player.load(uri);
-            console.log('Stream loaded successfully!');
-        } catch (error) {
-            console.error('Error loading stream:', error);
-            alert('Link Expired or Error: ' + error.code);
         }
+    });
+
+    // JioTV Headers: Iske bina 403 error aayega
+    player.getNetworkingEngine().registerRequestFilter(function(type, request) {
+        request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
+        request.headers['Referer'] = 'https://www.jiotv.com/';
+    });
+
+    const url = "https://jiotvbpkmob.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/index.mpd?__hdnea__=st=1772191697~exp=1772278097~acl=/*~hmac=9eeb9b91c5a24edb651b3658d43b0c0f86ce5226f7eee44338ce364dcbf8ed0c";
+
+    try {
+        await player.load(url);
+    } catch (e) {
+        console.error("Error code:", e.code, e);
+        alert("Nahi chala! Ya toh Token expire ho gaya hai ya Keys block hain.");
     }
+}
 
-    // Initialize on load
-    document.addEventListener('shaka-ui-loaded', startPlayer);
+document.addEventListener('DOMContentLoaded', init);
 </script>
-
 </body>
 </html>
