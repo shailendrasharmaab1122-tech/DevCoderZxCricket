@@ -1,114 +1,346 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevCoderz | Fixed</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { background: #000; height: 100%; width: 100%; overflow: hidden; font-family: sans-serif; }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script><style type="text/css">* {user-select: auto !important; -webkit-user-select: auto !important;}</style><input type="hidden" id="inject_idm_text_selection">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp">
 
-        /* Devansh Sharma Branding */
-        .branding {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 10;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 10px 18px;
-            border-radius: 50px;
-            border: 1px solid #00f0ff;
-            color: #fff;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
-        .live-dot {
-            height: 8px; width: 8px;
-            background: #ff0000;
-            border-radius: 50%;
-            margin-right: 10px;
-            box-shadow: 0 0 8px #ff0000;
-            animation: blink 1s infinite;
-        }
-        .branding b { color: #00f0ff; margin-left: 5px; }
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{
+  background:#000;
+  height:100%;
+  width:100%;
+  overflow:hidden;
+}
 
-        #container { width: 100%; height: 100%; position: relative; }
-        video { width: 100%; height: 100%; }
+:root{
+  --top-bar-height:90px;
+  --bottom-bar-height:90px;
+}
 
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-    </style>
-</head>
+/* ===== TOP / BOTTOM ===== */
+.top-bar,.bottom-bar{
+  position:absolute;
+  left:0;
+  width:100%;
+  background:#000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  z-index:1200;
+}
+
+.top-bar{top:0;height:var(--top-bar-height);gap:10px}
+.bottom-bar{bottom:0;height:var(--bottom-bar-height)}
+
+.ad-box{
+  width:300px;
+  height:250px;
+  transform:scale(0.32);
+  transform-origin:center;
+}
+
+.counter-box{transform:scale(0.8)}
+
+.shaka-video-container{
+  position:absolute;
+  top:var(--top-bar-height);
+  bottom:var(--bottom-bar-height);
+  left:0;right:0;
+}
+
+video{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#000;
+}
+
+#channelTitle{
+  position:absolute;
+  top:10px;
+  left:10px;
+  color:#fff;
+  background:rgba(0,0,0,.6);
+  padding:4px 8px;
+  border-radius:4px;
+  z-index:1500;
+  font-size:14px;
+}
+
+.manual-play-button{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  background:rgba(0,0,0,.8);
+  color:#fff;
+  padding:18px 28px;
+  border:2px solid red;
+  border-radius:6px;
+  display:none;
+  z-index:2000;
+  cursor:pointer;
+}
+</style>
+<style></style><script type="text/javascript" src="https://o-oo.ooo/js/AfPopV3.js?ver=26"></script><script type="text/javascript" src="https://code.jquery.com/jquery-1.7.2.min.js"></script></head>
+
 <body>
 
-<div id="container" data-shaka-player-container>
-    <div class="branding">
-        <div class="live-dot"></div>
-        Developer: <b>Devansh Sharma</b>
-    </div>
-    <video id="video" data-shaka-player autoplay playsinline></video>
+<!-- ===== TOP BAR ===== -->
+<div class="top-bar">
+  <div class="counter-box">
+    <script src="//widget.supercounters.com/ssl/online_i.js"></script>
+    <script>sc_online_i(1729266,"ffffff","e61c1c");</script>
+    <script src="//widget.supercounters.com/ssl/hit.js"></script>
+    <script>sc_hit(1729267,0,5);</script>
+  </div>
+
+  <div class="ad-box">
+    <script>
+      atOptions={key:'3e4faa9a87c961436acc625de457e9e4',format:'iframe',height:250,width:300,params:{}};
+    </script>
+    <script src="https://recollectsideway.com/3e4faa9a87c961436acc625de457e9e4/invoke.js"></script>
+  </div>
+</div>
+
+<!-- ===== PLAYER ===== -->
+<div class="shaka-video-container youtube-theme shaka-mobile" data-shaka-player="" data-shaka-player-container="" shaka-controls="true" style="cursor: none;">
+  <video autoplay="" muted="" playsinline="" class="shaka-video" src="blob:https://jiop.sportsstream.workers.dev/6a01c946-d86c-4e3e-be32-199f4fdd3ead"></video>
+  <div id="channelTitle">Star Sports 2 Hindi HD</div>
+  <div class="manual-play-button" id="manualPlayButton" style="display: none;">▶ Click to Play</div>
+<div class="shaka-controls-container" shown="true"><div class="shaka-scrim-container"></div><div class="shaka-play-button-container"><button type="button" class="shaka-play-button shaka-no-propagation" icon="play" aria-label="Play"></button></div><div class="shaka-server-side-ad-container"></div><div class="shaka-bottom-controls shaka-no-propagation"><div class="shaka-ad-controls shaka-hidden"><div class="shaka-ad-position shaka-hidden"><span class="shaka-ad-position-span"></span></div><div class="shaka-ad-counter"><span class="shaka-ad-counter-span"></span></div></div><div class="shaka-controls-button-panel shaka-show-controls-on-mouse-over"><button type="button" class="shaka-current-time" aria-label="Skip ahead to live">- 0:51</button><div class="shaka-spacer" aria-hidden="true"></div><button type="button" class="shaka-mute-button material-icons-round shaka-tooltip" aria-label="Mute">volume_up</button><button type="button" class="shaka-fullscreen-button material-icons-round shaka-tooltip" aria-label="Full screen">fullscreen</button><button type="button" class="shaka-overflow-menu-button shaka-no-propagation material-icons-round shaka-tooltip" aria-label="More settings">more_vert</button></div><div class="shaka-range-container shaka-seek-bar-container" style="background: linear-gradient(to right, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0.54) 0%, rgba(255, 255, 255, 0.54) -1402.18%, rgba(255, 255, 255, 0.3) -1402.18%);"><div class="shaka-ad-markers"></div><input class="shaka-range-element shaka-seek-bar shaka-no-propagation shaka-show-controls-on-mouse-over" type="range" step="any" min="1772205435.0389998" max="1772205486.0389998" aria-label="Seek"><div id="shaka-player-ui-chapters-container"></div><div id="shaka-player-ui-thumbnail-container"><img id="shaka-player-ui-thumbnail-image" draggable="false"><div id="shaka-player-ui-thumbnail-time"></div></div></div></div><div class="shaka-overflow-menu shaka-no-propagation shaka-show-controls-on-mouse-over shaka-hidden"><button type="button" class="shaka-overflow-button shaka-caption-button shaka-tooltip-status shaka-hidden" aria-pressed="false" aria-label="Captions" shaka-status="Off"><i class="material-icons-round">closed_caption_disabled</i><label class="shaka-overflow-button-label shaka-overflow-menu-only"><span>Captions</span><span class="shaka-current-selection-span">Off</span></label></button><button type="button" class="shaka-overflow-button shaka-resolution-button shaka-tooltip-status" shaka-status="Auto" aria-label="Resolution"><i class="material-icons-round">settings</i><label class="shaka-overflow-button-label shaka-overflow-menu-only"><span>Resolution</span><span class="shaka-current-selection-span">Auto</span></label></button><button type="button" class="shaka-overflow-button shaka-language-button shaka-tooltip-status" aria-label="Language" shaka-status="हिन्दी"><i class="material-icons-round">language</i><label class="shaka-overflow-button-label shaka-overflow-menu-only"><span>Language</span><span class="shaka-current-selection-span">हिन्दी</span></label></button><button type="button" class="shaka-pip-button shaka-tooltip shaka-hidden" aria-label="Enter Picture-in-Picture"><i class="material-icons-round">picture_in_picture_alt</i><label class="shaka-overflow-button-label shaka-overflow-menu-only"><span>Picture-in-Picture</span><span class="shaka-current-selection-span">Off</span></label></button><button type="button" class="shaka-cast-button shaka-tooltip shaka-hidden" aria-pressed="false" aria-label="Cast..."><i class="material-icons-round">cast</i><label class="shaka-overflow-button-label shaka-overflow-menu-only"><span>Cast...</span><span class="shaka-current-selection-span">Off</span></label></button><button type="button" class="shaka-overflow-button shaka-playbackrate-button shaka-tooltip-status" aria-label="Playback speed" shaka-status="0x"><i class="material-icons-round">slow_motion_video</i><label class="shaka-overflow-button-label shaka-overflow-menu-only"><span>Playback speed</span><span class="shaka-current-selection-span">0x</span></label></button></div><div class="shaka-no-propagation shaka-show-controls-on-mouse-over shaka-settings-menu shaka-hidden shaka-text-languages"><button type="button" class="shaka-back-to-overflow-button" aria-label="Back"><i class="material-icons-round">arrow_back</i><span>Captions</span></button><button type="button" class="shaka-turn-captions-off-button" aria-selected="true"><span class="shaka-auto-span shaka-chosen-item">Off</span><i class="material-icons-round shaka-chosen-item" aria-hidden="true">done</i></button></div><div class="shaka-no-propagation shaka-show-controls-on-mouse-over shaka-settings-menu shaka-hidden shaka-resolutions"><button type="button" class="shaka-back-to-overflow-button" aria-label="Resolution"><i class="material-icons-round">arrow_back</i><span>Resolution</span></button><button type="button" class="explicit-resolution"><span>720p</span></button><button type="button" class="shaka-enable-abr-button" aria-selected="true"><span class="shaka-auto-span shaka-chosen-item">Auto</span><i class="material-icons-round shaka-chosen-item" aria-hidden="true">done</i></button></div><div class="shaka-no-propagation shaka-show-controls-on-mouse-over shaka-settings-menu shaka-hidden shaka-audio-languages"><button type="button" class="shaka-back-to-overflow-button" aria-label="Back"><i class="material-icons-round">arrow_back</i><span>Language</span></button><button type="button" aria-selected="true"><span class="shaka-chosen-item">हिन्दी</span><i class="material-icons-round shaka-chosen-item" aria-hidden="true">done</i></button><button type="button"><span>தமிழ்</span></button><button type="button"><span>తెలుగు</span></button><button type="button"><span>ಕನ್ನಡ</span></button></div><div class="shaka-no-propagation shaka-show-controls-on-mouse-over shaka-settings-menu shaka-hidden shaka-playback-rates"><button type="button" class="shaka-back-to-overflow-button" aria-label="Back"><i class="material-icons-round">arrow_back</i><span>Playback speed</span></button><button type="button"><span>0.5x</span></button><button type="button"><span>0.75x</span></button><button type="button"><span>1x</span></button><button type="button"><span>1.25x</span></button><button type="button"><span>1.5x</span></button><button type="button"><span>1.75x</span></button><button type="button"><span>2x</span></button></div></div><div class="shaka-client-side-ad-container shaka-hidden"></div><div class="shaka-spinner-container shaka-hidden"><div class="shaka-spinner"><svg class="shaka-spinner-svg" viewBox="0 0 30 30"><circle class="shaka-spinner-path" cx="15" cy="15" r="14.5" fill="none" stroke-width="1" stroke-miterlimit="10"></circle></svg></div></div><div class="shaka-text-container" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;"></div></div>
+
+<!-- ===== BOTTOM BAR ===== -->
+<div class="bottom-bar">
+  <div class="ad-box">
+    <script>
+      atOptions={key:'3e4faa9a87c961436acc625de457e9e4',format:'iframe',height:250,width:300,params:{}};
+    </script>
+    <script src="https://recollectsideway.com/3e4faa9a87c961436acc625de457e9e4/invoke.js"></script>
+  </div>
 </div>
 
 <script>
-    // 1. Aapki Fresh MPD Link
-    const rawUrl = "https://jiotvbpkmob.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/index.mpd?__hdnea__=st=1772191697~exp=1772278097~acl=/*~hmac=9eeb9b91c5a24edb651b3658d43b0c0f86ce5226f7eee44338ce364dcbf8ed0c";
-    
-    // 2. ClearKeys (Sports18)
-    const clearKeys = {
-        'b2cf15bfd938452188d457e3cdce6e02': '2b57ec437b7257b5af165d634ae2bfc7'
-    };
-
-    // 3. CORS Proxy (Bypass for Vercel)
-    // Hum "m3u8.dev" ya "cors-anywhere" ka logic use kar rahe hain
-    const proxyUrl = "https://cors-proxy.htmldriven.com/?url="; 
-
-    async function init() {
-        const video = document.getElementById('video');
-        const container = document.getElementById('container');
-        const player = new shaka.Player(video);
-
-        new shaka.ui.Overlay(player, container, video);
-
-        player.configure({
-            drm: { clearKeys: clearKeys },
-            streaming: { 
-                jumpLargeGaps: true,
-                alwaysStreamText: true 
-            }
-        });
-
-        // Network Filter to inject headers even through proxy
-        player.getNetworkingEngine().registerRequestFilter(function(type, request) {
-            request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
-            request.headers['Referer'] = 'https://www.jiotv.com/';
-        });
-
+const _0x7ac9e7 = _0x3fee;
+function _0x3fee(_0x227e81, _0x42abc6) {
+    _0x227e81 = _0x227e81 - (0x1782 + -0x2d * 0x66 + -0x1f * 0x1e);
+    const _0x5c8af2 = _0x2cac();
+    let _0x152ca8 = _0x5c8af2[_0x227e81];
+    return _0x152ca8;
+}
+(function (_0x421b92, _0x53251d) {
+    const _0x418de5 = _0x3fee, _0x2893fd = _0x421b92();
+    while (!![]) {
         try {
-            // Hum direct load karne ke bajaye request ko force kar rahe hain
-            await player.load(rawUrl);
-            console.log("Fixed by Devansh Sharma - Stream Running");
-        } catch (e) {
-            console.error("Error Code:", e.code);
-            
-            // Auto-retry with Proxy if direct fails
-            if (e.code == 1001 || e.code == 1002) {
-                console.log("Direct blocked. Trying via Proxy...");
-                try {
-                    await player.load(proxyUrl + encodeURIComponent(rawUrl));
-                } catch (proxyError) {
-                    alert("Bhai, Jio ne Proxy bhi block kar di hai. Token check karo!");
-                }
-            }
+            const _0x48eae4 = -parseInt(_0x418de5(0x22f)) / (-0x23bb + -0x1 * 0xa75 + 0xd7 * 0x37) * (parseInt(_0x418de5(0x258)) / (0xc39 + -0x1 * -0x8cb + -0x1502)) + -parseInt(_0x418de5(0x259)) / (0x1223 + 0x63 * -0x2b + -0x17f * 0x1) + -parseInt(_0x418de5(0x237)) / (-0x7ba + -0x23a4 + 0x2b62) * (-parseInt(_0x418de5(0x252)) / (0x86 * 0x29 + 0x1 * 0x23aa + -0x391b)) + -parseInt(_0x418de5(0x216)) / (0x1d3d + -0x1 * 0xf + -0x1d28) + parseInt(_0x418de5(0x22d)) / (0x9 * -0x15c + 0x19e * -0xb + 0x9d * 0x31) + parseInt(_0x418de5(0x1fa)) / (-0x10e1 + -0x1afb + 0x2be4) * (parseInt(_0x418de5(0x243)) / (0x16c2 + -0x22f8 + 0xc3f)) + -parseInt(_0x418de5(0x25e)) / (0x1fe1 * 0x1 + 0xe51 + -0x5c5 * 0x8) * (-parseInt(_0x418de5(0x201)) / (0x125a + 0x1295 * -0x2 + 0x12db));
+            if (_0x48eae4 === _0x53251d)
+                break;
+            else
+                _0x2893fd['push'](_0x2893fd['shift']());
+        } catch (_0x4f2ac3) {
+            _0x2893fd['push'](_0x2893fd['shift']());
         }
     }
-
-    document.addEventListener('shaka-ui-loaded', init);
+}(_0x2cac, 0x1b65f5 + -0xd2eff + 0x5d * 0x2b));
+function _0x2cac() {
+    const _0x51ca5c = [
+        'querySelec',
+        'cookie',
+        '81LYhLWa',
+        'display',
+        'Browser\x20no',
+        't\x20supporte',
+        'channelTit',
+        '.5\x20(Linux;',
+        'otv2.teach',
+        'none',
+        'muted',
+        'Loaded',
+        'MANIFEST',
+        'json',
+        'npdJC',
+        'ById',
+        'toLowerCas',
+        '3428470uSCpuk',
+        'Android\x2013',
+        'catch',
+        'clearkey',
+        'headers',
+        'eo-contain',
+        '2jEPDty',
+        '1630968XgdXgO',
+        'PzyYc',
+        'tor',
+        'bPtob',
+        'ub.workers',
+        '13790Jfaksj',
+        'uris',
+        'manualPlay',
+        'aFYUe',
+        'lhOfh',
+        'plaYtv/7.1',
+        'VTNNF',
+        'search',
+        'iHgqU',
+        '\x20missing',
+        'tpoEI',
+        'load',
+        'Button',
+        'drmLicense',
+        '314344rKIyms',
+        'ailed',
+        'video',
+        'name',
+        'XyzyM',
+        'split',
+        'vOPyc',
+        '2299DEWSXr',
+        'kwdvW',
+        'DOMContent',
+        'addEventLi',
+        'play',
+        '.dev/',
+        'polyfill',
+        'Referer',
+        'ingEngine',
+        'Playback\x20f',
+        'ZBgYu',
+        'kFpQE',
+        'Networking',
+        'style',
+        'dxWeE',
+        'getElement',
+        'isBrowserS',
+        'includes',
+        't\x20found',
+        'link',
+        'SEGMENT',
+        '7156554jSnQRR',
+        'upported',
+        'User-Agent',
+        'find',
+        'get',
+        'rLib/2.11.',
+        'error',
+        'Engine',
+        'RszTC',
+        'GvcLh',
+        'Cookie',
+        'Channel\x20ID',
+        'https://ji',
+        'wCfCC',
+        'Channel\x20no',
+        'rdLQZ',
+        'Player',
+        'block',
+        'bcond',
+        'onclick',
+        'hSVqN',
+        'getNetwork',
+        'CFXRL',
+        '9835427wZmlFh',
+        'RequestTyp',
+        '746309yUIoYo',
+        'https://ww',
+        '.shaka-vid',
+        'configure',
+        'w.jiotv.co',
+        ')\x20ExoPlaye',
+        'RuMgJ',
+        'questFilte',
+        '8wGwTHD',
+        '__hdnea__',
+        'registerRe',
+        'Overlay',
+        'textConten',
+        'drmScheme',
+        'net',
+        'CPYUX',
+        'installAll',
+        'stener'
+    ];
+    _0x2cac = function () {
+        return _0x51ca5c;
+    };
+    return _0x2cac();
+}
+const params = new URLSearchParams(location[_0x7ac9e7(0x1f3)]), CHANNEL_NAME = params[_0x7ac9e7(0x21a)]('id'), JSON_URL = _0x7ac9e7(0x222) + _0x7ac9e7(0x249) + _0x7ac9e7(0x25d) + _0x7ac9e7(0x206);
+document[_0x7ac9e7(0x204) + _0x7ac9e7(0x240)](_0x7ac9e7(0x203) + _0x7ac9e7(0x24c), async () => {
+    const _0x47c68f = _0x7ac9e7, _0x1719c8 = {
+            'dxWeE': _0x47c68f(0x208),
+            'RszTC': _0x47c68f(0x230) + _0x47c68f(0x233) + 'm/',
+            'hSVqN': _0x47c68f(0x218),
+            'kFpQE': _0x47c68f(0x263) + _0x47c68f(0x248) + _0x47c68f(0x253) + _0x47c68f(0x234) + _0x47c68f(0x21b) + '6',
+            'PzyYc': _0x47c68f(0x220),
+            'wCfCC': function (_0x190ffa, _0x516bf1) {
+                return _0x190ffa === _0x516bf1;
+            },
+            'bcond': function (_0x229344, _0x87bbdf) {
+                return _0x229344 === _0x87bbdf;
+            },
+            'iHgqU': _0x47c68f(0x238),
+            'rdLQZ': function (_0x1a0d15, _0xac4e58) {
+                return _0x1a0d15 + _0xac4e58;
+            },
+            'aFYUe': _0x47c68f(0x227),
+            'CPYUX': _0x47c68f(0x24a),
+            'lhOfh': function (_0xa462d0, _0x183532) {
+                return _0xa462d0(_0x183532);
+            },
+            'GvcLh': _0x47c68f(0x221) + _0x47c68f(0x1f5),
+            'bPtob': _0x47c68f(0x245) + _0x47c68f(0x246) + 'd',
+            'XyzyM': _0x47c68f(0x1fc),
+            'npdJC': _0x47c68f(0x260) + _0x47c68f(0x1f8),
+            'VTNNF': _0x47c68f(0x231) + _0x47c68f(0x257) + 'er',
+            'CFXRL': function (_0x1dc521, _0x41dbbd) {
+                return _0x1dc521(_0x41dbbd);
+            },
+            'RuMgJ': _0x47c68f(0x224) + _0x47c68f(0x213),
+            'tpoEI': _0x47c68f(0x247) + 'le',
+            'kwdvW': _0x47c68f(0x255),
+            'vOPyc': function (_0x166651, _0x4a1819) {
+                return _0x166651(_0x4a1819);
+            },
+            'ZBgYu': _0x47c68f(0x20a) + _0x47c68f(0x1fb)
+        };
+    if (!CHANNEL_NAME)
+        return _0x1719c8[_0x47c68f(0x262)](alert, _0x1719c8[_0x47c68f(0x21f)]);
+    shaka[_0x47c68f(0x207)][_0x47c68f(0x23f)]();
+    if (!shaka[_0x47c68f(0x226)][_0x47c68f(0x211) + _0x47c68f(0x217)]())
+        return _0x1719c8[_0x47c68f(0x262)](alert, _0x1719c8[_0x47c68f(0x25c)]);
+    const _0x3d7fbe = document[_0x47c68f(0x241) + _0x47c68f(0x25b)](_0x1719c8[_0x47c68f(0x1fe)]), _0x201534 = document[_0x47c68f(0x210) + _0x47c68f(0x250)](_0x1719c8[_0x47c68f(0x24f)]), _0xd21392 = new shaka[(_0x47c68f(0x226))](_0x3d7fbe);
+    new shaka['ui'][(_0x47c68f(0x23a))](_0xd21392, document[_0x47c68f(0x241) + _0x47c68f(0x25b)](_0x1719c8[_0x47c68f(0x1f2)]), _0x3d7fbe);
+    try {
+        const _0x59932d = await _0x1719c8[_0x47c68f(0x262)](fetch, JSON_URL), _0x395176 = await _0x59932d[_0x47c68f(0x24e)](), _0x524050 = _0x395176[_0x47c68f(0x219)](_0x44f47d => _0x44f47d[_0x47c68f(0x1fd)][_0x47c68f(0x251) + 'e']() === CHANNEL_NAME[_0x47c68f(0x251) + 'e']());
+        if (!_0x524050)
+            return _0x1719c8[_0x47c68f(0x22c)](alert, _0x1719c8[_0x47c68f(0x235)]);
+        document[_0x47c68f(0x210) + _0x47c68f(0x250)](_0x1719c8[_0x47c68f(0x1f6)])[_0x47c68f(0x23b) + 't'] = _0x524050[_0x47c68f(0x1fd)];
+        if (_0x1719c8[_0x47c68f(0x228)](_0x524050[_0x47c68f(0x23c)], _0x1719c8[_0x47c68f(0x202)]) && _0x524050[_0x47c68f(0x1f9)]) {
+            const [_0x219b15, _0x39caa3] = _0x524050[_0x47c68f(0x1f9)][_0x47c68f(0x1ff)](':');
+            _0xd21392[_0x47c68f(0x232)]({ 'drm': { 'clearKeys': { [_0x219b15]: _0x39caa3 } } });
+        }
+        _0xd21392[_0x47c68f(0x22b) + _0x47c68f(0x209)]()[_0x47c68f(0x239) + _0x47c68f(0x236) + 'r']((_0x1f9d18, _0x5e6eb2) => {
+            const _0x217f38 = _0x47c68f;
+            _0x5e6eb2[_0x217f38(0x256)][_0x1719c8[_0x217f38(0x20f)]] = _0x1719c8[_0x217f38(0x21e)], _0x5e6eb2[_0x217f38(0x256)][_0x1719c8[_0x217f38(0x22a)]] = _0x1719c8[_0x217f38(0x20c)], _0x524050[_0x217f38(0x242)] && (_0x5e6eb2[_0x217f38(0x256)][_0x1719c8[_0x217f38(0x25a)]] = _0x524050[_0x217f38(0x242)], (_0x1719c8[_0x217f38(0x223)](_0x1f9d18, shaka[_0x217f38(0x23d)][_0x217f38(0x20d) + _0x217f38(0x21d)][_0x217f38(0x22e) + 'e'][_0x217f38(0x24d)]) || _0x1719c8[_0x217f38(0x228)](_0x1f9d18, shaka[_0x217f38(0x23d)][_0x217f38(0x20d) + _0x217f38(0x21d)][_0x217f38(0x22e) + 'e'][_0x217f38(0x215)])) && !_0x5e6eb2[_0x217f38(0x25f)][0x1c6 * -0x15 + 0x23e + 0x2300][_0x217f38(0x212)](_0x1719c8[_0x217f38(0x1f4)]) && (_0x5e6eb2[_0x217f38(0x25f)][0xef * -0x1e + 0x331 + 0x18d1] += _0x1719c8[_0x217f38(0x225)](_0x5e6eb2[_0x217f38(0x25f)][-0xa0b * 0x1 + -0x2e6 * -0x1 + 0x725 * 0x1][_0x217f38(0x212)]('?') ? '&' : '?', _0x524050[_0x217f38(0x242)])));
+        }), await _0xd21392[_0x47c68f(0x1f7)](_0x524050[_0x47c68f(0x214)]), await _0x3d7fbe[_0x47c68f(0x205)]()[_0x47c68f(0x254)](() => {
+            const _0x242a5a = _0x47c68f;
+            _0x201534[_0x242a5a(0x20e)][_0x242a5a(0x244)] = _0x1719c8[_0x242a5a(0x261)];
+        });
+    } catch (_0x47b60d) {
+        console[_0x47c68f(0x21c)](_0x47b60d), _0x1719c8[_0x47c68f(0x200)](alert, _0x1719c8[_0x47c68f(0x20b)]);
+    }
+    _0x201534[_0x47c68f(0x229)] = async () => {
+        const _0x8b66fb = _0x47c68f;
+        _0x201534[_0x8b66fb(0x20e)][_0x8b66fb(0x244)] = _0x1719c8[_0x8b66fb(0x23e)], _0x3d7fbe[_0x8b66fb(0x24b)] = ![], await _0x3d7fbe[_0x8b66fb(0x205)]();
+    };
+});
 </script>
 
-</body>
-</html>
+
+
+
+<script src="https://recollectsideway.com/1a/88/58/1a88587e20ea1e362b615ed3b07f1287.js"></script> 
+<script type="text/javascript" src="//data527.click/163656ac3c55aa8f932d/5d26b81e28/?placementName=default"></script></body></html>
