@@ -1,91 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Live Stream Player</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
-<style>
-    body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;font-family:sans-serif}
-    #player_wrap{width:100%;height:100%;position:relative}
-    video{width:100%;height:100%}
-    .dev_header{position:absolute;top:15px;left:15px;z-index:10;background:rgba(0,0,0,0.7);padding:7px 15px;border-radius:50px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;pointer-events:none;backdrop-filter:blur(5px)}
-    .live_dot{height:8px;width:8px;background:#00f0ff;border-radius:50%;margin-right:10px;box-shadow:0 0 10px #00f0ff;animation:blink_live 1.2s infinite}
-    .dev_name{color:#fff;font-size:12px;font-weight:600;letter-spacing:0.5px}
-    .dev_name span{color:#00f0ff;font-weight:800}
-    #splash_gate{position:absolute;inset:0;background:#080808;display:flex;justify-content:center;align-items:center;z-index:100}
-    .play_btn_card{text-align:center;cursor:pointer;background:#111;padding:35px;border-radius:20px;border:1px solid #222;transition:0.3s}
-    .p_icon{font-size:40px;color:#fff;background:#1e40af;width:75px;height:75px;line-height:75px;border-radius:50%;margin-bottom:15px;display:inline-block;padding-left:5px}
-    .p_label{color:#fff;font-size:15px;font-weight:600;display:block}
-    @keyframes blink_live{0%,100%{opacity:1}50%{opacity:.3}}
-    .shaka-spinner-container{display:none!important}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASH Player | Devansh</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
+    
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        #video-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+        }
+
+        #loading-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: sans-serif;
+            font-size: 16px;
+            z-index: 5;
+        }
+    </style>
 </head>
-<body oncontextmenu="return false">
+<body>
 
-<div id="player_wrap" data-shaka-player-container>
-    <div class="dev_header">
-        <div class="live_dot"></div>
-        <div class="dev_name">Developer <span>Devansh Sharma</span></div>
-    </div>
-
-    <div id="splash_gate">
-        <div class="play_btn_card" id="start_trigger">
-            <div class="p_icon">▶</div>
-            <span class="p_label">TAP TO WATCH LIVE</span>
-        </div>
-    </div>
-
-    <video id="main_player" data-shaka-player autoplay playsinline></video>
+<div id="video-container" data-shaka-player-container>
+    <div id="loading-overlay">Initializing Stream...</div>
+    <video id="video" data-shaka-player autoplay playsinline poster="https://ik.imagekit.io/24sfhkkep/shwe7ank-poster-16x9.png"></video>
 </div>
 
 <script>
-(function(){
-    // Fixed Manifest URL (Sports18 1 HD)
-    var _0xU = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2Rhc2gvU3BvcnRzMThfMV9IRF9CVFMubXBkP19faGRuZWFfXz1zdD0xNzcyMTkxNjk3fmV4cD0xNzcyMjc4MDk3fmFjbD0vKn5obWFjPTllZWI5YjkxYzVhMjRlZGI2NTFiMzY1OGQ0M2IwYzBmODZjZTUyMjZmN2VlZTQ0MzM4Y2UzNjRkY2JmOGVkMGM=";
-    
-    // Key ID & Key (Must match for the channel)
-    var _0xK1 = "YjJjZjE1YmZkOTM4NDUyMTg4ZDQ1N2UzY2RjZTZlMDI=";
-    var _0xK2 = "MmI1N2VjNDM3YjcyNTdiNWFmMTY1ZDYzNGFlMmJmYzc=";
+async function initApp() {
+    const video = document.getElementById('video');
+    const container = document.getElementById('video-container');
+    const loading = document.getElementById('loading-overlay');
 
-    var player, video, gate;
+    // Install polyfills to patch browser gaps
+    shaka.polyfill.installAll();
 
-    async function setup() {
-        video = document.getElementById('main_player');
-        gate = document.getElementById('splash_gate');
-        player = new shaka.Player(video);
+    if (!shaka.Player.isBrowserSupported()) {
+        loading.textContent = "Browser not supported!";
+        return;
+    }
 
-        new shaka.ui.Overlay(player, document.getElementById('player_wrap'), video);
+    const player = new shaka.Player(video);
+    const ui = new shaka.ui.Overlay(player, container, video);
 
-        player.configure({
-            drm: { clearKeys: { [atob(_0xK1)]: atob(_0xK2) } },
-            streaming: { lowLatencyMode: true }
-        });
+    // Stream & Keys Configuration
+    const manifestUri = "https://live-pv-ta.amazon.fastly-edge.com/lhr-nitro/live/clients/dash/enc/wwrmho82pc/out/v1/d7130f460d41486ea7e8e3eb45f0522f/cenc.mpd";
 
-        // Simplified Networking: Only adds Headers, no more double-token mess
-        player.getNetworkingEngine().registerRequestFilter(function(type, request) {
-            request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
-            request.headers['Referer'] = 'https://www.jiotv.com/';
-        });
-
-        document.getElementById('start_trigger').addEventListener('click', async function() {
-            try {
-                this.innerHTML = '<span class="p_label">LOADING...</span>';
-                await player.load(atob(_0xU));
-                gate.style.display = 'none';
-                video.play();
-            } catch (e) {
-                alert("Playback Failed: Either Token or DRM Keys are invalid.");
-                console.error(e);
+    player.configure({
+        drm: {
+            clearKeys: {
+                "baafdb8ebcbbc0655332291da6f121da": "60ac892e0ea0b2c46fc6837c97ed641a"
             }
-        });
-    }
+        },
+        streaming: {
+            lowLatencyMode: true,
+            bufferingGoal: 5,
+            jumpLargeGaps: true
+        }
+    });
 
-    if (shaka.Player.isBrowserSupported()) {
-        document.addEventListener('DOMContentLoaded', setup);
+    try {
+        await player.load(manifestUri);
+        loading.style.display = 'none';
+        console.log("Stream Loaded Successfully");
+    } catch (e) {
+        console.error("Error Loading:", e);
+        loading.textContent = "Stream/Keys Expired or Blocked";
+        loading.style.color = "red";
     }
-})();
+}
+
+document.addEventListener('shaka-ui-loaded', initApp);
 </script>
+
 </body>
 </html>
