@@ -3,63 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Sports18 1 HD - Live</title>
+<title>Live Stream</title>
 <style>
-    body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;font-family:sans-serif}
-    #_0x55a1{width:100%;height:100%;position:relative}
-    #_0x9922{position:absolute;top:0;left:0;width:100%;height:100%;border:none;z-index:1}
-    ._0x11b2{position:absolute;top:15px;left:15px;z-index:10;background:rgba(0,0,0,0.7);padding:7px 15px;border-radius:50px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;pointer-events:none;backdrop-filter:blur(5px)}
-    ._0x33c4{height:8px;width:8px;background:#00f0ff;border-radius:50%;margin-right:10px;box-shadow:0 0 10px #00f0ff;animation:_0x_k1 1.2s infinite}
-    ._0x77d8{color:#fff;font-size:12px;font-weight:600;letter-spacing:0.5px}
-    ._0x77d8 span{color:#00f0ff;font-weight:800}
-    #_0x1122{position:absolute;inset:0;background:#080808;display:flex;justify-content:center;align-items:center;z-index:100;transition:opacity 0.4s ease}
-    ._0x44f5{text-align:center;cursor:pointer;background:#111;padding:35px;border-radius:20px;border:1px solid #222;transition:0.3s}
-    ._0x44f5:hover{border-color:#00f0ff;transform:scale(1.02)}
-    ._0x66a1{font-size:40px;color:#fff;background:#1e40af;width:75px;height:75px;line-height:75px;border-radius:50%;margin-bottom:15px;display:inline-block;padding-left:5px}
-    ._0x88b2{color:#fff;font-size:15px;font-weight:600;display:block}
-    @keyframes _0x_k1{0%{opacity:1}50%{opacity:.3}100%{opacity:1}}
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; font-family: sans-serif; }
+    
+    #main-container { width: 100%; height: 100%; position: relative; background: #000; }
+    
+    #video-player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 1; }
+    
+    .dev-tag { 
+        position: absolute; 
+        top: 20px; 
+        left: 20px; 
+        z-index: 999; 
+        background: rgba(0, 0, 0, 0.7); 
+        padding: 8px 18px; 
+        border-radius: 50px; 
+        border: 1px solid rgba(255, 255, 255, 0.1); 
+        display: flex; 
+        align-items: center; 
+        pointer-events: none; 
+        backdrop-filter: blur(10px); 
+    }
+    
+    .dot { height: 10px; width: 10px; background: #00f0ff; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 10px #00f0ff; animation: pulse 1.5s infinite; }
+    .dev-name { color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; }
+    .dev-name span { color: #00f0ff; font-weight: 800; }
+
+    #overlay { position: absolute; inset: 0; background: #080808; display: flex; justify-content: center; align-items: center; z-index: 1000; transition: opacity 0.5s ease; }
+    .play-card { text-align: center; cursor: pointer; background: #111; padding: 40px; border-radius: 25px; border: 1px solid #222; transition: 0.3s; }
+    .play-card:hover { border-color: #00f0ff; transform: scale(1.02); }
+    .play-icon { font-size: 40px; color: #fff; background: #1e40af; width: 80px; height: 80px; line-height: 80px; border-radius: 50%; margin-bottom: 20px; display: inline-block; padding-left: 8px; }
+    .play-text { color: #fff; font-size: 16px; font-weight: 600; display: block; }
+
+    @keyframes pulse { 0% {opacity: 1;} 50% {opacity: .3;} 100% {opacity: 1;} }
+    
+    :-webkit-full-screen .dev-tag { display: flex !important; }
+    :fullscreen .dev-tag { display: flex !important; }
 </style>
 </head>
 <body oncontextmenu="return false">
 
-<div id="_0x55a1">
-    <div class="_0x11b2">
-        <div class="_0x33c4"></div>
-        <div class="_0x77d8">Developer <span>Devansh Sharma</span></div>
+<div id="main-container">
+    <div class="dev-tag">
+        <div class="dot"></div>
+        <div class="dev-name">Developer <span>Devansh Sharma</span></div>
     </div>
 
-    <div id="_0x1122">
-        <div class="_0x44f5" id="_0x99ff">
-            <div class="_0x66a1">▶</div>
-            <span class="_0x88b2">TAP TO WATCH LIVE</span>
+    <div id="overlay">
+        <div class="play-card" id="start-btn">
+            <div class="play-icon">▶</div>
+            <span class="play-text">TAP TO WATCH LIVE</span>
         </div>
     </div>
 
-    <iframe id="_0x9922" src="" allow="autoplay; fullscreen; encrypted-media" allowfullscreen referrerpolicy="no-referrer"></iframe>
+    <iframe id="video-player" src="" allow="autoplay; fullscreen; encrypted-media" allowfullscreen referrerpolicy="no-referrer"></iframe>
 </div>
 
 <script>
 (function() {
-    const _0x1a = document.getElementById("_0x9922");
-    const _0x2b = document.getElementById("_0x1122");
-    const _0x3c = document.getElementById("_0x99ff");
+    const player = document.getElementById("video-player");
+    const overlay = document.getElementById("overlay");
+    const startBtn = document.getElementById("start-btn");
+    const container = document.getElementById("main-container");
 
-    const _0x_s1 = "aHR0cHM6Ly9kYXNoLnZvZGVwMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD1odHRwczovL2ppb3R2YnBrbW9iLmNkbi5qaW8uY29tL2Jway10di9TcG9ydHMxOF8xX0hEX0JUUy9vdXRwdXQvaW5kZXgubXBkP25hbWU9U3BvcnRzMThfMV9IRCZrZXlJZD1iZDFlYTZhMWMxZmI1ZGNkYjcwOTQzNGUwODI2YmJjMCZrZXk9ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=";
-    const _0x_s2 = "JmNvb2tpZT1fX2hkbmVhX189c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz";
+    const part1 = "aHR0cHM6Ly9kYXNoLnZvZGVwMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD1odHRwczovL2ppb3R2YnBrbW9iLmNkbi5qaW8uY29tL2Jway10di9TcG9ydHMxOF8xX0hEX0JUUy9vdXRwdXQvaW5kZXgubXBkP25hbWU9U3BvcnRzMThfMV9IRCZrZXlJZD1iZDFlYTZhMWMxZmI1ZGNkYjcwOTQzNGUwODI2YmJjMCZrZXk9ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=";
+    const part2 = "JmNvb2tpZT1fX2hkbmVhX189c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz";
 
-    _0x3c.onclick = function() {
-        _0x1a.src = atob(_0x_s1) + atob(_0x_s2) + "&autoplay=1&muted=0";
-        _0x2b.style.opacity = '0';
-        setTimeout(() => {
-            _0x2b.style.display = 'none';
-        }, 450);
+    startBtn.onclick = function() {
+        player.src = atob(part1) + atob(part2) + "&autoplay=1&muted=0";
+        
+        if (container.requestFullscreen) { container.requestFullscreen(); } 
+        else if (container.webkitRequestFullscreen) { container.webkitRequestFullscreen(); } 
+        else if (container.msRequestFullscreen) { container.msRequestFullscreen(); }
+
+        overlay.style.opacity = '0';
+        setTimeout(() => { overlay.style.display = 'none'; }, 500);
     };
 
-    var _0x_junk = [];
-    for(var i=0; i<450; i++) {
-        var _t = (Math.random() * 0xFFFF).toString(16);
-        _0x_junk.push("var _0x_data_" + i + " = 0x" + _t + ";");
-    }
+    window.onkeydown = function(e) {
+        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.keyCode == 85)) return false;
+    };
 })();
 </script>
 
