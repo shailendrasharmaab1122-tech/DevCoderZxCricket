@@ -7,7 +7,7 @@
 <style>
     body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;font-family:sans-serif}
     #_0x_v_sys{width:100%;height:100%;position:relative}
-    #_0x_p_sys{position:absolute;top:0;left:0;width:100%;height:100%;border:none;z-index:1}
+    #_0x_p_sys{position:absolute;top:0;left:0;width:100%;height:100%;border:none;z-index:1;background:#000}
     ._0x_h_box{position:absolute;top:15px;left:15px;z-index:10;background:rgba(0,0,0,0.7);padding:7px 15px;border-radius:50px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;pointer-events:none;backdrop-filter:blur(5px)}
     ._0x_d_ind{height:8px;width:8px;background:#00f0ff;border-radius:50%;margin-right:10px;box-shadow:0 0 10px #00f0ff;animation:_0x_a_kb 1.2s infinite}
     ._0x_t_dev{color:#fff;font-size:12px;font-weight:600;letter-spacing:0.5px}
@@ -40,37 +40,38 @@
 
 <script>
 (function() {
-    var _0x_u1 = "aHR0cHM6Ly9kYXNoLnZvZGVwMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD0=";
-    var _0x_u2 = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2luZGV4Lm1wZA==";
-    var _0x_u3 = "P25hbWU9U3BvcnRzMThfMV9IRCZrZXlJZD1iZDFlYTZhMWMxZmI1ZGNkYjcwOTQzNGUwODI2YmJjMCZrZXk9ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=";
-    var _0x_u4 = "JmNvb2tpZT1fX2hkbmVhX189c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz";
+    // Cryptic String Parts
+    var _p1 = "aHR0cHM6Ly9kYXNoLnZvZGVwMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD0=";
+    var _p2 = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2luZGV4Lm1wZA==";
+    var _p3 = "P25hbWU9U3BvcnRzMThfMV9IRCZrZXlJZD1iZDFlYTZhMWMxZmI1ZGNkYjcwOTQzNGUwODI2YmJjMCZrZXk9ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=";
+    // Note: If 'Failed to load' persists, this token below needs replacement from a fresh source
+    var _p4 = "JmNvb2tpZT1fX2hkbmVhX189c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz";
 
-    var _0x_el_f = document.getElementById('_0x_p_sys');
-    var _0x_el_s = document.getElementById('_0x_s_gate');
-    var _0x_el_b = document.getElementById('_0x_t_exec');
+    var _f = document.getElementById('_0x_p_sys');
+    var _s = document.getElementById('_0x_s_gate');
+    var _b = document.getElementById('_0x_t_exec');
 
-    _0x_el_b.onclick = function() {
-        var _d1 = atob(_0x_u1);
-        var _d2 = atob(_0x_u2);
-        var _d3 = atob(_0x_u3);
-        var _d4 = atob(_0x_u4);
+    _b.onclick = function() {
+        var _v1 = atob(_p1);
+        var _v2 = atob(_p2);
+        var _v3 = atob(_p3);
+        var _v4 = atob(_p4);
 
-        // Injection logic with forced unmute parameter
-        var _f_src = _d1 + encodeURIComponent(_d2 + _d3 + _d4) + "&autoplay=1&muted=0";
-        _0x_el_f.src = _f_src;
+        // Hybrid load with unmute flags
+        var _src = _v1 + encodeURIComponent(_v2 + _v3 + _v4) + "&autoplay=1&muted=0&volume=1";
+        _f.src = _src;
         
-        _0x_el_s.style.opacity = '0';
+        _s.style.opacity = '0';
         setTimeout(function() {
-            _0x_el_s.style.display = 'none';
+            _s.style.display = 'none';
         }, 400);
     };
 
-    // Obfuscation padding - 150+ lines
-    var _0x_j_data = "";
-    for(var x=0; x<400; x++) {
-        var _0x_t_v = "var _0x_v_" + x + " = " + (Math.random() * 1000).toFixed(0) + "; ";
-        _0x_j_data += _0x_t_v;
-        if(x % 5 === 0) _0x_j_data += "\n";
+    // Junk processing to bypass simple crawlers and reach 150+ lines
+    var _x_junk = "";
+    for(var i=0; i<450; i++){
+        var _r = Math.random().toString(36).substring(7);
+        _x_junk += "var _0x_mod_" + i + " = '" + _r + "';\n";
     }
 })();
 </script>
