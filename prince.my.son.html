@@ -6,72 +6,70 @@
 <title>Sports18 1 HD</title>
 <style>
     body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;font-family:sans-serif}
-    #_main_sc_0x{width:100%;height:100%;position:relative}
-    #_stream_v_0x{position:absolute;top:0;left:0;width:100%;height:100%;border:none;z-index:1}
-    ._hdr_0x{position:absolute;top:15px;left:15px;z-index:10;background:rgba(0,0,0,0.7);padding:7px 15px;border-radius:50px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;pointer-events:none;backdrop-filter:blur(5px)}
-    ._dot_0x{height:8px;width:8px;background:#00f0ff;border-radius:50%;margin-right:10px;box-shadow:0 0 10px #00f0ff;animation:_blink_0x 1.2s infinite}
-    ._dev_0x{color:#fff;font-size:12px;font-weight:600;letter-spacing:0.5px}
-    ._dev_0x span{color:#00f0ff;font-weight:800}
-    #_gate_0x{position:absolute;inset:0;background:#080808;display:flex;justify-content:center;align-items:center;z-index:100;transition:opacity 0.4s ease}
-    ._card_0x{text-align:center;cursor:pointer;background:#111;padding:35px;border-radius:20px;border:1px solid #222;transition:0.3s}
-    ._card_0x:hover{border-color:#00f0ff;transform:scale(1.02)}
-    ._icon_0x{font-size:40px;color:#fff;background:#1e40af;width:75px;height:75px;line-height:75px;border-radius:50%;margin-bottom:15px;display:inline-block;padding-left:5px}
-    ._lbl_0x{color:#fff;font-size:15px;font-weight:600;display:block}
+    #_container_0x1{width:100%;height:100%;position:relative}
+    #_player_v_0x2{position:absolute;top:0;left:0;width:100%;height:100%;border:none;z-index:1}
+    ._header_0x3{position:absolute;top:15px;left:15px;z-index:10;background:rgba(0,0,0,0.7);padding:7px 15px;border-radius:50px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;pointer-events:none;backdrop-filter:blur(5px)}
+    ._dot_0x4{height:8px;width:8px;background:#00f0ff;border-radius:50%;margin-right:10px;box-shadow:0 0 10px #00f0ff;animation:_blink_0x 1.2s infinite}
+    ._dev_0x5{color:#fff;font-size:12px;font-weight:600;letter-spacing:0.5px}
+    ._dev_0x5 span{color:#00f0ff;font-weight:800}
+    #_splash_0x6{position:absolute;inset:0;background:#080808;display:flex;justify-content:center;align-items:center;z-index:100;transition:opacity 0.4s ease}
+    ._card_0x7{text-align:center;cursor:pointer;background:#111;padding:35px;border-radius:20px;border:1px solid #222;transition:0.3s}
+    ._card_0x7:hover{border-color:#00f0ff;transform:scale(1.02)}
+    ._icon_0x8{font-size:40px;color:#fff;background:#1e40af;width:75px;height:75px;line-height:75px;border-radius:50%;margin-bottom:15px;display:inline-block;padding-left:5px}
+    ._label_0x9{color:#fff;font-size:15px;font-weight:600;display:block}
     @keyframes _blink_0x{0%{opacity:1}50%{opacity:.3}100%{opacity:1}}
 </style>
 </head>
 <body oncontextmenu="return false">
 
-<div id="_main_sc_0x">
-    <div class="_hdr_0x">
-        <div class="_dot_0x"></div>
-        <div class="_dev_0x">Developer <span>Devansh Sharma</span></div>
+<div id="_container_0x1">
+    <div class="_header_0x3">
+        <div class="_dot_0x4"></div>
+        <div class="_dev_0x5">Developer <span>Devansh Sharma</span></div>
     </div>
 
-    <div id="_gate_0x">
-        <div class="_card_0x" id="_run_0x">
-            <div class="_icon_0x">▶</div>
-            <span class="_lbl_0x">TAP TO WATCH LIVE</span>
+    <div id="_splash_0x6">
+        <div class="_card_0x7" id="_trigger_0x10">
+            <div class="_icon_0x8">▶</div>
+            <span class="_label_0x9">TAP TO WATCH LIVE</span>
         </div>
     </div>
 
-    <iframe id="_stream_v_0x" src="" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
+    <iframe id="_player_v_0x2" src="" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
 </div>
 
 <script>
 (function() {
-    var _0xArr = [
-        'getElementById', 'style', 'opacity', 'display', 'none', 'src', 'onclick',
-        'aHR0cHM6Ly9kYXNoLnZvZGVwMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD0=',
-        'aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2luZGV4Lm1wZA==',
-        'P25hbWU9U3BvcnRzMThfMV9IRCZrZXlJZD1iZDFlYTZhMWMxZmI1ZGNkYjcwOTQzNGUwODI2YmJjMCZrZXk9ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=',
-        'JmNvb2tpZT1fX2hkbmVhX189c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz'
-    ];
+    var _0xM1 = "aHR0cHM6Ly9kYXNoLnZvZGVwMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD0=";
+    var _0xM2 = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2luZGV4Lm1wZA==";
+    var _0xM3 = "P25hbWU9U3BvcnRzMThfMV9IRCZrZXlJZD1iZDFlYTZhMWMxZmI1ZGNkYjcwOTQzNGUwODI2YmJjMCZrZXk9ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=";
+    var _0xM4 = "JmNvb2tpZT1fX2hkbmVhX189c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz";
 
-    var _0xV = document[_0xArr[0]]('_stream_v_0x');
-    var _0xG = document[_0xArr[0]]('_gate_0x');
-    var _0xB = document[_0xArr[0]]('_run_0x');
+    var _0xR = document.getElementById('_player_v_0x2');
+    var _0xS = document.getElementById('_splash_0x6');
+    var _0xT = document.getElementById('_trigger_0x10');
 
-    _0xB[_0xArr[6]] = function() {
-        var _base = atob(_0xArr[7]);
-        var _url = atob(_0xArr[8]);
-        var _keys = atob(_0xArr[9]);
-        var _tk = atob(_0xArr[10]);
+    _0xT.onclick = function() {
+        var _v1 = atob(_0xM1);
+        var _v2 = atob(_0xM2);
+        var _v3 = atob(_0xM3);
+        var _v4 = atob(_0xM4);
 
-        _0xV[_0xArr[5]] = _base + encodeURIComponent(_url + _keys + _tk);
-        _0xG[_0xArr[1]][_0xArr[2]] = '0';
+        _0xR.src = _v1 + encodeURIComponent(_v2 + _v3 + _v4);
+        _0xS.style.opacity = '0';
         
         setTimeout(function() {
-            _0xG[_0xArr[1]][_0xArr[3]] = _0xArr[4];
-        }, 450);
+            _0xS.style.display = 'none';
+        }, 400);
     };
 
-    var _junk = "";
-    for(var i=0; i<200; i++) {
-        _junk += Math.random().toString(36).substring(2, 15);
-        if(i % 50 == 0) _junk += "\n";
+    var _0xJ = "";
+    for(var i=0; i<300; i++) {
+        _0xJ += "var _junk_" + i + " = " + Math.random() + ";\n";
     }
+    // _0xJ variable is here only to increase the source code size for obfuscation
 })();
 </script>
+
 </body>
 </html>
