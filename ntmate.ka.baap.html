@@ -4,81 +4,94 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Sports18 1 HD - Live</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
 <style>
     body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;font-family:sans-serif}
     #player_wrap{width:100%;height:100%;position:relative}
-    video{width:100%;height:100%}
-    .dev_header{position:absolute;top:15px;left:15px;z-index:10;background:rgba(0,0,0,0.7);padding:7px 15px;border-radius:50px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;pointer-events:none;backdrop-filter:blur(5px)}
-    .live_dot{height:8px;width:8px;background:#00f0ff;border-radius:50%;margin-right:10px;box-shadow:0 0 10px #00f0ff;animation:blink_live 1.2s infinite}
+    
+    /* The Iframe Player */
+    #videoFrame {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        z-index: 1;
+    }
+
+    /* Developer Credits Overlay */
+    .dev_header{
+        position:absolute;top:15px;left:15px;z-index:10;
+        background:rgba(0,0,0,0.7);padding:7px 15px;
+        border-radius:50px;border:1px solid rgba(255,255,255,0.1);
+        display:flex;align-items:center;pointer-events:none;
+        backdrop-filter:blur(5px);
+    }
+    .live_dot{
+        height:8px;width:8px;background:#00f0ff;
+        border-radius:50%;margin-right:10px;
+        box-shadow:0 0 10px #00f0ff;animation:blink_live 1.2s infinite;
+    }
     .dev_name{color:#fff;font-size:12px;font-weight:600;letter-spacing:0.5px}
     .dev_name span{color:#00f0ff;font-weight:800}
-    #splash_gate{position:absolute;inset:0;background:#080808;display:flex;justify-content:center;align-items:center;z-index:100}
+
+    /* Splash Screen Overlay */
+    #splash_gate{
+        position:absolute;inset:0;background:#080808;
+        display:flex;justify-content:center;align-items:center;
+        z-index:100;transition: 0.5s ease-out;
+    }
     .play_btn_card{text-align:center;cursor:pointer;background:#111;padding:35px;border-radius:20px;border:1px solid #222;transition:0.3s}
     .play_btn_card:hover{border-color:#00f0ff;transform:scale(1.02)}
     .p_icon{font-size:40px;color:#fff;background:#1e40af;width:75px;height:75px;line-height:75px;border-radius:50%;margin-bottom:15px;display:inline-block;padding-left:5px}
     .p_label{color:#fff;font-size:15px;font-weight:600;display:block}
+
     @keyframes blink_live{0%{opacity:1}50%{opacity:.3}100%{opacity:1}}
 </style>
 </head>
 <body oncontextmenu="return false">
 
-<div id="player_wrap" data-shaka-player-container>
+<div id="player_wrap">
     <div class="dev_header">
         <div class="live_dot"></div>
         <div class="dev_name">Developer <span>Devansh Sharma</span></div>
     </div>
+
     <div id="splash_gate">
         <div class="play_btn_card" id="start_trigger">
             <div class="p_icon">▶</div>
             <span class="p_label">TAP TO WATCH LIVE</span>
         </div>
     </div>
-    <video id="main_player" data-shaka-player autoplay playsinline></video>
+
+    <iframe id="videoFrame" 
+        src="" 
+        allow="autoplay; fullscreen; encrypted-media; picture-in-picture" 
+        allowfullscreen>
+    </iframe>
 </div>
 
 <script>
 (function(){
-    // Iframe wale code se nikali gayi details
-    var streamUrl = "https://jiotvbpkmob.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/index.mpd";
-    var token = "st=1772241887~exp=1772328287~acl=/*~hmac=c2276b495783dbb09e00bbbf9f38c98f7d06d932a86c8364b74b848141627e13";
-    
-    // Proxy URL jo iframe wale code mein use ho rahi thi
-    var proxy = "https://dash.vodep39240327.workers.dev/?url=";
+    // Jo URL aapke dusre code mein chal raha hai
+    var streamSrc = "https://dash.vodep39240327.workers.dev/?url=https://jiotvbpkmob.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/index.mpd?name=Sports18_1_HD&keyId=bd1ea6a1c1fb5dcdb709434e0826bbc0&key=f57f22cba32739ce7beb1fab3f3d060b&cookie=__hdnea__=st=1772241887~exp=1772328287~acl=/*~hmac=c2276b495783dbb09e00bbbf9f38c98f7d06d932a86c8364b74b848141627e13";
 
-    // Keys
-    var kId = "bd1ea6a1c1fb5dcdb709434e0826bbc0";
-    var k = "f57f22cba32739ce7beb1fab3f3d060b";
+    var iframe = document.getElementById('videoFrame');
+    var gate = document.getElementById('splash_gate');
 
-    async function _init(){
-        const vid = document.getElementById('main_player');
-        const gate = document.getElementById('splash_gate');
-        const p = new shaka.Player(vid);
-        new shaka.ui.Overlay(p, document.getElementById('player_wrap'), vid);
-
-        p.configure({
-            drm: { clearKeys: { [kId]: k } },
-            streaming: { lowLatencyMode: true }
-        });
-
-        // Final URL with Proxy + Stream + Token
-        var finalUrl = proxy + encodeURIComponent(streamUrl + "?__hdnea__=" + token);
-
-        try {
-            await p.load(finalUrl);
-            document.getElementById('start_trigger').onclick = function(){
-                gate.style.display = 'none';
-                vid.muted = false;
-                vid.play();
-            };
-        } catch(e) {
-            console.error("Error loading stream", e);
-        }
-    }
-
-    document.addEventListener('shaka-ui-loaded', _init);
+    // Button click handle
+    document.getElementById('start_trigger').onclick = function(){
+        // Iframe load karenge jab user click karega
+        iframe.src = streamSrc;
+        
+        // Splash gate hatayenge
+        gate.style.opacity = '0';
+        setTimeout(function(){
+            gate.style.display = 'none';
+        }, 500);
+    };
 })();
 </script>
+
 </body>
 </html>
