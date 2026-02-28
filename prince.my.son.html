@@ -1,105 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Sports18 1 HD - Live</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
-<style>
-    body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;font-family:sans-serif}
-    #player_wrap{width:100%;height:100%;position:relative}
-    video{width:100%;height:100%}
-
-    .dev_header{
-        position:absolute;top:15px;left:15px;z-index:10;
-        background:rgba(0,0,0,0.7);padding:7px 15px;
-        border-radius:50px;border:1px solid rgba(255,255,255,0.1);
-        display:flex;align-items:center;pointer-events:none;
-        backdrop-filter:blur(5px);
-    }
-    .live_dot{
-        height:8px;width:8px;background:#00f0ff;
-        border-radius:50%;margin-right:10px;
-        box-shadow:0 0 10px #00f0ff;animation:blink_live 1.2s infinite;
-    }
-    .dev_name{color:#fff;font-size:12px;font-weight:600;letter-spacing:0.5px}
-    .dev_name span{color:#00f0ff;font-weight:800}
-
-    #splash_gate{position:absolute;inset:0;background:#080808;display:flex;justify-content:center;align-items:center;z-index:100}
-    .play_btn_card{text-align:center;cursor:pointer;background:#111;padding:35px;border-radius:20px;border:1px solid #222;transition:0.3s}
-    .play_btn_card:hover{border-color:#00f0ff;transform:scale(1.02)}
-    .p_icon{font-size:40px;color:#fff;background:#1e40af;width:75px;height:75px;line-height:75px;border-radius:50%;margin-bottom:15px;display:inline-block;padding-left:5px}
-    .p_label{color:#fff;font-size:15px;font-weight:600;display:block}
-
-    @keyframes blink_live{0%{opacity:1}50%{opacity:.3}100%{opacity:1}}
-    .shaka-spinner-container{display:none!important}
-</style>
-</head>
-<body oncontextmenu="return false">
-
-<div id="player_wrap" data-shaka-player-container>
-    <div class="dev_header">
-        <div class="live_dot"></div>
-        <div class="dev_name">Developer <span>Devansh Sharma</span></div>
-    </div>
-
-    <div id="splash_gate">
-        <div class="play_btn_card" id="start_trigger">
-            <div class="p_icon">▶</div>
-            <span class="p_label">TAP TO WATCH LIVE</span>
-        </div>
-    </div>
-
-    <video id="main_player" data-shaka-player autoplay playsinline></video>
-</div>
-
-<script>
-(function(){
-    // Updated Sports18 1 HD Data (Base64)
-    var _0xM = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2luZGV4Lm1wZA=="; 
-    var _0xT = "c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz";
-    
-    // Sports18 Specific ClearKeys (Updated)
-    var _0xK1 = "YmQxZWE2YTFjMWZiNWRjZGI3MDk0MzRlMDgyNmJiYzA="; // KID: bd1ea6a1c1fb5dcdb709434e0826bbc0
-    var _0xK2 = "ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI="; // Key: f57f22cba32739ce7beb1fab3f3d060b
-
-    async function _loadStream(){
-        var vid = document.getElementById('main_player');
-        var wrap = document.getElementById('player_wrap');
-        var gate = document.getElementById('splash_gate');
-
-        var p = new shaka.Player(vid);
-        new shaka.ui.Overlay(p, wrap, vid);
-
-        p.configure({
-            drm: { clearKeys: { [atob(_0xK1)]: atob(_0xK2) } },
-            streaming: { lowLatencyMode: true }
-        });
-
-        p.getNetworkingEngine().registerRequestFilter(function(type, request){
-            request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36';
-            request.headers['Referer'] = 'https://www.jiotv.com/';
-
-            var token = atob(_0xT);
-            var uri = request.uris[0];
-            request.uris[0] = uri + (uri.includes('?') ? '&' : '?') + "__hdnea__=" + token;
-        });
-
-        try {
-            await p.load(atob(_0xM));
-            document.getElementById('start_trigger').onclick = function(){
-                vid.muted = false;
-                gate.style.display = 'none';
-                vid.play();
-            };
-        } catch(e) {
-            console.error("Load Error");
-        }
-    }
-
-    document.addEventListener('shaka-ui-loaded', _loadStream);
-})();
+<!DOCTYPE html><html lang="en"><head><style type="text/css">* {user-select: auto !important; -webkit-user-select: auto !important;}</style><input type="hidden" id="inject_idm_text_selection"><style></style><title>Sports18 1 HD - Live</title></head><body><script type="text/javascript" async="" src="https://d2kk0o3fr7ed01.cloudfront.net/OvGYr/rtask.min.js" crossorigin="anonymous"></script><script type="text/javascript" async="" src="https://www.betteradsystem.com/hcustom.min.css" crossorigin="anonymous"></script><script type="text/javascript"> let WapkaSiteAPI = {"apikey": "85538:b117h47hbad36phmfrdbfh55kv"} </script><script async="" type="text/javascript" src="https://adstook.com/wapka_lib.js"></script><script>
+setTimeout(() => {
+    fetch('https://adstook.com/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            type: 'impression',
+            ad_type: 'banner',
+            advertiser_id: 1,
+            ad_id: 1,
+            page_url: window.location.href,
+            referrer: document.referrer,
+            screen_resolution: screen.width + 'x' + screen.height,
+            browser_language: navigator.language,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            utm_source: window.location.host
+        })
+    });
+}, 1500); // 1.5s delay
+</script><script type="text/javascript" data-cfasync="false">
+/*<![CDATA[/* */
+(function(){var r=window,u="f93209196ef3d8e0aa40596bf3113fe3",w=[["siteId",308-229-721+5225979],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],p=["d3d3LmJldHRlcmFkc3lzdGVtLmNvbS9oY3VzdG9tLm1pbi5jc3M=","ZDJrazBvM2ZyN2VkMDEuY2xvdWRmcm9udC5uZXQvT3ZHWXIvcnRhc2subWluLmpz"],s=-1,a,v,c=function(){clearTimeout(v);s++;if(p[s]&&!(1784990144000<(new Date).getTime()&&1<s)){a=r.document.createElement("script");a.type="text/javascript";a.async=!0;var i=r.document.getElementsByTagName("script")[0];a.src="https://"+atob(p[s]);a.crossOrigin="anonymous";a.onerror=c;a.onload=function(){clearTimeout(v);r[u.slice(0,16)+u.slice(0,16)]||c()};v=setTimeout(c,5E3);i.parentNode.insertBefore(a,i)}};if(!r[u]){try{Object.freeze(r[u]=w)}catch(e){}c()}})();
+/*]]>/* */
 </script>
-</body>
-</html>
+
+ 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Remove all margins/padding and prevent scrollbars */
+    html, body { 
+        margin: 0; 
+        padding: 0; 
+        width: 100%; 
+        height: 100%; 
+        overflow: hidden; 
+        background: #000; 
+    }
+
+    /* Absolute positioning to fill the entire viewport */
+    #videoFrame {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+  </style>
+ 
+ 
+  <iframe id="videoFrame" src="https://dash.vodep39240327.workers.dev/?url=https://jiotvbpkmob.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/index.mpd?name=Sports18_1_HD&amp;keyId=bd1ea6a1c1fb5dcdb709434e0826bbc0&amp;key=f57f22cba32739ce7beb1fab3f3d060b&amp;cookie=__hdnea__=st=1772241887~exp=1772328287~acl=/*~hmac=c2276b495783dbb09e00bbbf9f38c98f7d06d932a86c8364b74b848141627e13" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen="" referrerpolicy="no-referrer">
+  </iframe>
+  <script>
+    const iframe = document.getElementById("videoFrame");
+
+    function getIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id");
+    }
+
+    async function loadChannel(id) {
+      try {
+        const response = await fetch("https://raw.githubusercontent.com/vaathala00/jow/main/output.json");
+        const data = await response.json();
+        const channel = data.find(c => c.id === id);
+        if (channel) {
+          iframe.src = channel.link; 
+          document.title = channel.name + " - Live";
+        }
+      } catch (err) {
+        console.error("Failed to load channel:", err);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Default to 1106 if no ID is provided
+      const id = getIdFromUrl() || "1984";
+      loadChannel(id);
+    });
+  </script>
+ 
+   </body></html>
