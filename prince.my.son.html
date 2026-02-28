@@ -1,91 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Live Stream</title>
-<style>
-    body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; font-family: sans-serif; }
-    #main-container { width: 100%; height: 100%; position: relative; background: #000; }
-    #video-player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 1; }
-    
-    /* Invisible layer to force our fullscreen */
-    #fs-overlay { position: absolute; inset: 0; z-index: 5; display: none; cursor: pointer; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Stream Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background: #000; color: #fff; height: 100vh; overflow: hidden; position: relative; }
+        
+        .inner-dev-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 2147483647;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 6px 14px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+        }
+        .dot { height: 8px; width: 8px; background: #00f0ff; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #00f0ff; animation: blink 1.2s infinite; }
+        .inner-dev-tag div { font-size: 11px; font-weight: 600; color: #eee; }
+        .inner-dev-tag span { color: #00f0ff; font-weight: 800; margin-left: 4px; }
+        
+        iframe { width: 100%; height: 100%; border: none; }
 
-    .dev-tag { 
-        position: absolute; top: 20px; left: 20px; z-index: 9999; 
-        background: rgba(0, 0, 0, 0.7); padding: 8px 18px; border-radius: 50px; 
-        border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; 
-        pointer-events: none; backdrop-filter: blur(10px); 
-    }
-    .dot { height: 10px; width: 10px; background: #00f0ff; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 10px #00f0ff; animation: pulse 1.5s infinite; }
-    .dev-name { color: #fff; font-size: 13px; font-weight: 600; }
-    .dev-name span { color: #00f0ff; font-weight: 800; }
-    
-    #overlay { position: absolute; inset: 0; background: #080808; display: flex; justify-content: center; align-items: center; z-index: 10000; transition: opacity 0.5s ease; }
-    .play-card { text-align: center; cursor: pointer; background: #111; padding: 40px; border-radius: 25px; border: 1px solid #222; }
-    .play-icon { font-size: 40px; color: #fff; background: #1e40af; width: 80px; height: 80px; line-height: 80px; border-radius: 50%; margin-bottom: 20px; display: inline-block; padding-left: 8px; }
-    .play-text { color: #fff; font-size: 16px; font-weight: 600; display: block; }
-    
-    @keyframes pulse { 0%, 100% {opacity: 1;} 50% {opacity: .3;} }
-
-    /* Key fix: ensure tag shows when main container is fullscreen */
-    #main-container:fullscreen .dev-tag { display: flex !important; visibility: visible !important; opacity: 1 !important; }
-    #main-container:-webkit-full-screen .dev-tag { display: flex !important; visibility: visible !important; opacity: 1 !important; }
-</style>
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    </style>
 </head>
-<body oncontextmenu="return false">
+<body oncontextmenu="return false;">
 
-<div id="main-container">
-    <div class="dev-tag">
+    <div class="inner-dev-tag">
         <div class="dot"></div>
-        <div class="dev-name">Developer <span>Devansh Sharma</span></div>
+        <div>Developer <span>Devansh Sharma</span></div>
     </div>
 
-    <div id="fs-overlay"></div>
-
-    <div id="overlay">
-        <div class="play-card" id="start-btn">
-            <div class="play-icon">▶</div>
-            <span class="play-text">TAP TO WATCH LIVE</span>
-        </div>
-    </div>
-
-    <iframe id="video-player" src="" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
-</div>
+    <iframe id="main-player" src="about:blank" allowfullscreen allow="autoplay; encrypted-media"></iframe>
 
 <script>
-(function() {
-    const player = document.getElementById("video-player");
-    const overlay = document.getElementById("overlay");
-    const container = document.getElementById("main-container");
-    const fsOverlay = document.getElementById("fs-overlay");
-
-    const p1 = "aHR0cHM6Ly9kYXNoLnZvZGVwMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD1odHRwczovL2ppb3R2YnBrbW9iLmNkbi5qaW8uY29tL2Jway10di9TcG9ydHMxOF8xX0hEX0JUUy9vdXRwdXQvaW5kZXgubXBkP25hbWU9U3BvcnRzMThfMV9IRCZrZXlJZD1iZDFlYTZhMWMxZmI1ZGNkYjcwOTQzNGUwODI2YmJjMCZrZXk9ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=";
-    const p2 = "JmNvb2tpZT1fX2hkbmVhX189c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz";
-
-    function goFull() {
-        if (container.requestFullscreen) { container.requestFullscreen(); }
-        else if (container.webkitRequestFullscreen) { container.webkitRequestFullscreen(); }
-    }
-
-    document.getElementById("start-btn").onclick = function() {
-        player.src = atob(p1) + atob(p2) + "&autoplay=1";
-        goFull();
-        overlay.style.opacity = '0';
-        setTimeout(() => { 
-            overlay.style.display = 'none'; 
-            fsOverlay.style.display = 'block'; // Enable the invisible FS trigger
-        }, 500);
-    };
-
-    // If user clicks anywhere on the video, force OUR fullscreen
-    fsOverlay.onclick = function() {
-        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-            goFull();
-        }
-    };
-})();
+    (function() {
+        const _s1 = "aHR0cHM6Ly9kYXNoLnZvZGVwMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD1odHRwczovL2ppb3R2YnBrbW9iLmNkbi5qaW8uY29tL2Jway10di9TcG9ydHMxOF8xX0hEX0JUUy9vdXRwdXQvaW5kZXgubXBkP25hbWU9U3BvcnRzMThfMV9IRCZrZXlJZD1iZDFlYTZhMWMxZmI1ZGNkYjcwOTQzNGUwODI2YmJjMCZrZXk9ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=";
+        const _s2 = "JmNvb2tpZT1fX2hkbmVhX189c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz";
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('main-player').src = atob(_s1) + atob(_s2) + "&autoplay=1";
+        });
+    })();
 </script>
 </body>
 </html>
