@@ -8,46 +8,56 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         body { background: #000; color: #fff; height: 100vh; overflow: hidden; position: relative; }
-        
+        #wrapper { width: 100%; height: 100%; position: relative; }
         .inner-dev-tag {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            z-index: 2147483647;
-            background: rgba(0, 0, 0, 0.75);
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 2147483647 !important;
+            background: rgba(0, 0, 0, 0.7);
             padding: 6px 14px;
             border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             pointer-events: none;
             backdrop-filter: blur(8px);
         }
+        :fullscreen .inner-dev-tag, :-webkit-full-screen .inner-dev-tag {
+            display: flex !important;
+            z-index: 2147483647 !important;
+        }
         .dot { height: 8px; width: 8px; background: #00f0ff; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #00f0ff; animation: blink 1.2s infinite; }
         .inner-dev-tag div { font-size: 11px; font-weight: 600; color: #eee; }
         .inner-dev-tag span { color: #00f0ff; font-weight: 800; margin-left: 4px; }
-        
         iframe { width: 100%; height: 100%; border: none; }
-
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
 <body oncontextmenu="return false;">
-
-    <div class="inner-dev-tag">
-        <div class="dot"></div>
-        <div>Developer <span>Devansh Sharma</span></div>
+    <div id="wrapper">
+        <div class="inner-dev-tag">
+            <div class="dot"></div>
+            <div>Developer <span>Devansh Sharma</span></div>
+        </div>
+        <iframe id="main-player" src="about:blank" allowfullscreen allow="autoplay; encrypted-media"></iframe>
     </div>
-
-    <iframe id="main-player" src="about:blank" allowfullscreen allow="autoplay; encrypted-media"></iframe>
-
 <script>
     (function() {
         const _s1 = "aHR0cHM6Ly9kYXNoLnZvZGVwMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD1odHRwczovL2ppb3R2YnBrbW9iLmNkbi5qaW8uY29tL2Jway10di9TcG9ydHMxOF8xX0hEX0JUUy9vdXRwdXQvaW5kZXgubXBkP25hbWU9U3BvcnRzMThfMV9IRCZrZXlJZD1iZDFlYTZhMWMxZmI1ZGNkYjcwOTQzNGUwODI2YmJjMCZrZXk9ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=";
         const _s2 = "JmNvb2tpZT1fX2hkbmVhX189c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz";
-        
+        const player = document.getElementById('main-player');
+        const wrapper = document.getElementById('wrapper');
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('main-player').src = atob(_s1) + atob(_s2) + "&autoplay=1";
+            player.src = atob(_s1) + atob(_s2) + "&autoplay=1";
+        });
+        document.addEventListener('fullscreenchange', function() {
+            const tag = document.querySelector('.inner-dev-tag');
+            if (document.fullscreenElement) {
+                document.fullscreenElement.appendChild(tag);
+            } else {
+                wrapper.appendChild(tag);
+            }
         });
     })();
 </script>
