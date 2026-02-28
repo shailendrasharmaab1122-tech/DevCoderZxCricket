@@ -3,76 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Sports18 1 HD</title>
+<title>Live Stream</title>
 <style>
-    body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;font-family:sans-serif}
-    #_0x5a1b{width:100%;height:100%;position:relative}
-    #_0x2c3d{position:absolute;top:0;left:0;width:100%;height:100%;border:none;z-index:1}
-    ._0x1a2b{position:absolute;top:15px;left:15px;z-index:10;background:rgba(0,0,0,0.7);padding:7px 15px;border-radius:50px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;pointer-events:none;backdrop-filter:blur(5px)}
-    ._0x3c4d{height:8px;width:8px;background:#00f0ff;border-radius:50%;margin-right:10px;box-shadow:0 0 10px #00f0ff;animation:_0x_kb1 1.2s infinite}
-    ._0x5e6f{color:#fff;font-size:12px;font-weight:600;letter-spacing:0.5px}
-    ._0x5e6f span{color:#00f0ff;font-weight:800}
-    #_0x7g8h{position:absolute;inset:0;background:#080808;display:flex;justify-content:center;align-items:center;z-index:100;transition:opacity 0.4s ease}
-    ._0x9i0j{text-align:center;cursor:pointer;background:#111;padding:35px;border-radius:20px;border:1px solid #222;transition:0.3s}
-    ._0x9i0j:hover{border-color:#00f0ff;transform:scale(1.02)}
-    ._0x1k2l{font-size:40px;color:#fff;background:#1e40af;width:75px;height:75px;line-height:75px;border-radius:50%;margin-bottom:15px;display:inline-block;padding-left:5px}
-    ._0x3m4n{color:#fff;font-size:15px;font-weight:600;display:block}
-    @keyframes _0x_kb1{0%{opacity:1}50%{opacity:.3}100%{opacity:1}}
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; font-family: sans-serif; }
+    #main-container { width: 100%; height: 100%; position: relative; background: #000; }
+    #video-player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 1; }
+
+    /* Invisible layer to force our fullscreen */
+    #fs-overlay { position: absolute; inset: 0; z-index: 5; display: none; cursor: pointer; }
+
+    .dev-tag { 
+        position: absolute; top: 20px; left: 20px; z-index: 9999; 
+        background: rgba(0, 0, 0, 0.7); padding: 8px 18px; border-radius: 50px; 
+        border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; 
+        pointer-events: none; backdrop-filter: blur(10px); 
+    }
+    .dot { height: 10px; width: 10px; background: #00f0ff; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 10px #00f0ff; animation: pulse 1.5s infinite; }
+    .dev-name { color: #fff; font-size: 13px; font-weight: 600; }
+    .dev-name span { color: #00f0ff; font-weight: 800; }
+
+    #overlay { position: absolute; inset: 0; background: #080808; display: flex; justify-content: center; align-items: center; z-index: 10000; transition: opacity 0.5s ease; }
+    .play-card { text-align: center; cursor: pointer; background: #111; padding: 40px; border-radius: 25px; border: 1px solid #222; }
+    .play-icon { font-size: 40px; color: #fff; background: #1e40af; width: 80px; height: 80px; line-height: 80px; border-radius: 50%; margin-bottom: 20px; display: inline-block; padding-left: 8px; }
+    .play-text { color: #fff; font-size: 16px; font-weight: 600; display: block; }
+
+    @keyframes pulse { 0%, 100% {opacity: 1;} 50% {opacity: .3;} }
+
+    /* Key fix: ensure tag shows when main container is fullscreen */
+    #main-container:fullscreen .dev-tag { display: flex !important; visibility: visible !important; opacity: 1 !important; }
+    #main-container:-webkit-full-screen .dev-tag { display: flex !important; visibility: visible !important; opacity: 1 !important; }
 </style>
 </head>
-<body oncontextmenu="return false;">
+<body oncontextmenu="return false">
 
-<div id="_0x5a1b">
-    <div class="_0x1a2b">
-        <div class="_0x3c4d"></div>
-        <div class="_0x5e6f">Developer <span>Devansh Sharma</span></div>
+<div id="main-container">
+    <div class="dev-tag">
+        <div class="dot"></div>
+        <div class="dev-name">Developer <span>Devansh Sharma</span></div>
     </div>
 
-    <div id="_0x7g8h">
-        <div class="_0x9i0j" id="_0x_btn">
-            <div class="_0x1k2l">▶</div>
-            <span class="_0x3m4n">TAP TO WATCH LIVE</span>
+    <div id="fs-overlay"></div>
+
+    <div id="overlay">
+        <div class="play-card" id="start-btn">
+            <div class="play-icon">▶</div>
+            <span class="play-text">TAP TO WATCH LIVE</span>
         </div>
     </div>
 
-    <iframe id="_0x2c3d" src="" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
+    <iframe id="video-player" src="" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
 </div>
 
 <script>
 (function() {
-    var _0x01 = [
-        'getElementById', 'style', 'opacity', 'display', 'none', 'src', 'onclick',
-        'aHR0cHM6Ly9kYXNoLnZvZGVwMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD0=',
-        'aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2luZGV4Lm1wZA==',
-        'P25hbWU9U3BvcnRzMThfMV9IRCZrZXlJZD1iZDFlYTZhMWMxZmI1ZGNkYjcwOTQzNGUwODI2YmJjMCZrZXk9ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=',
-        'JmNvb2tpZT1fX2hkbmVhX189c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz'
-    ];
+    const player = document.getElementById("video-player");
+    const overlay = document.getElementById("overlay");
+    const container = document.getElementById("main-container");
+    const fsOverlay = document.getElementById("fs-overlay");
 
-    var _0x02 = document[_0x01[0]]('_0x2c3d');
-    var _0x03 = document[_0x01[0]]('_0x7g8h');
-    var _0x04 = document[_0x01[0]]('_0x_btn');
+    const p1 = "aHR0cHM6Ly9kYXNoLnZvZGVwMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD1odHRwczovL2ppb3R2YnBrbW9iLmNkbi5qaW8uY29tL2Jway10di9TcG9ydHMxOF8xX0hEX0JUUy9vdXRwdXQvaW5kZXgubXBkP25hbWU9U3BvcnRzMThfMV9IRCZrZXlJZD1iZDFlYTZhMWMxZmI1ZGNkYjcwOTQzNGUwODI2YmJjMCZrZXk9ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=";
+    const p2 = "JmNvb2tpZT1fX2hkbmVhX189c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz";
 
-    _0x04[_0x01[6]] = function() {
-        var _0x05 = atob(_0x01[7]);
-        var _0x06 = atob(_0x01[8]);
-        var _0x07 = atob(_0x01[9]);
-        var _0x08 = atob(_0x01[10]);
+    function goFull() {
+        if (container.requestFullscreen) { container.requestFullscreen(); }
+        else if (container.webkitRequestFullscreen) { container.webkitRequestFullscreen(); }
+    }
 
-        _0x02[_0x01[5]] = _0x05 + encodeURIComponent(_0x06 + _0x07 + _0x08);
-        _0x03[_0x01[1]][_0x01[2]] = '0';
-        
-        setTimeout(function() {
-            _0x03[_0x01[1]][_0x01[3]] = _0x01[4];
-        }, 400);
+    document.getElementById("start-btn").onclick = function() {
+        player.src = atob(p1) + atob(p2) + "&autoplay=1";
+        goFull();
+        overlay.style.opacity = '0';
+        setTimeout(() => { 
+            overlay.style.display = 'none'; 
+            fsOverlay.style.display = 'block'; // Enable the invisible FS trigger
+        }, 500);
     };
 
-    // Extra line padding for length requirement
-    var _z1 = "A"; var _z2 = "B"; var _z3 = "C";
-    var _z4 = _z1 + _z2 + _z3;
-    for(var i=0; i<150; i++){
-        var _temp = i * 2;
-        if(_temp < 0) console.log(_z4);
-    }
+    // If user clicks anywhere on the video, force OUR fullscreen
+    fsOverlay.onclick = function() {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            goFull();
+        }
+    };
 })();
 </script>
 </body>
