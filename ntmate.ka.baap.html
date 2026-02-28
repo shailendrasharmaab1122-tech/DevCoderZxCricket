@@ -14,7 +14,7 @@
     .live_dot{height:8px;width:8px;background:#00f0ff;border-radius:50%;margin-right:10px;box-shadow:0 0 10px #00f0ff;animation:blink_live 1.2s infinite}
     .dev_name{color:#fff;font-size:12px;font-weight:600;letter-spacing:0.5px}
     .dev_name span{color:#00f0ff;font-weight:800}
-    #splash_gate{position:absolute;inset:0;background:#080808;display:flex;justify-content:center;align-items:center;z-index:100;transition:0.5s}
+    #splash_gate{position:absolute;inset:0;background:#080808;display:flex;justify-content:center;align-items:center;z-index:100}
     .play_btn_card{text-align:center;cursor:pointer;background:#111;padding:35px;border-radius:20px;border:1px solid #222;transition:0.3s}
     .play_btn_card:hover{border-color:#00f0ff;transform:scale(1.02)}
     .p_icon{font-size:40px;color:#fff;background:#1e40af;width:75px;height:75px;line-height:75px;border-radius:50%;margin-bottom:15px;display:inline-block;padding-left:5px}
@@ -32,7 +32,7 @@
     <div id="splash_gate">
         <div class="play_btn_card" id="start_trigger">
             <div class="p_icon">▶</div>
-            <span class="p_label" id="status_text">TAP TO WATCH LIVE</span>
+            <span class="p_label">TAP TO WATCH LIVE</span>
         </div>
     </div>
     <video id="main_player" data-shaka-player autoplay playsinline></video>
@@ -40,51 +40,44 @@
 
 <script>
 (function(){
-    var _0xM = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3BvcnRzMThfMV9IRF9CVFMvb3V0cHV0L2luZGV4Lm1wZA=="; 
-    var _0xT = "c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz";
-    var _0xK1 = "YmQxZWE2YTFjMWZiNWRjZGI3MDk0MzRlMDgyNmJiYzA="; 
-    var _0xK2 = "ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=";
+    // Iframe wale code se nikali gayi details
+    var streamUrl = "https://jiotvbpkmob.cdn.jio.com/bpk-tv/Sports18_1_HD_BTS/output/index.mpd";
+    var token = "st=1772241887~exp=1772328287~acl=/*~hmac=c2276b495783dbb09e00bbbf9f38c98f7d06d932a86c8364b74b848141627e13";
+    
+    // Proxy URL jo iframe wale code mein use ho rahi thi
+    var proxy = "https://dash.vodep39240327.workers.dev/?url=";
 
-    var p, vid, gate;
+    // Keys
+    var kId = "bd1ea6a1c1fb5dcdb709434e0826bbc0";
+    var k = "f57f22cba32739ce7beb1fab3f3d060b";
 
-    async function initPlayer() {
-        vid = document.getElementById('main_player');
-        gate = document.getElementById('splash_gate');
-        var wrap = document.getElementById('player_wrap');
-
-        p = new shaka.Player(vid);
-        new shaka.ui.Overlay(p, wrap, vid);
+    async function _init(){
+        const vid = document.getElementById('main_player');
+        const gate = document.getElementById('splash_gate');
+        const p = new shaka.Player(vid);
+        new shaka.ui.Overlay(p, document.getElementById('player_wrap'), vid);
 
         p.configure({
-            drm: { clearKeys: { [atob(_0xK1)]: atob(_0xK2) } },
-            streaming: { lowLatencyMode: true, jumpLargeGaps: true }
+            drm: { clearKeys: { [kId]: k } },
+            streaming: { lowLatencyMode: true }
         });
 
-        p.getNetworkingEngine().registerRequestFilter(function(type, request){
-            request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36';
-            request.headers['Referer'] = 'https://www.jiotv.com/';
-            var token = atob(_0xT);
-            request.uris[0] += (request.uris[0].includes('?') ? '&' : '?') + "__hdnea__=" + token;
-        });
-
-        // Click event ko pehle hi enable kar diya taaki wait na karna pade
-        document.getElementById('start_trigger').onclick = function(){
-            gate.style.opacity = '0';
-            setTimeout(() => { gate.style.display = 'none'; }, 500);
-            vid.muted = false;
-            vid.play().catch(e => console.log("Autoplay blocked or loading..."));
-        };
+        // Final URL with Proxy + Stream + Token
+        var finalUrl = proxy + encodeURIComponent(streamUrl + "?__hdnea__=" + token);
 
         try {
-            await p.load(atob(_0xM));
-            console.log("Stream Ready");
+            await p.load(finalUrl);
+            document.getElementById('start_trigger').onclick = function(){
+                gate.style.display = 'none';
+                vid.muted = false;
+                vid.play();
+            };
         } catch(e) {
-            console.error("Load Error", e);
-            document.getElementById('status_text').innerText = "ERROR LOADING STREAM";
+            console.error("Error loading stream", e);
         }
     }
 
-    document.addEventListener('shaka-ui-loaded', initPlayer);
+    document.addEventListener('shaka-ui-loaded', _init);
 })();
 </script>
 </body>
