@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Stream Player</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         body, html { background: #000; color: #fff; height: 100vh; width: 100vw; overflow: hidden; }
@@ -26,13 +27,13 @@
         .dot { height: 7px; width: 7px; background: #00f0ff; border-radius: 50%; margin-right: 8px; box-shadow: 0 0 8px #00f0ff; animation: blink 1.2s infinite; }
         .inner-dev-tag div { font-size: 10px; font-weight: 600; color: #fff; white-space: nowrap; }
         .inner-dev-tag span { color: #00f0ff; font-weight: 800; margin-left: 3px; }
-        iframe { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
+        video { width: 100%; height: 100%; border: none; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
 <body oncontextmenu="return false;">
     <div id="wrapper">
-        <iframe id="main-player" src="about:blank" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+        <video id="main-player" controls autoplay playsinline></video>
         <div class="inner-dev-tag" id="myTag">
             <div class="dot"></div>
             <div>Developer <span>Devansh Sharma</span></div>
@@ -40,16 +41,32 @@
     </div>
 <script>
     (function() {
-        const _base = "aHR0cHM6Ly9mcmVlZ29hbHMuYmFzaC5zaC9wbGF5ZXIucGhwP3VybD0=";
-        const _stream = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfMV9IaW5kaV9CVFMvb3V0cHV0L2luZGV4Lm1wZD9fX2hkbmVhX189c3Q9MTc3MjMzMDAyNn5leHA9MTc3MjQxNjQyNn5hY2w9Lyp+aG1hYz1lYjhmZDIxMzA3OTNkYmZmYmZiMmE4MGY0NTU3ZTIwZTlhYjA4MWJiNjVmMDEyMGEyNWQ1NjU1MjU2N2U4ODY0";
+        const _m = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfMV9IaW5kaV9CVFMvb3V0cHV0L2luZGV4Lm1wZD9fX2hkbmVhX189c3Q9MTc3MjMzMDAyNn5leHA9MTc3MjQxNjQyNn5hY2w9Lyp+aG1hYz1lYjhmZDIxMzA3OTNkYmZmYmZiMmE4MGY0NTU3ZTIwZTlhYjA4MWJiNjVmMDEyMGEyNWQ1NjU1MjU2N2U4ODY0";
+        const _k = "YmQxZWE2YTFjMWZiNWRjZGI3MDk0MzRlMDgyNmJiYzA=";
+        const _v = "ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=";
         
-        const player = document.getElementById('main-player');
+        const video = document.getElementById('main-player');
         const tag = document.getElementById('myTag');
         const wrapper = document.getElementById('wrapper');
 
-        document.addEventListener('DOMContentLoaded', function() {
-            player.src = atob(_base) + atob(_stream) + "&key=f57f22cba32739ce7beb1fab3f3d060b&keyid=bd1ea6a1c1fb5dcdb709434e0826bbc0";
-        });
+        async function start() {
+            const player = new shaka.Player(video);
+            player.configure({
+                drm: {
+                    clearKeys: {
+                        [atob(_k)]: atob(_v)
+                    }
+                }
+            });
+
+            try {
+                await player.load(atob(_m));
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', start);
 
         function handleFS() {
             if (document.fullscreenElement) {
