@@ -25,9 +25,9 @@
 <body oncontextmenu="return false;">
 
     <div id="err-scr">
-        <h1 style="color: #00f0ff; font-size: 28px;">UNSUPPORTED BROWSER</h1>
-        <p style="margin-top: 15px;">1DM, ADM and Other Downloaders are Blocked.</p>
-        <p style="margin-top: 10px; color: #ff4b4b;">Please use the <b>Original Google Chrome</b> app.</p>
+        <h1 style="color: #00f0ff; font-size: 28px;">UNSUPPORTED ENVIRONMENT</h1>
+        <p style="margin-top: 15px; color: #fff;">External Browsers & Downloaders are strictly Blocked.</p>
+        <p style="margin-top: 20px; color: #ff4b4b; font-weight: bold; border: 1px solid #ff4b4b; padding: 10px; border-radius: 8px;">OPEN IN ORIGINAL GOOGLE CHROME</p>
     </div>
 
     <div id="wrapper">
@@ -46,18 +46,42 @@
 
 <script>
 (function(){
-    const ua = navigator.userAgent;
-    const vendor = navigator.vendor;
-    
-    // 1DM डिटेक्शन के लिए एडवांस चेक्स
-    const is1DM = /1DM|ADM|AdvancedDownloadManager|Downloader/i.test(ua);
-    const isChrome = /Chrome|CriOS/.test(ua) && /Google Inc/.test(vendor);
-    const isEdge = /Edg/.test(ua);
-    
-    // 1DM अक्सर Chrome का नाटक करता है, इसलिए हम उसके 'internal' निशानों को ढूंढ रहे हैं
-    if (is1DM || !isChrome || isEdge || (window.external && window.external.toString().includes('1DM'))) {
-        document.getElementById('err-scr').style.display = 'flex';
-        document.getElementById('wrapper').style.display = 'none';
+    const err = document.getElementById('err-scr');
+    const wrap = document.getElementById('wrapper');
+
+    // 1DM/ADM Deep Detection
+    function isSecure() {
+        const ua = navigator.userAgent;
+        const vendor = navigator.vendor;
+        
+        // 1. Basic Checks
+        const isChrome = /Chrome|CriOS/.test(ua) && /Google Inc/.test(vendor);
+        const isEdge = /Edg/.test(ua);
+        const is1DM = /1DM|ADM|AdvancedDownloadManager|Downloader|IDM/i.test(ua);
+
+        // 2. Hardware/Plugin Check (1DM me ye 'undefined' या '0' होते हैं)
+        const hasPlugins = navigator.plugins.length > 0;
+        const isMobile = /Android|iPhone|iPad/i.test(ua);
+
+        // 3. 1DM specifically injects certain properties or has empty Chrome objects
+        const isFakeChrome = isMobile && (!window.chrome || !window.chrome.runtime) && !/Mobile/.test(ua);
+        
+        // 4. Checking for 1DM Specific Global Variables
+        const has1DMInjected = (typeof _1dm !== 'undefined' || typeof ADM !== 'undefined');
+
+        if (is1DM || isEdge || !isChrome || has1DMInjected) {
+            return false;
+        }
+        
+        // Extra: Webdriver check (1DM often triggers this)
+        if (navigator.webdriver) return false;
+
+        return true;
+    }
+
+    if (!isSecure()) {
+        err.style.display = 'flex';
+        wrap.style.display = 'none';
         return;
     }
 
@@ -74,17 +98,14 @@
         frm.src = atob(s);
     });
 
-    // Anti-Inspect
-    document.addEventListener('keydown', function(e) {
-        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
-            e.preventDefault();
-        }
+    // Anti-Inspect logic
+    document.addEventListener('keydown', e => {
+        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) e.preventDefault();
     });
 
-    // Fullscreen Tag Management
     function fs(){
         if(document.fullscreenElement){ document.fullscreenElement.appendChild(tag); }
-        else { document.getElementById('wrapper').appendChild(tag); }
+        else { wrap.appendChild(tag); }
     }
     document.addEventListener('fullscreenchange', fs);
     document.addEventListener('webkitfullscreenchange', fs);
