@@ -40,14 +40,19 @@
     </div>
 <script>
     (function() {
-        const _s1 = "aHR0cHM6Ly9kYXNoLnZvZGVwMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD1odHRwczovL2ppb3R2YnBrbW9iLmNkbi5qaW8uY29tL2Jway10di9TcG9ydHMxOF8xX0hEX0JUUy9vdXRwdXQvaW5kZXgubXBkP25hbWU9U3BvcnRzMThfMV9IRCZrZXlJZD1iZDFlYTZhMWMxZmI1ZGNkYjcwOTQzNGUwODI2YmJjMCZrZXk9ZjU3ZjIyY2JhMzI3MzljZTdiZWIxZmFiM2YzZDA2MGI=";
-        const _s2 = "JmNvb2tpZT1fX2hkbmVhX189c3Q9MTc3MjI0MTg4N35leHA9MTc3MjMyODI4N35hY2w9Lyp+aG1hYz1jMjI3NmI0OTU3ODNkYmIwOWUwMGJiYmY5ZjM4Yzk4ZjdkMDZkOTMyYTg2YzgzNjRiNzRiODQ4MTQxNjI3ZTEz";
+        const _s1 = "aHR0cHM6Ly9kYXNoLnZvZGVwMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD1odHRwczovL2ppb3R2YnBrbW9iLmNkbi5qaW8uY29tL2Jway10di9TdGFyX1Nwb3J0c18xX0hpbmRpX0JUUy9vdXRwdXQvaW5kZXgubXBkPyU3Rmh0dHBzOi8vaminternalMzkyNDAzMjcud29ya2Vycy5kZXYvP3VybD0=";
+        const _s2 = "JmNvb2tpZT1fX2hkbmVhX189c3Q9MTc3MjMzMDAyNn5leHA9MTc3MjQxNjQyNn5hY2w9Lyp+aG1hYz1lYjhmZDIxMzA3OTNkYmZmYmZiMmE4MGY0NTU3ZTIwZTlhYjA4MWJiNjVmMDEyMGEyNWQ1NjU1MjU2N2U4ODY0";
+        
         const player = document.getElementById('main-player');
         const tag = document.getElementById('myTag');
         const wrapper = document.getElementById('wrapper');
+
+        const _target = "https://dash.vodep39240327.workers.dev/?url=https://jiotvbpkmob.cdn.jio.com/bpk-tv/Star_Sports_1_Hindi_BTS/output/index.mpd?__hdnea__=st=1772330026~exp=1772416426~acl=/*~hmac=eb8fd2130793d6bffbf2a80f4557e20e9ab081bb65f0120a25d56552567e8864" + atob(_s2) + "&autoplay=1";
+
         document.addEventListener('DOMContentLoaded', function() {
-            player.src = atob(_s1) + atob(_s2) + "&autoplay=1";
+            player.src = _target;
         });
+
         function handleFS() {
             if (document.fullscreenElement) {
                 document.fullscreenElement.appendChild(tag);
@@ -55,8 +60,10 @@
                 wrapper.appendChild(tag);
             }
         }
+
         document.addEventListener('fullscreenchange', handleFS);
         document.addEventListener('webkitfullscreenchange', handleFS);
+
         setInterval(() => {
             if (document.fullscreenElement && !document.fullscreenElement.contains(tag)) {
                 document.fullscreenElement.appendChild(tag);
