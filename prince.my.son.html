@@ -6,110 +6,108 @@
     <title>Stream Player</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; user-select: none; -webkit-user-select: none; }
-        body, html { background: #000; color: #fff; height: 100vh; width: 100vw; overflow: hidden; position: fixed; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body, html { background: #000; color: #fff; height: 100vh; width: 100vw; overflow: hidden; }
         #wrapper { width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; }
-        #err-scr { position: absolute; inset: 0; background: #000; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; text-align: center; padding: 30px; }
-        #play-ov { position: absolute; inset: 0; background: rgba(0,0,0,0.98); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; }
-        .p-btn { width: 90px; height: 90px; background: #00f0ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 50px rgba(0, 240, 255, 0.6); margin-bottom: 25px; }
-        .p-btn svg { fill: #000; width: 45px; height: 45px; margin-left: 6px; }
-        #play-ov p { font-weight: 800; font-size: 22px; color: #00f0ff; text-transform: uppercase; }
-        .inner-dev-tag { position: fixed; top: 15px; left: 15px; z-index: 2147483647; background: rgba(0, 0, 0, 0.9); padding: 8px 18px; border-radius: 50px; border: 1px solid #00f0ff; display: none; align-items: center; backdrop-filter: blur(20px); }
-        .dot { height: 9px; width: 9px; background: #00f0ff; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 12px #00f0ff; animation: blk 1.2s infinite; }
-        .inner-dev-tag div { font-size: 12px; font-weight: 600; color: #fff; }
-        .inner-dev-tag span { color: #00f0ff; font-weight: 800; margin-left: 5px; }
+        
+        #play-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            cursor: pointer;
+        }
+        .play-btn {
+            width: 85px;
+            height: 85px;
+            background: #00f0ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.5);
+            margin-bottom: 20px;
+        }
+        .play-btn svg { fill: #000; width: 40px; height: 40px; margin-left: 5px; }
+        #play-overlay p { font-weight: 800; font-size: 20px; letter-spacing: 2px; color: #00f0ff; text-transform: uppercase; }
+
+        .inner-dev-tag {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 2147483647;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 6px 15px;
+            border-radius: 50px;
+            border: 1px solid #00f0ff;
+            display: none;
+            align-items: center;
+            pointer-events: none;
+            backdrop-filter: blur(15px);
+        }
+        .dot { height: 8px; width: 8px; background: #00f0ff; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #00f0ff; animation: blink 1.2s infinite; }
+        .inner-dev-tag div { font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap; }
+        .inner-dev-tag span { color: #00f0ff; font-weight: 800; margin-left: 4px; }
+        
         iframe { width: 100%; height: 100%; border: none; display: none; background: #000; }
-        @keyframes blk { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
 <body oncontextmenu="return false;">
-
-    <div id="err-scr">
-        <h1 style="color: #00f0ff; font-size: 28px;">UNSUPPORTED ENVIRONMENT</h1>
-        <p style="margin-top: 15px; color: #fff;">External Browsers & Downloaders are strictly Blocked.</p>
-        <p style="margin-top: 20px; color: #ff4b4b; font-weight: bold; border: 1px solid #ff4b4b; padding: 10px; border-radius: 8px;">OPEN IN ORIGINAL GOOGLE CHROME</p>
-    </div>
-
     <div id="wrapper">
-        <div id="play-ov">
-            <div class="p-btn" id="start-trig">
+        <div id="play-overlay">
+            <div class="play-btn">
                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
             </div>
             <p>Tap To Play</p>
         </div>
-        <iframe id="vid-frame" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
-        <div class="inner-dev-tag" id="devTag">
+
+        <iframe id="main-player" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+        
+        <div class="inner-dev-tag" id="myTag">
             <div class="dot"></div>
             <div>Developer <span>Devansh Sharma</span></div>
         </div>
     </div>
 
 <script>
-(function(){
-    const err = document.getElementById('err-scr');
-    const wrap = document.getElementById('wrapper');
+    (function() {
+        const overlay = document.getElementById('play-overlay');
+        const player = document.getElementById('main-player');
+        const tag = document.getElementById('myTag');
+        const wrapper = document.getElementById('wrapper');
+        const streamBase = "aHR0cHM6Ly9tYXRjaGVzbGlua3oucGFnZXMuZGV2L2ppbz9pZD0zNjImYXV0b3BsYXk9MQ==";
 
-    // 1DM/ADM Deep Detection
-    function isSecure() {
-        const ua = navigator.userAgent;
-        const vendor = navigator.vendor;
-        
-        // 1. Basic Checks
-        const isChrome = /Chrome|CriOS/.test(ua) && /Google Inc/.test(vendor);
-        const isEdge = /Edg/.test(ua);
-        const is1DM = /1DM|ADM|AdvancedDownloadManager|Downloader|IDM/i.test(ua);
+        overlay.addEventListener('click', function() {
+            overlay.style.display = 'none';
+            player.style.display = 'block';
+            tag.style.display = 'flex';
+            
+            // Isse direct autoplay trigger hoga
+            player.src = atob(streamBase);
+        });
 
-        // 2. Hardware/Plugin Check (1DM me ye 'undefined' या '0' होते हैं)
-        const hasPlugins = navigator.plugins.length > 0;
-        const isMobile = /Android|iPhone|iPad/i.test(ua);
-
-        // 3. 1DM specifically injects certain properties or has empty Chrome objects
-        const isFakeChrome = isMobile && (!window.chrome || !window.chrome.runtime) && !/Mobile/.test(ua);
-        
-        // 4. Checking for 1DM Specific Global Variables
-        const has1DMInjected = (typeof _1dm !== 'undefined' || typeof ADM !== 'undefined');
-
-        if (is1DM || isEdge || !isChrome || has1DMInjected) {
-            return false;
+        function handleFS() {
+            if (document.fullscreenElement) {
+                document.fullscreenElement.appendChild(tag);
+            } else {
+                wrapper.appendChild(tag);
+            }
         }
-        
-        // Extra: Webdriver check (1DM often triggers this)
-        if (navigator.webdriver) return false;
 
-        return true;
-    }
+        document.addEventListener('fullscreenchange', handleFS);
+        document.addEventListener('webkitfullscreenchange', handleFS);
 
-    if (!isSecure()) {
-        err.style.display = 'flex';
-        wrap.style.display = 'none';
-        return;
-    }
-
-    const trig = document.getElementById('start-trig');
-    const ovl = document.getElementById('play-ov');
-    const frm = document.getElementById('vid-frame');
-    const tag = document.getElementById('devTag');
-    const s = "aHR0cHM6Ly9tYXRjaGVzbGlua3oucGFnZXMuZGV2L2ppbz9pZD0zNjImYXV0b3BsYXk9MQ==";
-
-    trig.addEventListener('click', function() {
-        ovl.style.display = 'none';
-        frm.style.display = 'block';
-        tag.style.display = 'flex';
-        frm.src = atob(s);
-    });
-
-    // Anti-Inspect logic
-    document.addEventListener('keydown', e => {
-        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) e.preventDefault();
-    });
-
-    function fs(){
-        if(document.fullscreenElement){ document.fullscreenElement.appendChild(tag); }
-        else { wrap.appendChild(tag); }
-    }
-    document.addEventListener('fullscreenchange', fs);
-    document.addEventListener('webkitfullscreenchange', fs);
-})();
+        setInterval(() => {
+            if (document.fullscreenElement && !document.fullscreenElement.contains(tag)) {
+                document.fullscreenElement.appendChild(tag);
+            }
+        }, 1000);
+    })();
 </script>
 </body>
 </html>
