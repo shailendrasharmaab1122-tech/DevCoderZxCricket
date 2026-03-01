@@ -6,29 +6,28 @@
     <title>Stream Player</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; user-select: none; -webkit-user-select: none; }
         body, html { background: #000; color: #fff; height: 100vh; width: 100vw; overflow: hidden; position: fixed; }
         #wrapper { width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; }
         #err-scr { position: absolute; inset: 0; background: #000; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; text-align: center; padding: 30px; }
-        #play-ov { position: absolute; inset: 0; background: rgba(0,0,0,0.98); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; transition: 0.3s; }
-        .p-btn { width: 90px; height: 90px; background: #00f0ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 50px rgba(0, 240, 255, 0.6); margin-bottom: 25px; transform: scale(1); transition: 0.2s; }
-        .p-btn:active { transform: scale(0.9); }
+        #play-ov { position: absolute; inset: 0; background: rgba(0,0,0,0.98); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; }
+        .p-btn { width: 90px; height: 90px; background: #00f0ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 50px rgba(0, 240, 255, 0.6); margin-bottom: 25px; }
         .p-btn svg { fill: #000; width: 45px; height: 45px; margin-left: 6px; }
-        #play-ov p { font-weight: 800; font-size: 22px; letter-spacing: 3px; color: #00f0ff; text-transform: uppercase; text-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
-        .inner-dev-tag { position: fixed; top: 15px; left: 15px; z-index: 2147483647; background: rgba(0, 0, 0, 0.9); padding: 8px 18px; border-radius: 50px; border: 1px solid #00f0ff; display: none; align-items: center; backdrop-filter: blur(20px); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        #play-ov p { font-weight: 800; font-size: 22px; color: #00f0ff; text-transform: uppercase; }
+        .inner-dev-tag { position: fixed; top: 15px; left: 15px; z-index: 2147483647; background: rgba(0, 0, 0, 0.9); padding: 8px 18px; border-radius: 50px; border: 1px solid #00f0ff; display: none; align-items: center; backdrop-filter: blur(20px); }
         .dot { height: 9px; width: 9px; background: #00f0ff; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 12px #00f0ff; animation: blk 1.2s infinite; }
-        .inner-dev-tag div { font-size: 12px; font-weight: 600; color: #fff; letter-spacing: 0.5px; }
+        .inner-dev-tag div { font-size: 12px; font-weight: 600; color: #fff; }
         .inner-dev-tag span { color: #00f0ff; font-weight: 800; margin-left: 5px; }
         iframe { width: 100%; height: 100%; border: none; display: none; background: #000; }
         @keyframes blk { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
     </style>
 </head>
-<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
+<body oncontextmenu="return false;">
 
     <div id="err-scr">
-        <h1 style="color: #00f0ff; font-size: 28px; margin-bottom: 15px;">SECURITY ALERT</h1>
-        <p style="font-size: 16px; line-height: 1.6;">This stream is protected. <br>Use <b>Official Google Chrome</b> browser on Mobile/PC.</p>
-        <p style="margin-top: 20px; color: #ff4b4b; font-size: 13px; font-weight: 600;">EXTERNAL PLAYERS & DOWNLOADERS BLOCKED</p>
+        <h1 style="color: #00f0ff; font-size: 28px;">UNSUPPORTED BROWSER</h1>
+        <p style="margin-top: 15px;">1DM, ADM and Other Downloaders are Blocked.</p>
+        <p style="margin-top: 10px; color: #ff4b4b;">Please use the <b>Original Google Chrome</b> app.</p>
     </div>
 
     <div id="wrapper">
@@ -46,8 +45,50 @@
     </div>
 
 <script>
-(function(){const _0x1a2b=['Chrome','vendor','Google\x20Inc','Edg','1DM','ADM','vid-frame','play-ov','devTag','start-trig','err-scr','wrapper','style','display','flex','none','block','DOMContentLoaded','addEventListener','click','atob','aHR0cHM6Ly9tYXRjaGVzbGlua3oucGFnZXMuZGV2L2ppbz9pZD0zNjImYXV0b3BsYXk9MQ==','src','keydown','keyCode','ctrlKey','shiftKey','fullscreenElement','appendChild','contains'];const _0x3c4d=function(_0x5e6f){return _0x1a2b[_0x5e6f];};const _0xua=navigator.userAgent;const _0xvc=navigator.vendor;if(!_0xua.includes(_0x3c4d(0))||!_0xvc.includes(_0x3c4d(2))||_0xua.includes(_0x3c4d(3))||_0xua.includes(_0x3c4d(4))||_0xua.includes(_0x3c4d(5))){document.getElementById(_0x3c4d(10)).style.display=_0x3c4d(14);document.getElementById(_0x3c4d(11)).style.display=_0x3c4d(15);return;}const _0xfrm=document.getElementById(_0x3c4d(6));const _0xovl=document.getElementById(_0x3c4d(7));const _0xtag=document.getElementById(_0x3c4d(8));const _0xtrg=document.getElementById(_0x3c4d(9));_0xtrg.addEventListener(_0x3c4d(19),function(){_0xovl.style.display=_0x3c4d(15);_0xfrm.style.display=_0x3c4d(16);_0xtag.style.display=_0x3c4d(14);_0xfrm.src=window[_0x3c4d(20)](_0x3c4d(21));});document.addEventListener(_0x3c4d(23),function(_0xe){if(_0xe.keyCode==123||(_0xe.ctrlKey&&_0xe.shiftKey&&(_0xe.keyCode==73||_0xe.keyCode==74))||(_0xe.ctrlKey&&_0xe.keyCode==85)){_0xe.preventDefault();return false;}});setInterval(function(){const _0x6a=function(){debugger;};_0x6a();},500);function _0xfs(){const _0xwrap=document.getElementById(_0x3c4d(11));if(document[_0x3c4d(27)]){document[_0x3c4d(27)].appendChild(_0xtag);}else{_0xwrap.appendChild(_0xtag);}}document.addEventListener('fullscreenchange',_0xfs);document.addEventListener('webkitfullscreenchange',_0xfs);setInterval(()=>{if(document[_0x3c4d(27)]&&!document[_0x3c4d(27)][_0x3c4d(29)](_0xtag)){document[_0x3c4d(27)].appendChild(_0xtag);}},1000);})();
-</script>
+(function(){
+    const ua = navigator.userAgent;
+    const vendor = navigator.vendor;
+    
+    // 1DM डिटेक्शन के लिए एडवांस चेक्स
+    const is1DM = /1DM|ADM|AdvancedDownloadManager|Downloader/i.test(ua);
+    const isChrome = /Chrome|CriOS/.test(ua) && /Google Inc/.test(vendor);
+    const isEdge = /Edg/.test(ua);
+    
+    // 1DM अक्सर Chrome का नाटक करता है, इसलिए हम उसके 'internal' निशानों को ढूंढ रहे हैं
+    if (is1DM || !isChrome || isEdge || (window.external && window.external.toString().includes('1DM'))) {
+        document.getElementById('err-scr').style.display = 'flex';
+        document.getElementById('wrapper').style.display = 'none';
+        return;
+    }
 
+    const trig = document.getElementById('start-trig');
+    const ovl = document.getElementById('play-ov');
+    const frm = document.getElementById('vid-frame');
+    const tag = document.getElementById('devTag');
+    const s = "aHR0cHM6Ly9tYXRjaGVzbGlua3oucGFnZXMuZGV2L2ppbz9pZD0zNjImYXV0b3BsYXk9MQ==";
+
+    trig.addEventListener('click', function() {
+        ovl.style.display = 'none';
+        frm.style.display = 'block';
+        tag.style.display = 'flex';
+        frm.src = atob(s);
+    });
+
+    // Anti-Inspect
+    document.addEventListener('keydown', function(e) {
+        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
+            e.preventDefault();
+        }
+    });
+
+    // Fullscreen Tag Management
+    function fs(){
+        if(document.fullscreenElement){ document.fullscreenElement.appendChild(tag); }
+        else { document.getElementById('wrapper').appendChild(tag); }
+    }
+    document.addEventListener('fullscreenchange', fs);
+    document.addEventListener('webkitfullscreenchange', fs);
+})();
+</script>
 </body>
 </html>
