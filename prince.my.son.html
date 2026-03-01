@@ -40,13 +40,15 @@
     </div>
 <script>
     (function() {
-        const _s = "aHR0cHM6Ly9wbGF5ZXIucmVkZGl0dHlwZS5jb20vY2hhbm5lbC9TdGFyX1Nwb3J0c18xX0hpbmRpX0hE";
+        const _base = "aHR0cHM6Ly9mcmVlZ29hbHMuYmFzaC5zaC9wbGF5ZXIucGhwP3VybD0=";
+        const _stream = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfMV9IaW5kaV9CVFMvb3V0cHV0L2luZGV4Lm1wZD9fX2hkbmVhX189c3Q9MTc3MjMzMDAyNn5leHA9MTc3MjQxNjQyNn5hY2w9Lyp+aG1hYz1lYjhmZDIxMzA3OTNkYmZmYmZiMmE4MGY0NTU3ZTIwZTlhYjA4MWJiNjVmMDEyMGEyNWQ1NjU1MjU2N2U4ODY0";
+        
         const player = document.getElementById('main-player');
         const tag = document.getElementById('myTag');
         const wrapper = document.getElementById('wrapper');
 
         document.addEventListener('DOMContentLoaded', function() {
-            player.src = atob(_s);
+            player.src = atob(_base) + atob(_stream) + "&key=f57f22cba32739ce7beb1fab3f3d060b&keyid=bd1ea6a1c1fb5dcdb709434e0826bbc0";
         });
 
         function handleFS() {
