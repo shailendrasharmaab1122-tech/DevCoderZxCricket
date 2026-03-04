@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Stream Player</title>
+    <title>Stream Player Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         body, html { background: #000; color: #fff; height: 100vh; width: 100vw; overflow: hidden; }
-        #wrapper { width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; }
-        #play-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; cursor: pointer; }
-        .play-btn { width: 85px; height: 85px; background: #00f0ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(0, 240, 255, 0.5); margin-bottom: 20px; }
+        #wrapper { width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
+        #play-overlay { position: absolute; inset: 0; background: radial-gradient(circle, #0a0a0a 0%, #000 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; cursor: pointer; transition: 0.3s; }
+        .play-btn { width: 85px; height: 85px; background: #00f0ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(0, 240, 255, 0.4); margin-bottom: 20px; transition: transform 0.2s; }
+        .play-btn:hover { transform: scale(1.1); }
         .play-btn svg { fill: #000; width: 40px; height: 40px; margin-left: 5px; }
-        #play-overlay p { font-weight: 800; font-size: 20px; letter-spacing: 2px; color: #00f0ff; text-transform: uppercase; }
-        .inner-dev-tag { position: fixed; top: 15px; left: 15px; z-index: 2147483647; background: rgba(0, 0, 0, 0.85); padding: 6px 15px; border-radius: 50px; border: 1px solid #00f0ff; display: none; align-items: center; pointer-events: none; backdrop-filter: blur(15px); }
+        #play-overlay p { font-weight: 800; font-size: 18px; letter-spacing: 2px; color: #00f0ff; text-transform: uppercase; text-shadow: 0 0 10px rgba(0,240,255,0.5); }
+        .inner-dev-tag { position: fixed; top: 15px; left: 15px; z-index: 2147483647; background: rgba(0, 0, 0, 0.7); padding: 7px 15px; border-radius: 50px; border: 1px solid rgba(0, 240, 255, 0.5); display: none; align-items: center; backdrop-filter: blur(10px); }
         .dot { height: 8px; width: 8px; background: #00f0ff; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #00f0ff; animation: blink 1.2s infinite; }
-        .inner-dev-tag div { font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap; }
-        .inner-dev-tag span { color: #00f0ff; font-weight: 800; margin-left: 4px; }
+        .inner-dev-tag div { font-size: 11px; font-weight: 600; color: #fff; }
+        .inner-dev-tag span { color: #00f0ff; font-weight: 800; }
         iframe { width: 100%; height: 100%; border: none; display: none; background: #000; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
@@ -24,10 +25,8 @@
 <body oncontextmenu="return false;">
     <div id="wrapper">
         <div id="play-overlay">
-            <div class="play-btn">
-                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            </div>
-            <p>Tap To Play</p>
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+            <p>Start Streaming</p>
         </div>
         <iframe id="main-player" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
         <div class="inner-dev-tag" id="myTag">
@@ -41,13 +40,20 @@
         const player = document.getElementById('main-player');
         const tag = document.getElementById('myTag');
         const wrapper = document.getElementById('wrapper');
-        const base = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0hpbmRpX0JUUy9vdXRwdXQvaW5kZXgubXBkfGNvb2tpZT1oZG5lYT1zdD0xNzcyNTY5NTA3fmV4cD0xNzcyNjU1OTA3fmFjbD0vKn5obWFjPTM5MmJjOTE3ZmZhZDBkNGQyN2M2MWQ4NjExYzMzZDM3MzJmZjI4MTg3ZWExMTc0ZWM4ODYxMDk1NTExMmEyNmMmdXNlci1hZ2VudD1pYXNrZWQmZHJtU2NoZW1lPWNsZWFya2V5JmRybUxpY2Vuc2U9NDAwMTMxOTk0YjQ0NWQ4Yzg4MTcyMDIyNDg3NjBmbGE6MmQ1NmNiNmYwN2E3NWI5YWZmMTY1ZDUzNGFlMmJmYzQ=";
+        
+        // Final Encoded Source
+        const data = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0hpbmRpX0JUUy9vdXRwdXQvaW5kZXgubXBkfGNvb2tpZT1oZG5lYT1zdD0xNzcyNTY5NTA3fmV4cD0xNzcyNjU1OTA3fmFjbD0vKn5obWFjPTM5MmJjOTE3ZmZhZDBkNGQyN2M2MWQ4NjExYzMzZDM3MzJmZjI4MTg3ZWExMTc0ZWM4ODYxMDk1NTExMmEyNmMmdXNlci1hZ2VudD1pYXNrZWQmZHJtU2NoZW1lPWNsZWFya2V5JmRybUxpY2Vuc2U9NDAwMTMxOTk0YjQ0NWQ4Yzg4MTcyMDIyNDg3NjBmbGE6MmQ1NmNiNmYwN2E3NWI5YWZmMTY1ZDUzNGFlMmJmYzQ=";
 
         overlay.addEventListener('click', function() {
-            overlay.style.display = 'none';
-            player.style.display = 'block';
-            tag.style.display = 'flex';
-            player.src = atob(base);
+            try {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.style.display = 'none', 300);
+                player.style.display = 'block';
+                tag.style.display = 'flex';
+                player.src = atob(data);
+            } catch (e) {
+                console.error("Stream Error");
+            }
         });
 
         function handleFS() {
@@ -57,13 +63,20 @@
                 wrapper.appendChild(tag);
             }
         }
+
         document.addEventListener('fullscreenchange', handleFS);
-        document.addEventListener('webkitfullscreenchange', handleFS);
-        setInterval(() => {
+        
+        // Optimized check for Tag in FS
+        let fsCheck = setInterval(() => {
             if (document.fullscreenElement && !document.fullscreenElement.contains(tag)) {
                 document.fullscreenElement.appendChild(tag);
             }
-        }, 1000);
+        }, 2000);
+
+        // Anti-Crash: Monitor if iframe dies
+        player.onerror = function() {
+            player.src = atob(data);
+        };
     })();
 </script>
 </body>
