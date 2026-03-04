@@ -9,50 +9,14 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         body, html { background: #000; color: #fff; height: 100vh; width: 100vw; overflow: hidden; }
         #wrapper { width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; }
-        
-        #play-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            cursor: pointer;
-        }
-        .play-btn {
-            width: 85px;
-            height: 85px;
-            background: #00f0ff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 40px rgba(0, 240, 255, 0.5);
-            margin-bottom: 20px;
-        }
+        #play-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; cursor: pointer; }
+        .play-btn { width: 85px; height: 85px; background: #00f0ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(0, 240, 255, 0.5); margin-bottom: 20px; }
         .play-btn svg { fill: #000; width: 40px; height: 40px; margin-left: 5px; }
         #play-overlay p { font-weight: 800; font-size: 20px; letter-spacing: 2px; color: #00f0ff; text-transform: uppercase; }
-
-        .inner-dev-tag {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            z-index: 2147483647;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 6px 15px;
-            border-radius: 50px;
-            border: 1px solid #00f0ff;
-            display: none;
-            align-items: center;
-            pointer-events: none;
-            backdrop-filter: blur(15px);
-        }
+        .inner-dev-tag { position: fixed; top: 15px; left: 15px; z-index: 2147483647; background: rgba(0, 0, 0, 0.85); padding: 6px 15px; border-radius: 50px; border: 1px solid #00f0ff; display: none; align-items: center; pointer-events: none; backdrop-filter: blur(15px); }
         .dot { height: 8px; width: 8px; background: #00f0ff; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #00f0ff; animation: blink 1.2s infinite; }
         .inner-dev-tag div { font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap; }
         .inner-dev-tag span { color: #00f0ff; font-weight: 800; margin-left: 4px; }
-        
         iframe { width: 100%; height: 100%; border: none; display: none; background: #000; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
@@ -65,30 +29,25 @@
             </div>
             <p>Tap To Play</p>
         </div>
-
         <iframe id="main-player" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
-        
         <div class="inner-dev-tag" id="myTag">
             <div class="dot"></div>
             <div>Developer <span>Devansh Sharma</span></div>
         </div>
     </div>
-
 <script>
     (function() {
         const overlay = document.getElementById('play-overlay');
         const player = document.getElementById('main-player');
         const tag = document.getElementById('myTag');
         const wrapper = document.getElementById('wrapper');
-        const streamBase = "aHR0cHM6Ly9tYXRjaGVzbGlua3oucGFnZXMuZGV2L2ppbz9pZD0zNjImYXV0b3BsYXk9MQ==";
+        const base = "aHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0hpbmRpX0JUUy9vdXRwdXQvaW5kZXgubXBkfGNvb2tpZT1oZG5lYT1zdD0xNzcyNTY5NTA3fmV4cD0xNzcyNjU1OTA3fmFjbD0vKn5obWFjPTM5MmJjOTE3ZmZhZDBkNGQyN2M2MWQ4NjExYzMzZDM3MzJmZjI4MTg3ZWExMTc0ZWM4ODYxMDk1NTExMmEyNmMmdXNlci1hZ2VudD1pYXNrZWQmZHJtU2NoZW1lPWNsZWFya2V5JmRybUxpY2Vuc2U9NDAwMTMxOTk0YjQ0NWQ4Yzg4MTcyMDIyNDg3NjBmbGE6MmQ1NmNiNmYwN2E3NWI5YWZmMTY1ZDUzNGFlMmJmYzQ=";
 
         overlay.addEventListener('click', function() {
             overlay.style.display = 'none';
             player.style.display = 'block';
             tag.style.display = 'flex';
-            
-            // Isse direct autoplay trigger hoga
-            player.src = atob(streamBase);
+            player.src = atob(base);
         });
 
         function handleFS() {
@@ -98,10 +57,8 @@
                 wrapper.appendChild(tag);
             }
         }
-
         document.addEventListener('fullscreenchange', handleFS);
         document.addEventListener('webkitfullscreenchange', handleFS);
-
         setInterval(() => {
             if (document.fullscreenElement && !document.fullscreenElement.contains(tag)) {
                 document.fullscreenElement.appendChild(tag);
