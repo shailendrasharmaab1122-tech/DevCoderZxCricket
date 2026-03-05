@@ -42,20 +42,19 @@
         const tag = document.getElementById('myTag');
         const wrapper = document.getElementById('wrapper');
 
-        const config = {
-            src: "https://jiotvbpkmob.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd",
-            token: "hdnea=st=1772569507~exp=1772655907~acl=/*~hmac=392bc917ffad0d4d27c61d8617c3dd3732ff28187ea1174ec88610955112a26c",
-            kid: "400131994b445d8c8817202248760fda",
-            key: "2d56cb6f07a75b9aff165d534ae2bfc4"
-        };
+        const manifest = "https://jiotvbpkmob.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
+        const token = "hdnea=st=1772569507~exp=1772655907~acl=/*~hmac=392bc917ffad0d4d27c61d8617c3dd3732ff28187ea1174ec88610955112a26c";
+        const kid = "400131994b445d8c8817202248760fda";
+        const key = "2d56cb6f07a75b9aff165d534ae2bfc4";
 
         overlay.addEventListener('click', function() {
             overlay.style.display = 'none';
             player.style.display = 'block';
             tag.style.display = 'flex';
             
-            const finalUrl = config.src + "|" + config.token + "&keyId=" + config.kid + "&key=" + config.key;
-            player.src = "https://allrounder-live.pages.dev/player/#" + btoa(finalUrl);
+            const constructedUrl = manifest + "?" + token;
+            const playerUrl = "https://allrounder-live.pages.dev/player/#" + btoa(constructedUrl + "|drmScheme=clearkey&drmLicense=" + kid + ":" + key);
+            player.src = playerUrl;
         });
 
         function handleFS() {
