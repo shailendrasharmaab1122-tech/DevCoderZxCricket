@@ -1,265 +1,58 @@
-<!DOCTYPE html><html lang="en"><head><script language="javascript">
-
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Star Sports // Dillzy </title>
-<meta name="referrer" content="no-referrer">
-<script src="https://cdn.jsdelivr.net/npm/shaka-player@4.16.2/dist/shaka-player.ui.min.js"></script><style type="text/css">* {user-select: auto !important; -webkit-user-select: auto !important;}</style><input type="hidden" id="inject_idm_text_selection"><style></style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.16.2/dist/controls.css">
-
-    <!-- Google tag (gtag.js) -->
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FMP9REY96D"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-FMP9REY96D');
-</script>
-  <style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
-
-.shaka-video-container{
-position:fixed;
-inset:0;
-background:#000;
-display:flex;
-align-items:center;
-justify-content:center;
-}
-
-video{
-width:100%;
-height:100%;
-object-fit:contain;
-background:#000;
-}
-
-.custom-watermark{
-position:absolute;
-z-index:40;
-pointer-events:none;
-top:65%;
-left:6%;
-transform:translateY(-50%);
-font-size:11px;
-font-weight:600;
-color:rgba(255,255,255,0.12);
-}
-
-/* --- Updated Modern Blocker Styles --- */
-.block-overlay{
-position:fixed;
-inset:0;
-z-index:99999;
-display:flex;
-align-items:center;
-justify-content:center;
-background:radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
-text-align:center;
-}
-
-.block-box{
-padding:40px;
-max-width:500px;
-width:90%;
-background:rgba(20, 20, 20, 0.95);
-border-radius:16px;
-border:1px solid rgba(255, 255, 255, 0.1);
-box-shadow:0 20px 50px rgba(0,0,0,0.5);
-animation: fadeInUp 0.6s ease-out;
-}
-
-@keyframes fadeInUp {
-from { opacity: 0; transform: translateY(30px); }
-to { opacity: 1; transform: translateY(0); }
-}
-
-.block-title{
-font-size:42px;
-font-weight:800;
-color:#ffffff;
-text-transform:uppercase;
-letter-spacing:2px;
-margin-bottom:20px;
-text-shadow:0 0 10px rgba(255, 0, 0, 0.3);
-}
-
-.block-sub{
-font-size:14px;
-font-weight:500;
-color:rgba(255, 255, 255, 0.6);
-line-height:1.6;
-}
-
-/* Icon hidden as requested, but keeping structure if needed later */
-.block-icon{ display: none; }
-.block-note{ display: none; }
-
-@media(max-width:700px){
-.custom-watermark{font-size:9px;top:60%;left:16%}
-.block-title{font-size:28px}
-.block-box{padding:25px}
-.block-sub{font-size:12px}
-}
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Sports 1 HD - Devansh Sharma</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+    <style>
+        body { margin: 0; background: #000; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        video { width: 100%; height: 100%; outline: none; }
+        .watermark { position: fixed; top: 15px; left: 15px; z-index: 100; background: rgba(0,240,255,0.3); border: 1px solid #00f0ff; color: #fff; padding: 5px 15px; border-radius: 50px; font-family: sans-serif; font-size: 12px; pointer-events: none; backdrop-filter: blur(5px); }
+    </style>
 </head>
 <body>
 
-<div class="shaka-video-container shaka-mobile no-cursor" id="player-container" data-shaka-player-container="" shaka-controls="true">
-<video id="video" autoplay="" muted="" playsinline="" preload="metadata" class="shaka-video"><source src="blob:https://allrounder-live.pages.dev/ece0c78a-336f-4fe3-a864-3cd326e7ef70" type=""></video>
-<div class="custom-watermark"> </div>
-<div class="shaka-controls-container"><div class="shaka-scrim-container"></div><div class="shaka-play-button-container"><button type="button" aria-label="Pause" icon="pause" class="shaka-play-button shaka-no-propagation"><svg class="material-svg-icon" viewBox="0 -960 960 960"><path></path></svg></button></div><div class="shaka-hidden-fast-forward-container"><div class="shaka-no-propagation shaka-fast-forward-container"><span>0s</span><svg class="material-svg-icon shaka-forward-rewind-container-icon" viewBox="0 -960 960 960"><path d="M100-315v-330q0-18 12-29t28-11q5 0 11 1t11 5l248 166q9 6 13.5 14.5T428-480q0 10-4.5 18.5T410-447L162-281q-5 4-11 5t-11 1q-16 0-28-11t-12-29Zm400 0v-330q0-18 12-29t28-11q5 0 11 1t11 5l248 166q9 6 13.5 14.5T828-480q0 10-4.5 18.5T810-447L562-281q-5 4-11 5t-11 1q-16 0-28-11t-12-29Z"></path></svg></div></div><div class="shaka-hidden-rewind-container"><div class="shaka-no-propagation shaka-rewind-container"><span>0s</span><svg class="material-svg-icon shaka-forward-rewind-container-icon" viewBox="0 -960 960 960"><path d="M798-281 550-447q-9-6-13.5-14.5T532-480q0-10 4.5-18.5T550-513l248-166q5-4 11-5t11-1q16 0 28 11t12 29v330q0 18-12 29t-28 11q-5 0-11-1t-11-5Zm-400 0L150-447q-9-6-13.5-14.5T132-480q0-10 4.5-18.5T150-513l248-166q5-4 11-5t11-1q16 0 28 11t12 29v330q0 18-12 29t-28 11q-5 0-11-1t-11-5Z"></path></svg></div></div><div class="shaka-bottom-controls shaka-no-propagation"><div class="shaka-ad-controls shaka-hidden"><div class="shaka-skip-ad-container"><div class="shaka-skip-ad-counter shaka-hidden"></div><button type="button" class="shaka-skip-ad-button shaka-hidden shaka-no-propagation" disabled="">Skip Ad</button></div></div><div class="shaka-range-container shaka-seek-bar-container" style="background: linear-gradient(to right, green 0%, green 0%, green 2.54314%, red 2.54314%, red 3.57075%, white 3.57075%);"><div class="shaka-ad-markers"></div><input class="shaka-range-element shaka-seek-bar shaka-no-propagation shaka-show-controls-on-mouse-over" type="range" step="any" min="1772698619.7440414" max="1772698674.7546875" aria-label="Seek" disabled=""><div id="shaka-player-ui-thumbnail-container"><img id="shaka-player-ui-thumbnail-image" draggable="false"><div id="shaka-player-ui-thumbnail-time-container"><div id="shaka-player-ui-thumbnail-time"></div></div></div><div id="shaka-player-ui-time-container"></div></div><div class="shaka-controls-button-panel shaka-show-controls-on-mouse-over"><button type="button" class="shaka-mute-button shaka-tooltip" aria-label="Mute"><svg class="material-svg-icon" viewBox="0 -960 960 960"><path d="M760-481q0-83-44-151.5T598-735q-15-7-22-21.5t-2-29.5q6-16 21.5-23t31.5 0q97 43 155 131.5T840-481q0 108-58 196.5T627-153q-16 7-31.5 0T574-176q-5-15 2-29.5t22-21.5q74-34 118-102.5T760-481ZM280-360H160q-17 0-28.5-11.5T120-400v-160q0-17 11.5-28.5T160-600h120l132-132q19-19 43.5-8.5T480-703v446q0 27-24.5 37.5T412-228L280-360Zm380-120q0 42-19 79.5T591-339q-10 6-20.5.5T560-356v-250q0-12 10.5-17.5t20.5.5q31 25 50 63t19 80Z"></path></svg><label class="shaka-overflow-button-label shaka-overflow-menu-only"><span>Mute</span><span class="shaka-current-selection-span"></span></label></button><button type="button" aria-label="Pause" class="shaka-small-play-button shaka-tooltip"><svg class="material-svg-icon" viewBox="0 -960 960 960"><path d="M640-200q-33 0-56.5-23.5T560-280v-400q0-33 23.5-56.5T640-760q33 0 56.5 23.5T720-680v400q0 33-23.5 56.5T640-200Zm-320 0q-33 0-56.5-23.5T240-280v-400q0-33 23.5-56.5T320-760q33 0 56.5 23.5T400-680v400q0 33-23.5 56.5T320-200Z"></path></svg></button><button type="button" class="shaka-current-time" aria-label="Skip ahead to live">- 0:53</button><button type="button" class="shaka-ad-info" disabled=""></button><div class="shaka-spacer" aria-hidden="true"></div><button type="button" class="shaka-overflow-button shaka-resolution-button shaka-tooltip-status" shaka-status="Auto" aria-label="Resolution"><svg class="material-svg-icon" viewBox="0 -960 960 960"><path d="M480-120q-17 0-28.5-11.5T440-160v-160q0-17 11.5-28.5T480-360q17 0 28.5 11.5T520-320v40h280q17 0 28.5 11.5T840-240q0 17-11.5 28.5T800-200H520v40q0 17-11.5 28.5T480-120Zm-320-80q-17 0-28.5-11.5T120-240q0-17 11.5-28.5T160-280h160q17 0 28.5 11.5T360-240q0 17-11.5 28.5T320-200H160Zm160-160q-17 0-28.5-11.5T280-400v-40H160q-17 0-28.5-11.5T120-480q0-17 11.5-28.5T160-520h120v-40q0-17 11.5-28.5T320-600q17 0 28.5 11.5T360-560v160q0 17-11.5 28.5T320-360Zm160-80q-17 0-28.5-11.5T440-480q0-17 11.5-28.5T480-520h320q17 0 28.5 11.5T840-480q0 17-11.5 28.5T800-440H480Zm160-160q-17 0-28.5-11.5T600-640v-160q0-17 11.5-28.5T640-840q17 0 28.5 11.5T680-800v40h120q17 0 28.5 11.5T840-720q0 17-11.5 28.5T800-680H680v40q0 17-11.5 28.5T640-600Zm-480-80q-17 0-28.5-11.5T120-720q0-17 11.5-28.5T160-760h320q17 0 28.5 11.5T520-720q0 17-11.5 28.5T480-680H160Z"></path></svg><label class="shaka-overflow-button-label shaka-overflow-menu-only shaka-overflow-button-label-inline"><span>Resolution</span><span><span class="shaka-current-selection-span">Auto</span><span class="shaka-current-auto-quality" style="">1080p</span><sup class="shaka-current-quality-mark" style="">HD</sup></span></label><span class="shaka-overflow-playback-rate-mark" style="">HD</span></button><button type="button" class="shaka-pip-button shaka-tooltip shaka-hidden" aria-label="Enter Picture-in-Picture"><svg class="material-svg-icon" viewBox="0 -960 960 960"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm320-120h240q17 0 28.5-11.5T760-320v-160q0-17-11.5-28.5T720-520H480q-17 0-28.5 11.5T440-480v160q0 17 11.5 28.5T480-280Zm120-120Z"></path></svg><label class="shaka-overflow-button-label shaka-overflow-menu-only shaka-simple-overflow-button-label-inline"><span>Picture-in-Picture</span><span class="shaka-current-selection-span">Off</span></label></button><button type="button" class="shaka-fullscreen-button shaka-tooltip" aria-label="Full screen"><svg class="material-svg-icon" viewBox="0 -960 960 960"><path d="M200-200h80q17 0 28.5 11.5T320-160q0 17-11.5 28.5T280-120H160q-17 0-28.5-11.5T120-160v-120q0-17 11.5-28.5T160-320q17 0 28.5 11.5T200-280v80Zm560 0v-80q0-17 11.5-28.5T800-320q17 0 28.5 11.5T840-280v120q0 17-11.5 28.5T800-120H680q-17 0-28.5-11.5T640-160q0-17 11.5-28.5T680-200h80ZM200-760v80q0 17-11.5 28.5T160-640q-17 0-28.5-11.5T120-680v-120q0-17 11.5-28.5T160-840h120q17 0 28.5 11.5T320-800q0 17-11.5 28.5T280-760h-80Zm560 0h-80q-17 0-28.5-11.5T640-800q0-17 11.5-28.5T680-840h120q17 0 28.5 11.5T840-800v120q0 17-11.5 28.5T800-640q-17 0-28.5-11.5T760-680v-80Z"></path></svg></button></div></div><div class="shaka-no-propagation shaka-show-controls-on-mouse-over shaka-settings-menu shaka-hidden shaka-resolutions"><button type="button" class="shaka-back-to-overflow-button" aria-label="Resolution"><svg class="material-svg-icon" viewBox="0 -960 960 960"><path d="M480-424 284-228q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536-480l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480-424Z"></path></svg><span>Resolution</span></button><button type="button" class="explicit-resolution"><span>1080p</span><sup class="shaka-quality-mark">HD</sup></button><button type="button" class="explicit-resolution"><span>720p</span></button><button type="button" class="shaka-enable-abr-button" aria-selected="true"><span class="shaka-chosen-item">Auto</span><svg class="material-svg-icon shaka-chosen-item" viewBox="0 -960 960 960" aria-hidden="true"><path d="m382-354 339-339q12-12 28-12t28 12q12 12 12 28.5T777-636L410-268q-12 12-28 12t-28-12L182-440q-12-12-11.5-28.5T183-497q12-12 28.5-12t28.5 12l142 143Z"></path></svg></button></div></div><div class="shaka-client-side-ad-container shaka-hidden"></div><div class="shaka-server-side-ad-container shaka-hidden"></div><div class="shaka-spinner-container"><div class="shaka-spinner"><svg focusable="false" stroke="currentColor" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" width="50px" height="50px" class="q-spinner text-grey-9">
-      <g transform="translate(1 1)" stroke-width="6" fill="none" fill-rule="evenodd">
-        <circle stroke-opacity=".5" cx="18" cy="18" r="16"></circle>
-        <path d="M34 18c0-9.94-8.06-16-16-16">
-          <animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite">
-          </animateTransform>
-        </path>
-      </g>
-    </svg></div></div></div>
+    <div class="watermark">Developer: <b>Devansh Sharma</b></div>
+    <video id="video" controls autoplay playsinline crossorigin="anonymous"></video>
 
 <script>
-(function(){
-  
-  function isSandboxedEnv(){
-    try {
-      if (window.self === window.top) return false;
-      if (window.frameElement && window.frameElement.hasAttribute("sandbox")) {
-        return true;
-      }
-      try {
-        document.domain = document.domain;
-        if (window.frameElement && !window.frameElement.getAttribute("sandbox")) {
-             return false;
-        }
-      } catch (e) {
-         return true;
-      }
-      return false;
-    } catch(e) {
-      return true;
-    }
-  }
-  function triggerBlockScreen(title, message){
-    const container = document.getElementById("player-container");
-    const video = document.getElementById("video");
+async function initPlayer() {
+    const video = document.getElementById('video');
+    const player = new shaka.Player(video);
+
+    // Naya MPD Link aur Token
+    const manifestUri = "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
+    const token = "st=1772683607~exp=1772770007~acl=/*~hmac=45c14d0e25581c8ceb3b1e8b9e0bbd8140b390fc5443f376097fb1e847987bd9";
     
-    try {
-      video.pause();
-      video.removeAttribute('src');
-      video.load();
-    } catch(e){}
-
-    const overlay = document.createElement("div");
-    overlay.className = "block-overlay";
-    overlay.id = "sandbox-block-display";
-    overlay.innerHTML = `
-      <div class="block-box">
-        <div class="block-title">${title}</div>
-        <div class="block-sub">${message}</div>
-      </div>
-    `;
-    document.body.appendChild(overlay);
-    container.style.display = 'none';
-  }
-  if(isSandboxedEnv()){
-
-    triggerBlockScreen('Disable Sandbox', 'Opening Chrome Browser Only & Disable Ad blocker');
-    return;
-  }
-  const CONFIG={
-    streamUrl:"https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd",
-    keyId:"400131994b445d8c8817202248760fda",
-    key:"2d56cb6f07a75b9aff165d534ae2bfc4",
-    cookieUrl:"https://allrounder-live.pages.dev/api/cookie.json"
-  };
-
-  document.addEventListener("DOMContentLoaded",async()=>{
-
-    shaka.polyfill.installAll();
-    if(!shaka.Player.isBrowserSupported()) return;
-
-    const video=document.getElementById("video");
-    const container=document.getElementById("player-container");
-
-    video.muted=true;
-
-    const player=new shaka.Player();
-    await player.attach(video);
-
-    const ui=new shaka.ui.Overlay(player,container,video);
-
-    ui.configure({
-  addBigPlayButton: true,
-  controlPanelElements: [
-    "mute",           // First - volume/mute button
-    "play_pause",     // Second - play/pause button  
-    "time_and_duration", // Third - timeline timings (00:00 / 00:00)
-    "spacer",
-    "quality",
-    "picture_in_picture",
-    "fullscreen"
-  ],
-  seekBarColors: {
-    base: "white",
-    buffered: "red", 
-    played: "green"
-  }
-});
+    // ClearKey DRM
+    const kid = "400131994b445d8c8817202248760fda";
+    const key = "2d56cb6f07a75b9aff165d534ae2bfc4";
 
     player.configure({
-      drm:{clearKeys:{[CONFIG.keyId]:CONFIG.key}},
-      manifest:{defaultPresentationDelay:5},
-      streaming:{
-        lowLatencyMode:true,
-        bufferingGoal:10,
-        rebufferingGoal:2,
-        safeSeekOffset:5
-      }
+        drm: { clearKeys: { [kid]: key } },
+        streaming: { jumpLargeGaps: true }
     });
 
-    let cookieValue="";
-
-    try{
-      const response=await fetch(CONFIG.cookieUrl,{cache:"no-store"});
-      const data=await response.json();
-      cookieValue=data.cookie||"";
-    }catch(e){}
-
-    if(cookieValue){
-      player.getNetworkingEngine().registerRequestFilter((type,request)=>{
-        request.headers["Referer"]="https://www.jiotv.com/";
-        request.headers["User-Agent"]="plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6";
-        request.headers["Cookie"]=cookieValue;
-
-        let urlCookie=cookieValue.startsWith("__hdnea__=")?cookieValue.substring(10):cookieValue;
-
-        if((type===shaka.net.NetworkingEngine.RequestType.MANIFEST||
-        type===shaka.net.NetworkingEngine.RequestType.SEGMENT)&&
-        !request.uris[0].includes("__hdnea__")){
-          const sep=request.uris[0].includes("?")?"&":"?";
-          request.uris[0]+=sep+"__hdnea__="+urlCookie;
+    player.getNetworkingEngine().registerRequestFilter((type, request) => {
+        request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6';
+        request.headers['Referer'] = 'https://www.jiotv.com/';
+        
+        // Token ko link mein jodna
+        if (!request.uris[0].includes('__hdnea__')) {
+            request.uris[0] += (request.uris[0].includes('?') ? '&' : '?') + '__hdnea__=' + token;
         }
-      });
-    }
-
-    try{
-      await player.load(CONFIG.streamUrl);
-      video.play().catch(()=>{});
-    }catch(e){}
-
-    video.addEventListener("play",()=>{
-      video.muted=false;
     });
 
-  });
-})();
+    try {
+        await player.load(manifestUri);
+        console.log("Stream Started!");
+    } catch (e) {
+        console.error("Error:", e);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initPlayer);
 </script>
-  <script>(function(s){s.dataset.zone='10603308',s.src='https://bvtpk.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script><script data-zone="10603308" src="https://bvtpk.com/tag.min.js"></script>
-  
-
-
-
-</body></html>
+</body>
+</html>
