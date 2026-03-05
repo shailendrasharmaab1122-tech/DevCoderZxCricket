@@ -3,13 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>DevCoderz X Assault Decoder</title>
-
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#2563eb">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <title>Devansh Sharma X Assault Decoder</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -28,27 +22,54 @@
             color: #fff; min-height: 100vh; padding: 15px; overflow-x: hidden;
         }
         .main-wrapper { max-width: 900px; margin: 0 auto; }
+        
+        /* Header */
         .brand-header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 18px; background: var(--glass); backdrop-filter: blur(10px);
             border: 1px solid var(--border); border-radius: 20px; margin-bottom: 20px;
         }
-        .brand-text { font-weight: 800; font-size: 1.2rem; }
+        .brand-text { font-weight: 800; font-size: 1.1rem; }
         .brand-text span { color: var(--accent); }
+
+        /* Player Styling */
         .player-shell {
             width: 100%; aspect-ratio: 16/9; background: #000; 
             border-radius: 24px; overflow: hidden; border: 1px solid var(--border);
+            position: relative;
         }
+
+        /* Ad-Blocker Overlay Hack */
+        .ad-block-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 60px; /* Top ads block */
+            z-index: 10; cursor: default;
+        }
+
         iframe { width: 100%; height: 100%; border: none; }
+
+        /* Developer Tag */
+        .dev-tag {
+            position: absolute; top: 10px; left: 10px;
+            background: rgba(0, 0, 0, 0.8); border: 1px solid var(--accent);
+            padding: 5px 12px; border-radius: 50px; font-size: 11px;
+            z-index: 100; font-weight: 600; color: #fff;
+        }
+        .dev-tag span { color: var(--accent); }
+
         .app-controls { display: flex; gap: 10px; margin-top: 15px; }
         .control-btn {
             flex: 1; padding: 14px; border-radius: 15px; border: 1px solid var(--border);
             background: var(--glass); color: #fff; font-weight: 600; cursor: pointer;
+            transition: 0.3s;
         }
+        .control-btn:hover { background: var(--accent); }
+
         .tg-btn {
             display: block; width: 100%; padding: 16px; background: var(--accent); 
             color: #fff; text-decoration: none; border-radius: 16px; 
             font-weight: 800; margin-top: 15px; text-align: center;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
     </style>
 </head>
@@ -57,40 +78,52 @@
 <div class="main-wrapper">
     <header class="brand-header">
         <div class="brand-text">DevCoderz <span>X</span> Assault Decoder</div>
-        <div style="color: #ff4757; font-weight: 900;">LIVE</div>
+        <div style="color: #ff4757; font-weight: 900; display: flex; align-items: center; gap: 5px;">
+            <i class="fa-solid fa-circle" style="font-size: 8px; animation: blink 1s infinite;"></i> LIVE
+        </div>
     </header>
 
     <div class="player-shell" id="vidFrame">
-        <iframe id="main-player" src="/prince.my.son.html" allowfullscreen></iframe>
+        <div class="dev-tag">Developer: <span>Devansh Sharma</span></div>
+        
+        <div class="ad-block-layer"></div>
+
+        <iframe 
+            id="main-player" 
+            src="https://allrounder-live.pages.dev/star/star-1-hindi" 
+            allow="autoplay; encrypted-media; fullscreen" 
+            allowfullscreen>
+        </iframe>
     </div>
 
     <div class="app-controls">
-        <button class="control-btn" onclick="toggleRotate()">Fullscreen</button>
-        <button class="control-btn" onclick="location.reload()">Refresh</button>
+        <button class="control-btn" onclick="toggleFS()"><i class="fa-solid fa-expand"></i> Fullscreen</button>
+        <button class="control-btn" onclick="location.reload()"><i class="fa-solid fa-rotate"></i> Refresh</button>
     </div>
 
     <div style="margin-top: 20px;">
-        <a href="https://t.me/Cric_decoders" target="_blank" class="tg-btn">JOIN TELEGRAM</a>
+        <a href="https://t.me/Cric_decoders" target="_blank" class="tg-btn">
+            <i class="fa-brands fa-telegram"></i> JOIN TELEGRAM
+        </a>
     </div>
 </div>
 
 <script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-            .then(() => console.log("Success"))
-            .catch(() => console.log("Error"));
-        });
-    }
-
-    function toggleRotate() {
+    function toggleFS() {
         const player = document.getElementById('vidFrame');
         if (!document.fullscreenElement) {
-            player.requestFullscreen().catch(e => {});
+            player.requestFullscreen().catch(e => {
+                alert("Fullscreen not supported or blocked.");
+            });
         } else {
             document.exitFullscreen();
         }
     }
+
+    // Blink Animation
+    const style = document.createElement('style');
+    style.innerHTML = `@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }`;
+    document.head.appendChild(style);
 </script>
 </body>
 </html>
