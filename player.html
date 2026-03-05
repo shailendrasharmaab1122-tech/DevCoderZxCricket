@@ -1,112 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Player - DevCoderz</title>
-
-  <style>
-    /* 1. Developer Name Ek Hi Line Mein */
-    .glow-developer {
-      position: absolute; 
-      top: 20px; 
-      left: 50%; 
-      transform: translateX(-50%);
-      font-size: clamp(16px, 2.5vw, 22px); 
-      font-weight: bold; 
-      color: #1e90ff;
-      text-shadow: 0 0 10px #1e90ff, 0 0 20px #00ffff; 
-      z-index: 9999;
-      pointer-events: none; 
-      font-family: sans-serif;
-      white-space: nowrap;
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #000; height: 100vh; width: 100vw; overflow: hidden; }
-
-    #player-container { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; }
-    video { width: 100%; height: 100%; object-fit: contain; }
-
-    /* --- 2. CENTER PLAY BUTTON & SPINNER HIDE (Gola Fix) --- */
-    .shaka-spinner-container, 
-    .shaka-play-button-container, 
-    .shaka-central-play-button {
-      display: none !important;
-      visibility: hidden !important;
-      opacity: 0 !important;
-    }
-
-    /* --- 3. PROGRESS BAR HEIGHT ADJUSTMENT --- */
-    /* Mobile ke bottom buttons se bachne ke liye controls ko upar kiya */
-    .shaka-controls-container {
-      bottom: 50px !important; 
-    }
-
-    .shaka-bottom-controls {
-      padding: 0 10px !important;
-    }
-
-    /* Color Theme */
-    .shaka-bottom-controls button { color: #1e90ff !important; }
-    .shaka-range-element { color: #1e90ff !important; }
-    .shaka-current-time { color: #ffffff !important; }
-  </style>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>DevCoderz X Assault Decoder</title>
+<style>
+:root { --bg: #0b0f1a; --accent: #2563eb; --glass: rgba(255, 255, 255, 0.04); --border: rgba(255, 255, 255, 0.1); }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; overflow: hidden; }
+.main-wrapper { max-width: 900px; margin: 0 auto; position: relative; }
+.brand-header { display: flex; justify-content: space-between; align-items: center; padding: 18px; background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 20px; margin-bottom: 20px; }
+.player-shell { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 24px; overflow: hidden; border: 1px solid var(--border); position: relative; z-index: 1; }
+.dev-tag { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.85); border: 1px solid var(--accent); padding: 6px 14px; border-radius: 50px; font-size: 11px; z-index: 2147483647 !important; color: #fff; pointer-events: none; display: block !important; visibility: visible !important; opacity: 1 !important; }
+.dev-tag span { color: var(--accent); font-weight: 800; }
+iframe { width: 100%; height: 100%; border: none; background: #000; }
+.tg-btn { display: block; width: 100%; padding: 16px; background: var(--accent); color: #fff; text-decoration: none; border-radius: 16px; font-weight: 800; margin-top: 15px; text-align: center; }
+#_0xJunkContainer { display: none; visibility: hidden; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
-<body>
-
-  <div class="glow-developer">Developer - DevCoderZ</div>
-
-  <div id="player-container" data-shaka-player-container shaka-controls="true">
-    <video autoplay muted playsinline id="video" class="shaka-video"></video>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
-
-  <script>
-    async function initApp() {
-      shaka.polyfill.installAll();
-      if (!shaka.Player.isBrowserSupported()) return;
-
-      const video = document.getElementById('video');
-      const container = document.getElementById('player-container');
-      const player = new shaka.Player(video);
-      const ui = new shaka.ui.Overlay(player, container, video);
-
-      // DRM Config
-      player.configure({
-        drm: {
-          clearKeys: {
-            '2904b17cb64c996dbc254981b7602863': '66a7ef671b84498e64f94e8401fe8cb9'
-          }
-        },
-        streaming: {
-          rebufferingGoal: 2,
-          bufferingGoal: 10,
-          jumpLargeGaps: true
-        }
-      });
-
-      // Manifest URL
-      const manifestUri = "https://otte.live.fly.ww.aiv-cdn.net/syd-nitro/live/dash/enc/qkp4pavybn/out/v1/2298afadf64943adb0b44dc540ace1ce/cenc.mpd";
-
-      try {
-        await player.load(manifestUri);
-        console.log("Stream Loaded!");
-      } catch (e) {
-        console.error("Error Code:", e.code);
-      }
-    }
-
-    document.addEventListener('shaka-ui-loaded', initApp);
-
-    // Audio Unmute Fix
-    window.addEventListener('click', () => {
-        const v = document.getElementById('video');
-        v.muted = false;
-    }, { once: true });
-  </script>
+<body oncontextmenu="return false;">
+<div class="main-wrapper">
+<header class="brand-header">
+<div style="font-weight:800;">DevCoderz <span style="color:var(--accent);">X</span> Assault Decoder</div>
+<div style="color: #ff4757; font-weight: 900;">LIVE</div>
+</header>
+<div class="player-shell" id="_0xPlayerFrame">
+<div class="dev-tag" id="_0xWatermark">Developer: <span>Devansh Sharma</span></div>
+<div id="_0xStream" style="width:100%; height:100%;"></div>
+</div>
+<div style="display: flex; gap: 10px; margin-top: 15px;">
+<button onclick="_0xGoFS()" style="flex:1; padding: 15px; border-radius: 12px; border: 1px solid var(--border); background: var(--glass); color: #fff; cursor: pointer; font-weight: 700;">FULLSCREEN</button>
+<button onclick="location.reload()" style="flex:1; padding: 15px; border-radius: 12px; border: 1px solid var(--border); background: var(--glass); color: #fff; cursor: pointer; font-weight: 700;">REFRESH</button>
+</div>
+<a href="https://t.me/Cric_decoders" class="tg-btn">JOIN TELEGRAM</a>
+</div>
+<script>
+(function(){
+const _0xLinks = ["\x61\x48\x52\x30\x63\x48\x4d\x36\x4c\x79\x39\x68\x62\x47\x78\x79\x62\x33\x56\x75\x5a\x47\x56\x79\x4c\x57\x78\x70\x64\x6d\x55\x75\x63\x47\x46\x6e\x5a\x58\x4d\x75\x5a\x47\x56\x32\x4c\x33\x4e\x30\x59\x58\x49\x76\x63\x33\x52\x68\x63\x69\x30\x78\x4c\x57\x68\x70\x62\x6d\x52\x70"];
+const _0xDecode = (s) => atob(s);
+function _0xInit(){
+const r = document.getElementById('_0xStream');
+const f = document.createElement('iframe');
+f.src = _0xDecode(_0xLinks[0]);
+f.setAttribute('allowfullscreen', 'true');
+f.setAttribute('allow', 'autoplay; encrypted-media; fullscreen');
+f.style.width = '100%';
+f.style.height = '100%';
+r.appendChild(f);
+}
+window._0xGoFS = function(){
+const e = document.getElementById('_0xPlayerFrame');
+if(e.requestFullscreen) e.requestFullscreen();
+else if(e.webkitRequestFullscreen) e.webkitRequestFullscreen();
+};
+document.addEventListener('fullscreenchange', () => {
+const t = document.getElementById('_0xWatermark');
+if(document.fullscreenElement){
+t.style.position = 'fixed';
+t.style.zIndex = '2147483647';
+} else {
+t.style.position = 'absolute';
+}
+});
+for(let i=0; i<1000; i++){
+if(i === 999) _0xInit();
+}
+setInterval(() => { (function(){}).constructor('debugger')(); }, 1000);
+})();
+function _0xJ1(){return 1}function _0xJ2(){return 2}function _0xJ3(){return 3}
+// ... [Repeated thousands of lines to bloat the file to 1000+ lines] ...
+</script>
 </body>
 </html>
