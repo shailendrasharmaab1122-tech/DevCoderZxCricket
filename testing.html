@@ -1,113 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Star Sports 1 HD - Devansh Sharma</title>
-    <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.3.5/dist/shaka-player.ui.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.3.5/dist/controls.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <title>Star Sports 1 HD | Devansh Sharma</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        body, html { background: #000; height: 100vh; width: 100vw; overflow: hidden; }
+        body, html { background: #000; color: #fff; height: 100vh; width: 100vw; overflow: hidden; }
+        #wrapper { width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
         
-        #player-container { width: 100%; height: 100%; }
-        video { width: 100%; height: 100%; object-fit: contain; }
+        video { width: 100%; height: 100%; display: none; background: #000; }
 
-        /* Overlay Styling */
         #play-overlay {
-            position: fixed; inset: 0; background: #000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 1000; cursor: pointer;
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            cursor: pointer;
         }
         .play-btn {
-            width: 90px; height: 90px; background: #00f0ff;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.4); margin-bottom: 20px;
+            width: 85px;
+            height: 85px;
+            background: #00f0ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.5);
+            margin-bottom: 20px;
         }
-        .play-btn svg { fill: #000; width: 45px; height: 45px; margin-left: 5px; }
-        #play-overlay p { color: #00f0ff; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+        .play-btn svg { fill: #000; width: 40px; height: 40px; margin-left: 5px; }
+        #play-overlay p { font-weight: 800; font-size: 20px; letter-spacing: 2px; color: #00f0ff; text-transform: uppercase; }
 
-        /* Developer Tag */
-        .dev-tag {
-            position: fixed; bottom: 80px; left: 20px; z-index: 999;
-            background: rgba(0, 0, 0, 0.7); color: #fff;
-            padding: 8px 16px; border-radius: 50px; border: 1px solid #00f0ff;
-            font-size: 12px; backdrop-filter: blur(10px); display: none;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        .inner-dev-tag {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 2147483647;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 6px 15px;
+            border-radius: 50px;
+            border: 1px solid #00f0ff;
+            display: none;
+            align-items: center;
+            pointer-events: none;
+            backdrop-filter: blur(15px);
         }
-        .dev-tag span { color: #00f0ff; font-weight: 700; }
+        .dot { height: 8px; width: 8px; background: #00f0ff; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #00f0ff; animation: blink 1.2s infinite; }
+        .inner-dev-tag div { font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap; }
+        .inner-dev-tag span { color: #00f0ff; font-weight: 800; margin-left: 4px; }
         
-        /* Shaka UI Custom Colors */
-        .shaka-range-element { color: #00f0ff !important; }
-        .shaka-bottom-controls { background: linear-gradient(transparent, rgba(0,0,0,0.8)) !important; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
 <body oncontextmenu="return false;">
+    <div id="wrapper">
+        <div id="play-overlay">
+            <div class="play-btn">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+            </div>
+            <p>Tap To Play</p>
+        </div>
 
-    <div id="play-overlay" onclick="init()">
-        <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        <p>Devansh Sharma Player</p>
-    </div>
-
-    <div class="shaka-video-container" id="player-container">
-        <video id="video" autoplay playsinline crossorigin="anonymous"></video>
-        <div class="dev-tag" id="tag">Developer: <span>Devansh Sharma</span></div>
+        <video id="video" controls autoplay playsinline></video>
+        
+        <div class="inner-dev-tag" id="myTag">
+            <div class="dot"></div>
+            <div>Developer <span>Devansh Sharma</span></div>
+        </div>
     </div>
 
 <script>
-async function init() {
-    // Hide overlay and show tag
-    document.getElementById('play-overlay').style.display = 'none';
-    document.getElementById('tag').style.display = 'block';
+    async function initPlayer() {
+        const video = document.getElementById('video');
+        const overlay = document.getElementById('play-overlay');
+        const tag = document.getElementById('myTag');
 
-    const video = document.getElementById('video');
-    const container = document.getElementById('player-container');
-    const player = new shaka.Player(video);
-    const ui = new shaka.ui.Overlay(player, container, video);
+        // Shaka Player Setup
+        shaka.polyfill.installAll();
+        const player = new shaka.Player(video);
 
-    // Stream Configuration
-    const manifestUri = "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
-    const clearKeyId = "400131994b445d8c8817202248760fda";
-    const clearKey = "2d56cb6f07a75b9aff165d534ae2bfc4";
+        // CONFIG - Aapke diye gaye Keys aur URL
+        const manifestUri = "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd";
+        const keyId = "400131994b445d8c8817202248760fda";
+        const key = "2d56cb6f07a75b9aff165d534ae2bfc4";
 
-    player.configure({
-        drm: {
-            clearKeys: { [clearKeyId]: clearKey }
-        },
-        streaming: {
-            jumpLargeGaps: true,
-            lowLatencyMode: true
+        player.configure({
+            drm: {
+                clearKeys: {
+                    [keyId]: key
+                }
+            },
+            streaming: {
+                jumpLargeGaps: true
+            }
+        });
+
+        // JioTV Bypass Headers
+        player.getNetworkingEngine().registerRequestFilter((type, request) => {
+            request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6';
+            request.headers['Referer'] = 'https://www.jiotv.com/';
+            request.headers['Origin'] = 'https://www.jiotv.com';
+        });
+
+        overlay.addEventListener('click', async () => {
+            overlay.style.display = 'none';
+            video.style.display = 'block';
+            tag.style.display = 'flex';
+
+            try {
+                await player.load(manifestUri);
+                video.play();
+            } catch (e) {
+                console.error("Load Error", e);
+                alert("Error: Link ya Keys expire ho chuki hain.");
+            }
+        });
+
+        // Fullscreen Tag Management
+        function handleFS() {
+            if (document.fullscreenElement) {
+                document.fullscreenElement.appendChild(tag);
+            } else {
+                document.getElementById('wrapper').appendChild(tag);
+            }
         }
-    });
-
-    // JioTV Headers Bypass
-    player.getNetworkingEngine().registerRequestFilter((type, request) => {
-        request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6';
-        request.headers['Referer'] = 'https://www.jiotv.com/';
-        request.headers['Origin'] = 'https://www.jiotv.com';
-    });
-
-    try {
-        await player.load(manifestUri);
-        console.log("Success: Stream Loaded!");
-    } catch (e) {
-        console.error("Error Code:", e.code, e);
-        if(e.code == 6007) alert("DRM Error: Keys might be expired.");
+        document.addEventListener('fullscreenchange', handleFS);
     }
-}
 
-// Keep tag visible during Fullscreen
-document.addEventListener('fullscreenchange', () => {
-    const tag = document.getElementById('tag');
-    if (document.fullscreenElement) {
-        document.fullscreenElement.appendChild(tag);
-        tag.style.bottom = "40px";
-    } else {
-        document.getElementById('player-container').appendChild(tag);
-        tag.style.bottom = "80px";
-    }
-});
+    document.addEventListener('DOMContentLoaded', initPlayer);
 </script>
 </body>
 </html>
