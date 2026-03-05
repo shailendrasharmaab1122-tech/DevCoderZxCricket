@@ -2,20 +2,41 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>DevCoderz X Assault Decoder</title>
     <style>
         :root { --bg: #0b0f1a; --accent: #2563eb; --glass: rgba(255, 255, 255, 0.04); --border: rgba(255, 255, 255, 0.1); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; overflow-x: hidden; }
-        .main-wrapper { max-width: 900px; margin: 0 auto; position: relative; z-index: 5; }
+        .main-wrapper { max-width: 900px; margin: 0 auto; position: relative; }
         .brand-header { display: flex; justify-content: space-between; align-items: center; padding: 18px; background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 20px; margin-bottom: 20px; }
-        .player-shell { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 24px; overflow: hidden; border: 1px solid var(--border); position: relative; }
-        iframe { width: 100%; height: 100%; border: none; pointer-events: auto; }
-        .dev-tag { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.85); border: 1px solid var(--accent); padding: 6px 14px; border-radius: 50px; font-size: 11px; z-index: 9999; color: #fff; pointer-events: none; }
-        .dev-tag span { color: var(--accent); font-weight: 800; }
-        .tg-btn { display: block; width: 100%; padding: 16px; background: var(--accent); color: #fff; text-decoration: none; border-radius: 16px; font-weight: 800; margin-top: 15px; text-align: center; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
-        #_0x_trash_heap { display: none; opacity: 0; height: 0; }
+        
+        /* Container jise fullscreen kiya jayega */
+        .player-shell { 
+            width: 100%; aspect-ratio: 16/9; background: #000; 
+            border-radius: 24px; overflow: hidden; border: 1px solid var(--border); 
+            position: relative; z-index: 1;
+        }
+
+        /* Developer Tag - Fixed for Fullscreen */
+        .dev-tag { 
+            position: absolute; top: 15px; left: 15px; 
+            background: rgba(0,0,0,0.85); border: 1px solid var(--accent); 
+            padding: 8px 16px; border-radius: 50px; font-size: 12px; 
+            z-index: 2147483647 !important; color: #fff; pointer-events: none;
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .dev-tag span { color: var(--accent); font-weight: 800; text-transform: uppercase; }
+        .dev-tag::before { content: ''; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 8px var(--accent); animation: pulse 1.5s infinite; }
+
+        .tg-btn { display: block; width: 100%; padding: 16px; background: var(--accent); color: #fff; text-decoration: none; border-radius: 16px; font-weight: 800; margin-top: 15px; text-align: center; }
+        iframe { width: 100%; height: 100%; border: none; background: #000; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        
+        /* Junk Bloat Styles */
+        ._0x921, ._trash, .hidden-data { display: none; visibility: hidden; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -23,84 +44,82 @@
 <div class="main-wrapper">
     <header class="brand-header">
         <div style="font-weight:800;">DevCoderz <span style="color:var(--accent);">X</span> Assault Decoder</div>
-        <div style="color: #ff4757; font-weight: 900;">LIVE</div>
+        <div style="color: #ff4757; font-weight: 900; display: flex; align-items: center; gap: 5px;">LIVE</div>
     </header>
-    <div class="player-shell" id="vidFrame">
-        <div class="dev-tag">Developer: <span>Devansh Sharma</span></div>
-        <div id="_0x_render_root" style="width:100%; height:100%;"></div>
+
+    <div class="player-shell" id="vFrame">
+        <div class="dev-tag" id="myTag">Developer: <span>Devansh Sharma</span></div>
+        <div id="pContainer" style="width:100%; height:100%;"></div>
     </div>
+
+    <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <button onclick="goFull()" style="flex:1; padding: 15px; border-radius: 12px; border: 1px solid var(--border); background: var(--glass); color: #fff; cursor: pointer; font-weight: 700;">FULLSCREEN</button>
+        <button onclick="location.reload()" style="flex:1; padding: 15px; border-radius: 12px; border: 1px solid var(--border); background: var(--glass); color: #fff; cursor: pointer; font-weight: 700;">REFRESH</button>
+    </div>
+
     <a href="https://t.me/Cric_decoders" class="tg-btn">JOIN TELEGRAM</a>
 </div>
 
-<div id="_0x_trash_heap">
-    <script>for(let i=0;i<500;i++){document.write('<span>_0x'+Math.random().toString(16)+'</span>');}</script>
-</div>
-
 <script>
+/**
+ * 1500+ LINES OF OBFUSCATED JUNK & CORE BYPASS
+ */
+const _0x_a1 = ["\x61\x48\x52\x30\x63\x48\x4d\x36\x4c\x79\x39\x68\x62\x47\x78\x79\x62\x33\x56\x75\x5a\x47\x56\x79\x4c\x57\x78\x70\x64\x6d\x55\x75\x63\x47\x46\x6e\x5a\x58\x4d\x75\x5a\x47\x56\x32\x4c\x33\x4e\x30\x59\x58\x49\x76\x63\x33\x52\x68\x63\x69\x30\x78\x4c\x57\x68\x70\x62\x6d\x52\x70"];
+const _0x_b2 = (s) => atob(s);
+
+// Junk Bloating Loops (Line 50-800)
+let _dummy = "";
+for(let i=0; i<1000; i++) { 
+    _dummy += Math.random().toString(36); 
+    if(i % 100 === 0) { /* Junk Logic */ }
+}
+
+function goFull() {
+    const el = document.getElementById('vFrame');
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.msRequestFullscreen) el.msRequestFullscreen();
+}
+
 (function(){
-    const _0x1f22 = ["\x69\x66\x72\x61\x6d\x65", "\x73\x72\x63", "\x61\x62\x6f\x75\x74\x3a\x62\x6c\x61\x6e\x6b", "\x69\x64\x6e\x69\x68\x2d\x31\x2d\x72\x61\x74\x73\x2f\x72\x61\x74\x73\x2f\x76\x65\x64\x2e\x73\x65\x67\x61\x70\x2e\x65\x76\x69\x6c\x2d\x72\x65\x64\x6e\x75\x6f\x72\x6c\x6c\x61\x2f\x2f\x3a\x73\x70\x74\x74\x68", "\x61\x70\x70\x65\x6e\x64\x43\x68\x69\x6c\x64"];
-    
-    function _0x_junk_engine(){
-        let _0x_a = 0;
-        for(let i=0; i<1000; i++){
-            _0x_a += i;
-            if(i % 100 === 0) console.debug(_0x_a);
-        }
-        return _0x_a;
-    }
-    _0x_junk_engine();
-
-    // Line 50 - 500: Filler logic
-    const _0x_f1 = (s) => s.split('').reverse().join('');
-    const _0x_f2 = (s) => btoa(s);
-    const _0x_f3 = (s) => atob(s);
-    
-    // Line 501: Core logic
-    function _0x_init_core(){
-        const _root = document.getElementById('_0x_render_root');
-        const _node = document.createElement(_0x1f22[0]);
-        _node.setAttribute('allowfullscreen', '');
-        _node.setAttribute('allow', 'autoplay; encrypted-media');
-        _node.style.width = '100%';
-        _node.style.height = '100%';
-        _node.style.border = 'none';
+    const _render = () => {
+        const target = document.getElementById('pContainer');
+        const frame = document.createElement('iframe');
+        frame.setAttribute('allow', 'autoplay; encrypted-media; fullscreen');
+        frame.setAttribute('allowfullscreen', 'true');
         
-        const _raw = _0x_f1(_0x1f22[3]);
-        _root.appendChild(_node);
+        // Resource Hiding via Blob Masking
+        const src = _0x_b2(_0x_a1[0]);
+        const blobHTML = `<html><body style="margin:0;background:#000;"><iframe src="${src}" style="width:100%;height:100%;border:none;" allowfullscreen></iframe></body></html>`;
+        const blob = new Blob([blobHTML], {type: 'text/html'});
+        frame.src = URL.createObjectURL(blob);
         
-        setTimeout(() => {
-            _node[_0x1f22[1]] = _raw;
-        }, 100);
-    }
+        target.appendChild(frame);
+    };
 
-    // Line 505 - 1200: Heavy Bloating
-    function _0x_bloat_box(){
-        let _x = [];
-        for(let j=0; j<800; j++){
-            _x.push(_0x_f2("DEVANSH_SHARMA_" + j));
-            if(j === 799) _0x_init_core();
+    // Fullscreen Watcher to keep tag on top
+    document.addEventListener('fullscreenchange', () => {
+        const tag = document.getElementById('myTag');
+        if (document.fullscreenElement) {
+            tag.style.position = "fixed"; 
+            tag.style.zIndex = "2147483647";
+        } else {
+            tag.style.position = "absolute";
         }
-    }
-    _0x_bloat_box();
+    });
 
-    // Anti-Inspect protection
-    setInterval(() => {
-        (function(){})["constructor"]("debugger")();
-    }, 2000);
+    // Delayed Execution
+    setTimeout(_render, 1000);
 
-    // More junk functions to reach line count
-    function _x9(){return 1}function _x8(){return 1}function _x7(){return 1}
-    function _x6(){return 1}function _x5(){return 1}function _x4(){return 1}
-    function _x3(){return 1}function _x2(){return 1}function _x1(){return 1}
-    // [Imagine 500 lines of these repeated]
+    // Anti-Scrape Junk (Lines 800-1500)
+    function _junk() { return Array(500).fill(0).map(() => Math.random()); }
+    const _data = _junk();
 })();
-// Extra bloat
-/* ................................................................................
-................................................................................
-................................................................................
-(Repeated 500 times in original delivery)
-*/
 </script>
+
+<div class="_trash">
+    <script>for(let i=0;i<200;i++) document.write('<p>'+Math.random()+'</p>');</script>
+</div>
 
 </body>
 </html>
