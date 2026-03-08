@@ -1,75 +1,159 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>DevCoderz X Assault Decoder</title>
-<style>
-:root { --bg: #0b0f1a; --accent: #2563eb; --glass: rgba(255, 255, 255, 0.04); --border: rgba(255, 255, 255, 0.1); }
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; overflow: hidden; }
-.main-wrapper { max-width: 900px; margin: 0 auto; position: relative; }
-.brand-header { display: flex; justify-content: space-between; align-items: center; padding: 18px; background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 20px; margin-bottom: 20px; }
-.player-shell { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 24px; overflow: hidden; border: 1px solid var(--border); position: relative; z-index: 1; }
-.dev-tag { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.85); border: 1px solid var(--accent); padding: 6px 14px; border-radius: 50px; font-size: 11px; z-index: 2147483647 !important; color: #fff; pointer-events: none; display: block !important; visibility: visible !important; opacity: 1 !important; }
-.dev-tag span { color: var(--accent); font-weight: 800; }
-iframe { width: 100%; height: 100%; border: none; background: #000; }
-.tg-btn { display: block; width: 100%; padding: 16px; background: var(--accent); color: #fff; text-decoration: none; border-radius: 16px; font-weight: 800; margin-top: 15px; text-align: center; }
-#_0xJunkContainer { display: none; visibility: hidden; }
-</style>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>DevCoderz X Assault Decoder</title>
+    <style>
+        :root { 
+            --bg: #0b0f1a; 
+            --accent: #2563eb; 
+            --glass: rgba(255, 255, 255, 0.04); 
+            --border: rgba(255, 255, 255, 0.1); 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        
+        body { 
+            background: var(--bg); 
+            color: #fff; 
+            min-height: 100vh; 
+            padding: 15px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-wrapper { width: 100%; max-width: 900px; position: relative; }
+
+        .brand-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 18px; 
+            background: var(--glass); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid var(--border); 
+            border-radius: 20px; 
+            margin-bottom: 20px; 
+        }
+
+        .player-shell { 
+            width: 100%; 
+            aspect-ratio: 16/9; 
+            background: #000; 
+            border-radius: 24px; 
+            overflow: hidden; 
+            border: 1px solid var(--border); 
+            position: relative; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .dev-tag { 
+            position: absolute; 
+            top: 15px; 
+            left: 15px; 
+            background: rgba(0, 0, 0, 0.7); 
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--accent); 
+            padding: 6px 14px; 
+            border-radius: 50px; 
+            font-size: 11px; 
+            z-index: 10; 
+            color: #fff; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dev-tag span { color: var(--accent); font-weight: 800; }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .controls { display: flex; gap: 10px; margin-top: 15px; }
+
+        .btn-action { 
+            flex: 1; 
+            padding: 15px; 
+            border-radius: 12px; 
+            border: 1px solid var(--border); 
+            background: var(--glass); 
+            color: #fff; 
+            cursor: pointer; 
+            font-weight: 700; 
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        .btn-action:hover { background: var(--border); border-color: var(--accent); }
+
+        .tg-btn { 
+            display: block; 
+            width: 100%; 
+            padding: 18px; 
+            background: var(--accent); 
+            color: #fff; 
+            text-decoration: none; 
+            border-radius: 16px; 
+            font-weight: 800; 
+            margin-top: 15px; 
+            text-align: center; 
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+            transition: 0.3s;
+        }
+
+        .tg-btn:active { transform: scale(0.98); }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
-<div class="main-wrapper">
-<header class="brand-header">
-<div style="font-weight:800;">DevCoderz <span style="color:var(--accent);">X</span> Assault Decoder</div>
-<div style="color: #ff4757; font-weight: 900;">LIVE</div>
-</header>
-<div class="player-shell" id="_0xPlayerFrame">
-<div class="dev-tag" id="_0xWatermark">Developer: <span>Devansh Sharma</span></div>
-<div id="_0xStream" style="width:100%; height:100%;"></div>
-</div>
-<div style="display: flex; gap: 10px; margin-top: 15px;">
-<button onclick="_0xGoFS()" style="flex:1; padding: 15px; border-radius: 12px; border: 1px solid var(--border); background: var(--glass); color: #fff; cursor: pointer; font-weight: 700;">FULLSCREEN</button>
-<button onclick="location.reload()" style="flex:1; padding: 15px; border-radius: 12px; border: 1px solid var(--border); background: var(--glass); color: #fff; cursor: pointer; font-weight: 700;">REFRESH</button>
-</div>
-<a href="https://t.me/Cric_decoders" class="tg-btn">JOIN TELEGRAM</a>
-</div>
-<script>
-(function(){
-const _0xLinks = ["\x61\x48\x52\x30\x63\x48\x4d\x36\x4c\x79\x39\x68\x62\x47\x78\x79\x62\x33\x56\x75\x5a\x47\x56\x79\x4c\x57\x78\x70\x64\x6d\x55\x75\x63\x47\x46\x6e\x5a\x58\x4d\x75\x5a\x47\x56\x32\x4c\x33\x4e\x30\x59\x58\x49\x76\x63\x33\x52\x68\x63\x69\x30\x78\x4c\x57\x68\x70\x62\x6d\x52\x70"];
-const _0xDecode = (s) => atob(s);
-function _0xInit(){
-const r = document.getElementById('_0xStream');
-const f = document.createElement('iframe');
-f.src = _0xDecode(_0xLinks[0]);
-f.setAttribute('allowfullscreen', 'true');
-f.setAttribute('allow', 'autoplay; encrypted-media; fullscreen');
-f.style.width = '100%';
-f.style.height = '100%';
-r.appendChild(f);
-}
-window._0xGoFS = function(){
-const e = document.getElementById('_0xPlayerFrame');
-if(e.requestFullscreen) e.requestFullscreen();
-else if(e.webkitRequestFullscreen) e.webkitRequestFullscreen();
-};
-document.addEventListener('fullscreenchange', () => {
-const t = document.getElementById('_0xWatermark');
-if(document.fullscreenElement){
-t.style.position = 'fixed';
-t.style.zIndex = '2147483647';
-} else {
-t.style.position = 'absolute';
-}
-});
-for(let i=0; i<1000; i++){
-if(i === 999) _0xInit();
-}
-setInterval(() => { (function(){}).constructor('debugger')(); }, 1000);
-})();
-function _0xJ1(){return 1}function _0xJ2(){return 2}function _0xJ3(){return 3}
-// ... [Repeated thousands of lines to bloat the file to 1000+ lines] ...
-</script>
+
+    <div class="main-wrapper">
+        <header class="brand-header">
+            <div style="font-weight:800;">DevCoderz <span style="color:var(--accent);">X</span> Assault Decoder</div>
+            <div style="color: #ff4757; font-weight: 900; display: flex; align-items: center; gap: 5px;">
+                <span style="height: 8px; width: 8px; background: #ff4757; border-radius: 50%; display: inline-block;"></span>
+                LIVE
+            </div>
+        </header>
+
+        <div class="player-shell" id="mainPlayer">
+            <div class="dev-tag">Developer: <span>Devansh Sharma</span></div>
+            <iframe 
+                src="https://allrounder-live.pages.dev/star/star-1-hindi" 
+                allowfullscreen="true" 
+                allow="autoplay; encrypted-media; fullscreen">
+            </iframe>
+        </div>
+
+        <div class="controls">
+            <button class="btn-action" onclick="toggleFS()">Fullscreen</button>
+            <button class="btn-action" onclick="location.reload()">Refresh Stream</button>
+        </div>
+
+        <a href="https://t.me/Cric_decoders" class="tg-btn">JOIN TELEGRAM CHANNEL</a>
+    </div>
+
+    <script>
+        function toggleFS() {
+            const el = document.getElementById('mainPlayer');
+            if (!document.fullscreenElement) {
+                if (el.requestFullscreen) el.requestFullscreen();
+                else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+                else if (el.msRequestFullscreen) el.msRequestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Anti-Inspect Simple Logic
+        document.onkeydown = function(e) {
+            if(event.keyCode == 123) return false;
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+            if(e.ctrlKey && e.uKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        }
+    </script>
 </body>
 </html>
