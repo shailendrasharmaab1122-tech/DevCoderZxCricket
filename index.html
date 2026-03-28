@@ -3,46 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>DevCoderZ | IPL PRO</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&display=swap" rel="stylesheet">
+    <title>DevCoderZ | IPL LIVE FIX</title>
     <style>
-        :root { --bg: #05080f; --accent: #2563eb; --glass: rgba(255, 255, 255, 0.03); }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        body { background: var(--bg); color: #fff; padding: 10px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow: hidden; }
-        .main-wrapper { width: 100%; max-width: 900px; position: relative; }
-        .brand-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; margin-bottom: 10px; backdrop-filter: blur(10px); }
-        .player-shell { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
-        .dev-tag { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--accent); padding: 5px 12px; border-radius: 50px; font-size: 10px; z-index: 10; color: #fff; text-transform: uppercase; letter-spacing: 1px; pointer-events: none; }
-        video { width: 100%; height: 100%; }
-        /* Custom Fullscreen Button Styling */
-        .shaka-fullscreen-button { color: var(--accent) !important; font-size: 24px !important; }
-        .tg-link { display: block; width: 100%; padding: 15px; background: var(--accent); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 800; margin-top: 15px; text-align: center; text-transform: uppercase; font-size: 13px; }
+        :root { --bg: #05080f; --accent: #2563eb; }
+        body { background: var(--bg); color: #fff; margin: 0; display: flex; flex-direction: column; align-items: center; font-family: sans-serif; }
+        .player-shell { width: 95%; max-width: 850px; aspect-ratio: 16/9; background: #000; margin-top: 20px; border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; }
+        iframe, video { width: 100%; height: 100%; border: none; }
+        .status-tag { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 5px; font-size: 10px; color: var(--accent); z-index: 10; border: 1px solid var(--accent); }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-<div class="main-wrapper">
-    <header class="brand-header">
-        <div style="font-weight:800; font-size:14px;">DevCoderZ <span style="color:var(--accent);">X</span> Assault</div>
-        <div style="color: #ff4757; font-weight: 900; display: flex; align-items: center; gap: 5px; font-size: 12px;">
-            <span style="height: 7px; width: 7px; background: #ff4757; border-radius: 50%; display: inline-block;"></span> LIVE
-        </div>
-    </header>
-
-    <div class="player-shell" id="videoContainer" data-shaka-player-container>
-        <div class="dev-tag">Developer: <span>Devansh Sharma</span></div>
-        <video id="video" data-shaka-player autoplay playsinline style="width:100%;height:100%;"></video>
+    <div class="player-shell" id="mainContainer">
+        <div class="status-tag" id="status">CONNECTING...</div>
+        <iframe 
+            id="backupPlayer"
+            src="https://allrounder-live.pages.dev/star/star-1-hindi" 
+            allowfullscreen="true" 
+            allow="autoplay; encrypted-media; fullscreen">
+        </iframe>
     </div>
 
-    <a href="https://t.me/Cric_decoders" class="tg-link">Join Telegram for IPL Updates</a>
-</div>
-
-<script>
-// Obfuscated Loader Logic
-(function(_0x16b2f4,_0x456c82){const _0x139d=function(_0x2d8a1e){while(--_0x2d8a1e){_0x16b2f4['push'](_0x16b2f4['shift']());}};_0x139d(++_0x456c82);}(['load','channel_url','pkll.xojiv79335.workers.dev','addEventListener','DOMContentLoaded','shaka','polyfill','installAll','Player','isBrowserSupported','video','videoContainer','configure','drm','clearKeys','keyId','key','streaming','lowLatencyMode','bufferingGoal','getNetworkingEngine','registerRequestFilter','uris','includes','__hdnea__','Referer','https://www.jiotv.com/','User-Agent','plaYtv/7.1.5','3021'],0x1b3));const _0x5a12=function(_0x264177,_0x3f3d91){_0x264177=_0x264177-0x0;let _0x16b2f4=['load','channel_url','https://pkll.xojiv79335.workers.dev/','addEventListener','DOMContentLoaded','shaka','polyfill','installAll','Player','isBrowserSupported','video','videoContainer','configure','drm','clearKeys','keyId','key','streaming','lowLatencyMode','bufferingGoal','getNetworkingEngine','registerRequestFilter','uris','includes','__hdnea__','Referer','https://www.jiotv.com/','User-Agent','plaYtv/7.1.5','3021'];return _0x16b2f4[_0x264177];};document[_0x5a12(0x3)](_0x5a12(0x4),async()=>{const _0x51c6b1=new URLSearchParams(window['location']['search']),_0x2d73f4=_0x51c6b1['get']('id')||_0x5a12(0x1d);try{const _0x43b811=await fetch(_0x5a12(0x2)),_0x1736b4=await _0x43b811['json'](),_0x33491e=_0x1736b4['find'](_0x3e18f2=>_0x3e18f2['channel_id']==_0x2d73f4);if(!_0x33491e)return;window[_0x5a12(0x5)][_0x5a12(0x6)][_0x5a12(0x7)]();const _0x27f10b=document['getElementById'](_0x5a12(0xa)),_0x117409=new window[_0x5a12(0x5)][_0x5a12(0x8)](_0x27f10b);_0x117409[_0x5a12(0xc)]({_0x5a12(0xd):{_0x5a12(0xe):{[_0x33491e[_0x5a12(0xf)]]:_0x33491e[_0x5a12(0x10)]}},_0x5a12(0x11):{_0x5a12(0x12):!![],_0x5a12(0x13):0x2d}});_0x117409[_0x5a12(0x14)]()[_0x5a12(0x15)]((_0x2563eb,_0x1222)=>{_0x1222['headers'][_0x5a12(0x19)]=_0x5a12(0x1a);_0x1222['headers'][_0x5a12(0x1b)]=_0x5a12(0x1c);if(_0x33491e['cookie']){const _0x315620=_0x1222[_0x5a12(0x16)][0x0][_0x5a12(0x17)]('?')?'&':'?';if(!_0x1222[_0x5a12(0x16)][0x0][_0x5a12(0x17)](_0x5a12(0x18))){_0x1222[_0x5a12(0x16)][0x0]+=_0x315620+_0x33491e['cookie'];}}});await _0x117409[_0x5a12(0x0)](_0x33491e[_0x5a12(0x1)]);}catch(_0x4e6d42){console['error'](_0x4e6d42);}});
-</script>
+    <div style="margin-top: 20px; text-align: center;">
+        <p style="font-size: 12px; color: #aaa;">Agar video na chale toh page refresh karein.</p>
+        <button onclick="location.reload()" style="padding: 10px 20px; background: var(--accent); color: #fff; border: none; border-radius: 5px; cursor: pointer;">REFRESH STREAM</button>
+    </div>
 
 </body>
 </html>
