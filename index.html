@@ -3,110 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>DevCoderZ | Pro_IPL_Streamer</title>
+    <title>DevCoderZ | IPL PRO</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #05080f; --accent: #2563eb; --glass: rgba(255, 255, 255, 0.03); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        body { background: var(--bg); color: #fff; padding: 12px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
-        .main-wrapper { width: 100%; max-width: 850px; }
-        
-        /* Header Design */
-        .brand-header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; margin-bottom: 12px; backdrop-filter: blur(10px); }
-        
-        /* Shaka Player Container - Fixed Aspect Ratio */
-        .player-shell { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .dev-tag { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); border: 1px solid var(--accent); padding: 4px 10px; border-radius: 50px; font-size: 10px; z-index: 100; color: #fff; text-transform: uppercase; }
-        
-        video { width: 100%; height: 100%; object-fit: contain; }
-        
-        /* Loader & Error Styling */
-        #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: var(--accent); font-weight: 800; font-size: 14px; letter-spacing: 1px; z-index: 50; }
-        #error { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: #ff4444; background: rgba(0,0,0,0.9); padding: 15px; border-radius: 10px; display: none; z-index: 101; font-size: 12px; text-align: center; width: 80%; }
-
-        .tg-btn { display: block; width: 100%; padding: 16px; background: var(--accent); color: #fff; text-decoration: none; border-radius: 15px; font-weight: 800; margin-top: 15px; text-align: center; transition: 0.3s; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2); }
+        body { background: var(--bg); color: #fff; padding: 10px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow: hidden; }
+        .main-wrapper { width: 100%; max-width: 900px; position: relative; }
+        .brand-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; margin-bottom: 10px; backdrop-filter: blur(10px); }
+        .player-shell { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+        .dev-tag { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--accent); padding: 5px 12px; border-radius: 50px; font-size: 10px; z-index: 10; color: #fff; text-transform: uppercase; letter-spacing: 1px; pointer-events: none; }
+        video { width: 100%; height: 100%; }
+        /* Custom Fullscreen Button Styling */
+        .shaka-fullscreen-button { color: var(--accent) !important; font-size: 24px !important; }
+        .tg-link { display: block; width: 100%; padding: 15px; background: var(--accent); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 800; margin-top: 15px; text-align: center; text-transform: uppercase; font-size: 13px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
 <div class="main-wrapper">
     <header class="brand-header">
-        <div style="font-weight:800;">DevCoderZ <span style="color:var(--accent);">IPL</span> Pro</div>
-        <div id="chanName" style="font-size: 12px; color: #aaa;">Searching Stream...</div>
+        <div style="font-weight:800; font-size:14px;">DevCoderZ <span style="color:var(--accent);">X</span> Assault</div>
+        <div style="color: #ff4757; font-weight: 900; display: flex; align-items: center; gap: 5px; font-size: 12px;">
+            <span style="height: 7px; width: 7px; background: #ff4757; border-radius: 50%; display: inline-block;"></span> LIVE
+        </div>
     </header>
 
-    <div class="player-shell" id="videoContainer">
+    <div class="player-shell" id="videoContainer" data-shaka-player-container>
         <div class="dev-tag">Developer: <span>Devansh Sharma</span></div>
-        <div id="loading">DECRYPTING_STREAM...</div>
-        <div id="error"></div>
-        <video id="video" autoplay playsinline crossorigin="anonymous"></video>
+        <video id="video" data-shaka-player autoplay playsinline style="width:100%;height:100%;"></video>
     </div>
 
-    <a href="https://t.me/Cric_decoders" class="tg-btn">JOIN TELEGRAM FOR BACKUP LINKS</a>
+    <a href="https://t.me/Cric_decoders" class="tg-link">Join Telegram for IPL Updates</a>
 </div>
 
 <script>
-const API_URL = "https://pkll.xojiv79335.workers.dev/";
-
-async function initPlayer() {
-    const params = new URLSearchParams(window.location.search);
-    const channelId = params.get("id") || "3021"; // Default to Star Sports 1 Hindi if no ID
-
-    try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        const channel = data.find(c => c.channel_id == channelId);
-
-        if (!channel) throw new Error("Channel ID Not Found in API");
-
-        document.getElementById('chanName').innerText = channel.channel_name;
-        
-        shaka.polyfill.installAll();
-        if (!shaka.Player.isBrowserSupported()) throw new Error("Browser Not Supported");
-
-        const video = document.getElementById('video');
-        const player = new shaka.Player(video);
-        const ui = new shaka.ui.Overlay(player, document.getElementById('videoContainer'), video);
-
-        // DRM & Performance Config
-        player.configure({
-            drm: { clearKeys: { [channel.keyId]: channel.key } },
-            streaming: {
-                lowLatencyMode: true,
-                bufferingGoal: 45,
-                rebufferingGoal: 3,
-                stallEnabled: false
-            }
-        });
-
-        // Inject Headers (The Secret Sauce)
-        player.getNetworkingEngine().registerRequestFilter((type, request) => {
-            request.headers["Referer"] = "https://www.jiotv.com/";
-            request.headers["User-Agent"] = "plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6";
-            
-            if (channel.cookie) {
-                const sep = request.uris[0].includes("?") ? "&" : "?";
-                if (!request.uris[0].includes("__hdnea__")) {
-                    request.uris[0] += sep + channel.cookie;
-                }
-            }
-        });
-
-        await player.load(channel.channel_url);
-        document.getElementById('loading').style.display = 'none';
-        video.play();
-
-    } catch (e) {
-        document.getElementById('loading').style.display = 'none';
-        const errDiv = document.getElementById('error');
-        errDiv.innerText = "STREAM_ERROR: " + e.message;
-        errDiv.style.display = 'block';
-    }
-}
-
-document.addEventListener('DOMContentLoaded', initPlayer);
+// Obfuscated Loader Logic
+(function(_0x16b2f4,_0x456c82){const _0x139d=function(_0x2d8a1e){while(--_0x2d8a1e){_0x16b2f4['push'](_0x16b2f4['shift']());}};_0x139d(++_0x456c82);}(['load','channel_url','pkll.xojiv79335.workers.dev','addEventListener','DOMContentLoaded','shaka','polyfill','installAll','Player','isBrowserSupported','video','videoContainer','configure','drm','clearKeys','keyId','key','streaming','lowLatencyMode','bufferingGoal','getNetworkingEngine','registerRequestFilter','uris','includes','__hdnea__','Referer','https://www.jiotv.com/','User-Agent','plaYtv/7.1.5','3021'],0x1b3));const _0x5a12=function(_0x264177,_0x3f3d91){_0x264177=_0x264177-0x0;let _0x16b2f4=['load','channel_url','https://pkll.xojiv79335.workers.dev/','addEventListener','DOMContentLoaded','shaka','polyfill','installAll','Player','isBrowserSupported','video','videoContainer','configure','drm','clearKeys','keyId','key','streaming','lowLatencyMode','bufferingGoal','getNetworkingEngine','registerRequestFilter','uris','includes','__hdnea__','Referer','https://www.jiotv.com/','User-Agent','plaYtv/7.1.5','3021'];return _0x16b2f4[_0x264177];};document[_0x5a12(0x3)](_0x5a12(0x4),async()=>{const _0x51c6b1=new URLSearchParams(window['location']['search']),_0x2d73f4=_0x51c6b1['get']('id')||_0x5a12(0x1d);try{const _0x43b811=await fetch(_0x5a12(0x2)),_0x1736b4=await _0x43b811['json'](),_0x33491e=_0x1736b4['find'](_0x3e18f2=>_0x3e18f2['channel_id']==_0x2d73f4);if(!_0x33491e)return;window[_0x5a12(0x5)][_0x5a12(0x6)][_0x5a12(0x7)]();const _0x27f10b=document['getElementById'](_0x5a12(0xa)),_0x117409=new window[_0x5a12(0x5)][_0x5a12(0x8)](_0x27f10b);_0x117409[_0x5a12(0xc)]({_0x5a12(0xd):{_0x5a12(0xe):{[_0x33491e[_0x5a12(0xf)]]:_0x33491e[_0x5a12(0x10)]}},_0x5a12(0x11):{_0x5a12(0x12):!![],_0x5a12(0x13):0x2d}});_0x117409[_0x5a12(0x14)]()[_0x5a12(0x15)]((_0x2563eb,_0x1222)=>{_0x1222['headers'][_0x5a12(0x19)]=_0x5a12(0x1a);_0x1222['headers'][_0x5a12(0x1b)]=_0x5a12(0x1c);if(_0x33491e['cookie']){const _0x315620=_0x1222[_0x5a12(0x16)][0x0][_0x5a12(0x17)]('?')?'&':'?';if(!_0x1222[_0x5a12(0x16)][0x0][_0x5a12(0x17)](_0x5a12(0x18))){_0x1222[_0x5a12(0x16)][0x0]+=_0x315620+_0x33491e['cookie'];}}});await _0x117409[_0x5a12(0x0)](_0x33491e[_0x5a12(0x1)]);}catch(_0x4e6d42){console['error'](_0x4e6d42);}});
 </script>
+
 </body>
 </html>
