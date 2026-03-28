@@ -1,62 +1,69 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Star Sports 2 HD - Live</title>
+    <title>Star Sports 2 HD Fix</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.3.5/dist/controls.css">
     <style>
-        body { margin: 0; background: #000; display: flex; align-items: center; height: 100vh; }
-        #video-container { width: 100%; height: 100%; }
-        video { width: 100%; height: 100%; }
+        body { margin: 0; background: #000; }
+        .video-container { width: 100%; height: 100vh; }
     </style>
 </head>
 <body>
 
-<div id="video-container" data-shaka-player-container>
-    <video data-shaka-player id="video" autoplay></video>
+<div class="video-container" data-shaka-player-container>
+    <video data-shaka-player id="video" autoplay crossorigin="anonymous"></video>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.3.5/dist/shaka-player.ui.js"></script>
 
 <script>
-// Aapka updated SS2 Manifest URL
 const manifestUri = 'https://jiotvmblive.cdn.jio.com//bpk-tv/StarSportsHD2Hin_BTS/output/index.mpd?__hdnea__=st=1774648839~exp=1774735239~acl=/*~hmac=9c4b413ec2dc4f7dc1703988d9abc4902473253183e8b1140920ddfa29';
 
-async function startPlayer() {
+// YAHAN APNI KEYS DAALEIN (JSON API SE NIKAL KAR)
+const KEY_ID = 'YOUR_KEY_ID_HERE'; 
+const KEY_VALUE = 'YOUR_KEY_HERE';
+
+async function initPlayer() {
     const video = document.getElementById('video');
     const ui = video['ui'];
     const player = ui.getControls().getPlayer();
 
-    // DRM ClearKey Configuration
+    // 1. DRM Configuration
     player.configure({
         drm: {
             clearKeys: {
-                // API se mili hui values yahan daalein
-                'YOUR_SS2_KEY_ID': 'YOUR_SS2_KEY'
+                [KEY_ID]: KEY_VALUE
             }
         },
-        // Jio streams ke liye zaroori networking configuration
-        streaming: {
-            bufferingGoal: 30,
-            rebufferingGoal: 15
+        manifest: {
+            dash: {
+                ignoreMinBufferTime: true
+            }
         }
     });
 
-    // Custom Header for JioTV (Optional but recommended)
+    // 2. Networking Filter (Sabse Zaroori Step)
     player.getNetworkingEngine().registerRequestFilter((type, request) => {
+        // Jio servers aksar in headers ke bina 403 error dete hain
         request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+        
+        // Agar browser allow kare toh ye headers bhi add karein
+        // request.headers['Origin'] = 'https://www.jiotv.com';
+        // request.headers['Referer'] = 'https://www.jiotv.com/';
     });
 
     try {
         await player.load(manifestUri);
-        console.log('Star Sports 2 HD is LIVE!');
-    } catch (error) {
-        console.error('Error loading stream:', error);
+        console.log('Player loaded!');
+    } catch (e) {
+        console.error('Error Code:', e.code, 'Message:', e.message);
+        alert('Error: ' + e.code + '. Inspect element check karo!');
     }
 }
 
-document.addEventListener('shaka-ui-loaded', startPlayer);
+document.addEventListener('shaka-ui-loaded', initPlayer);
 </script>
 </body>
 </html>
