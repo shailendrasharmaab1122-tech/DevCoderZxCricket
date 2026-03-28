@@ -2,158 +2,61 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>DevCoderz X Assault Decoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Sports 2 HD - Live</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.3.5/dist/controls.css">
     <style>
-        :root { 
-            --bg: #0b0f1a; 
-            --accent: #2563eb; 
-            --glass: rgba(255, 255, 255, 0.04); 
-            --border: rgba(255, 255, 255, 0.1); 
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-
-        body { 
-            background: var(--bg); 
-            color: #fff; 
-            min-height: 100vh; 
-            padding: 15px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .main-wrapper { width: 100%; max-width: 900px; position: relative; }
-
-        .brand-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 18px; 
-            background: var(--glass); 
-            backdrop-filter: blur(10px); 
-            border: 1px solid var(--border); 
-            border-radius: 20px; 
-            margin-bottom: 20px; 
-        }
-
-        .player-shell { 
-            width: 100%; 
-            aspect-ratio: 16/9; 
-            background: #000; 
-            border-radius: 24px; 
-            overflow: hidden; 
-            border: 1px solid var(--border); 
-            position: relative; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        .dev-tag { 
-            position: absolute; 
-            top: 15px; 
-            left: 15px; 
-            background: rgba(0, 0, 0, 0.7); 
-            backdrop-filter: blur(5px);
-            border: 1px solid var(--accent); 
-            padding: 6px 14px; 
-            border-radius: 50px; 
-            font-size: 11px; 
-            z-index: 10; 
-            color: #fff; 
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .dev-tag span { color: var(--accent); font-weight: 800; }
-
-        iframe { width: 100%; height: 100%; border: none; }
-
-        .controls { display: flex; gap: 10px; margin-top: 15px; }
-
-        .btn-action { 
-            flex: 1; 
-            padding: 15px; 
-            border-radius: 12px; 
-            border: 1px solid var(--border); 
-            background: var(--glass); 
-            color: #fff; 
-            cursor: pointer; 
-            font-weight: 700; 
-            transition: 0.3s;
-            text-transform: uppercase;
-            font-size: 13px;
-        }
-
-        .btn-action:hover { background: var(--border); border-color: var(--accent); }
-
-        .tg-btn { 
-            display: block; 
-            width: 100%; 
-            padding: 18px; 
-            background: var(--accent); 
-            color: #fff; 
-            text-decoration: none; 
-            border-radius: 16px; 
-            font-weight: 800; 
-            margin-top: 15px; 
-            text-align: center; 
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
-            transition: 0.3s;
-        }
-
-        .tg-btn:active { transform: scale(0.98); }
+        body { margin: 0; background: #000; display: flex; align-items: center; height: 100vh; }
+        #video-container { width: 100%; height: 100%; }
+        video { width: 100%; height: 100%; }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-    <div class="main-wrapper">
-        <header class="brand-header">
-            <div style="font-weight:800;">DevCoderz <span style="color:var(--accent);">X</span> Assault Decoder</div>
-            <div style="color: #ff4757; font-weight: 900; display: flex; align-items: center; gap: 5px;">
-                <span style="height: 8px; width: 8px; background: #ff4757; border-radius: 50%; display: inline-block;"></span>
-                LIVE
-            </div>
-        </header>
+<div id="video-container" data-shaka-player-container>
+    <video data-shaka-player id="video" autoplay></video>
+</div>
 
-        <div class="player-shell" id="mainPlayer">
-            <div class="dev-tag">Developer: <span>Devansh Sharma</span></div>
-            <iframe 
-                src="https://allrounder-live.pages.dev/star/star-1-hindi" 
-                allowfullscreen="true" 
-                allow="autoplay; encrypted-media; fullscreen">
-            </iframe>
-        </div>
+<script src="https://cdn.jsdelivr.net/npm/shaka-player@4.3.5/dist/shaka-player.ui.js"></script>
 
-        <div class="controls">
-            <button class="btn-action" onclick="toggleFS()">Fullscreen</button>
-            <button class="btn-action" onclick="location.reload()">Refresh Stream</button>
-        </div>
+<script>
+// Aapka updated SS2 Manifest URL
+const manifestUri = 'https://jiotvmblive.cdn.jio.com//bpk-tv/StarSportsHD2Hin_BTS/output/index.mpd?__hdnea__=st=1774648839~exp=1774735239~acl=/*~hmac=9c4b413ec2dc4f7dc1703988d9abc4902473253183e8b1140920ddfa29';
 
-        <a href="https://t.me/Cric_decoders" class="tg-btn">JOIN TELEGRAM CHANNEL</a>
-    </div>
+async function startPlayer() {
+    const video = document.getElementById('video');
+    const ui = video['ui'];
+    const player = ui.getControls().getPlayer();
 
-    <script>
-        function toggleFS() {
-            const el = document.getElementById('mainPlayer');
-            if (!document.fullscreenElement) {
-                if (el.requestFullscreen) el.requestFullscreen();
-                else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-                else if (el.msRequestFullscreen) el.msRequestFullscreen();
-            } else {
-                document.exitFullscreen();
+    // DRM ClearKey Configuration
+    player.configure({
+        drm: {
+            clearKeys: {
+                // API se mili hui values yahan daalein
+                'YOUR_SS2_KEY_ID': 'YOUR_SS2_KEY'
             }
+        },
+        // Jio streams ke liye zaroori networking configuration
+        streaming: {
+            bufferingGoal: 30,
+            rebufferingGoal: 15
         }
+    });
 
-        // Anti-Inspect Simple Logic
-        document.onkeydown = function(e) {
-            if(event.keyCode == 123) return false;
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.uKey && e.keyCode == 'U'.charCodeAt(0)) return false;
-        }
-    </script>
+    // Custom Header for JioTV (Optional but recommended)
+    player.getNetworkingEngine().registerRequestFilter((type, request) => {
+        request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+    });
+
+    try {
+        await player.load(manifestUri);
+        console.log('Star Sports 2 HD is LIVE!');
+    } catch (error) {
+        console.error('Error loading stream:', error);
+    }
+}
+
+document.addEventListener('shaka-ui-loaded', startPlayer);
+</script>
 </body>
 </html>
