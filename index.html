@@ -2,31 +2,70 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DevCoderZ Clean Streamer</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevCoderZ | Star Sports Select 2 HD</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
     <style>
-        body { background: #000; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        video { width: 80%; border: 2px solid #00ff00; border-radius: 8px; box-shadow: 0 0 20px #00ff00; }
+        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        #player-container { width: 100%; height: 100%; max-width: 1000px; aspect-ratio: 16/9; border: 1px solid #333; }
+        video { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
-    <video id="video" controls></video>
+    <div id="player-container" data-shaka-player-container shaka-controls="true">
+        <video id="video" autoplay playsinline poster="https://img.media.jio.com/tvpimages/98/79/302114_1749665414817_l_medium.jpg"></video>
+    </div>
 
     <script>
-        const video = document.getElementById('video');
-        // Yahan apni .m3u8 stream ka asli link daalein
-        const videoSrc = 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8';
+        // --- DATA FROM YOUR JSON ---
+        const STREAM_DATA = {
+            url: "https://jiotvpllive.cdn.jio.com/bpk-tv//Star_Sports_Select_HD_2_BTS/output/index.mpd",
+            keyId: "6017d0514d425fa38f6e80ba6dcc852f",
+            key: "0018944b00adf2078f62386f30c68b74"
+        };
 
-        if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(videoSrc);
-            hls.attachMedia(video);
-        } 
-        // For Safari/iOS (jahan HLS native support hai)
-        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = videoSrc;
+        async function initApp() {
+            shaka.polyfill.installAll();
+            if (!shaka.Player.isBrowserSupported()) {
+                alert("Browser not supported!");
+                return;
+            }
+
+            const video = document.getElementById('video');
+            const container = document.getElementById('player-container');
+            const player = new shaka.Player(video);
+
+            // Shaka UI Config
+            const ui = new shaka.ui.Overlay(player, container, video);
+
+            // --- DRM CONFIG (Tala-Chabi) ---
+            player.configure({
+                drm: {
+                    clearKeys: {
+                        [STREAM_DATA.keyId]: STREAM_DATA.key
+                    }
+                }
+            });
+
+            // --- BYPASS HEADERS (Zaruri Hai!) ---
+            player.getNetworkingEngine().registerRequestFilter((type, request) => {
+                // Ye JioTV ko jhoot bolne ke liye headers hain
+                request.headers['Referer'] = 'https://www.jiotv.com/';
+                request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6';
+            });
+
+            try {
+                await player.load(STREAM_DATA.url);
+                console.log("DevCoderZ: Stream started!");
+            } catch (e) {
+                console.error("Error loading stream:", e);
+                alert("Stream load nahi hui! Ho sakta hai keys ya link expire ho gaye hon.");
+            }
         }
+
+        document.addEventListener('shaka-ui-loaded', initApp);
     </script>
 </body>
 </html>
