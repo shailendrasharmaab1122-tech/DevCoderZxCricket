@@ -7,9 +7,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css">
     <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        #player-container { width: 100%; height: 100%; max-width: 1000px; aspect-ratio: 16/9; border: 1px solid #333; }
+        body { margin: 0; background: #000; height: 100vh; display: flex; align-items: center; justify-content: center; font-family: sans-serif; }
+        #player-container { width: 100%; height: 100%; background: #000; }
         video { width: 100%; height: 100%; }
+        /* Custom Green Glow for DevCoderZ */
+        .shaka-video-container { border: 1px solid #00ff00; }
     </style>
 </head>
 <body>
@@ -19,53 +21,51 @@
     </div>
 
     <script>
-        // --- DATA FROM YOUR JSON ---
-        const STREAM_DATA = {
-            url: "https://jiotvpllive.cdn.jio.com/bpk-tv//Star_Sports_Select_HD_2_BTS/output/index.mpd",
-            keyId: "6017d0514d425fa38f6e80ba6dcc852f",
-            key: "0018944b00adf2078f62386f30c68b74"
+        const CONFIG = {
+            mpdUrl: "https://jiotvpllive.cdn.jio.com/bpk-tv//Star_Sports_Select_HD_2_BTS/output/index.mpd",
+            keyId: "6017d0514d425fa38f6e80ba6dcc852f", // Teri Key ID
+            key: "0018944b00adf2078f62386f30c68b74"     // Teri Asli Key
         };
 
-        async function initApp() {
+        async function initDevPlayer() {
             shaka.polyfill.installAll();
-            if (!shaka.Player.isBrowserSupported()) {
-                alert("Browser not supported!");
-                return;
-            }
-
+            
             const video = document.getElementById('video');
             const container = document.getElementById('player-container');
             const player = new shaka.Player(video);
-
-            // Shaka UI Config
+            
+            // UI Controls
             const ui = new shaka.ui.Overlay(player, container, video);
 
-            // --- DRM CONFIG (Tala-Chabi) ---
+            // --- DRM CONFIG (VVIP Step) ---
             player.configure({
                 drm: {
                     clearKeys: {
-                        [STREAM_DATA.keyId]: STREAM_DATA.key
+                        [CONFIG.keyId]: CONFIG.key
                     }
+                },
+                streaming: {
+                    lowLatencyMode: true,
+                    bufferingGoal: 10
                 }
             });
 
-            // --- BYPASS HEADERS (Zaruri Hai!) ---
+            // --- HEADER BYPASS (Taaki Jio Block Na Kare) ---
             player.getNetworkingEngine().registerRequestFilter((type, request) => {
-                // Ye JioTV ko jhoot bolne ke liye headers hain
                 request.headers['Referer'] = 'https://www.jiotv.com/';
                 request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6';
             });
 
             try {
-                await player.load(STREAM_DATA.url);
-                console.log("DevCoderZ: Stream started!");
-            } catch (e) {
-                console.error("Error loading stream:", e);
-                alert("Stream load nahi hui! Ho sakta hai keys ya link expire ho gaye hon.");
+                await player.load(CONFIG.mpdUrl);
+                console.log("Success! Stream Started.");
+            } catch (error) {
+                console.error("Error Code:", error.code);
+                // Agar 1001/4003 error aaye, toh samajh lena Proxy ki zarurat hai
             }
         }
 
-        document.addEventListener('shaka-ui-loaded', initApp);
+        document.addEventListener('shaka-ui-loaded', initDevPlayer);
     </script>
 </body>
 </html>
